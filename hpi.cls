@@ -1,5 +1,6 @@
-\NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{hpi}[2014/04/30 Class for typesetting papers and proceedings]
+\NeedsTeXFormat{LaTeX2e}[1995/12/01]
+\ProvidesClass{hpi}[2014/07/15 v0.2
+^^J Class for typesetting papers and proceedings]
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -256,7 +257,6 @@
 	\equal{\languagename}{naustrian}
 }{%
 	\def\@languagetag{de}
-	\RequirePackage{german}
 }{}
 %% Greek
 \ifthenelse{%
@@ -766,8 +766,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \RequirePackage{graphicx}
-\RequirePackage[hang, tight, FIGBOTCAP, TABBOTCAP]{subfigure}
-\renewcommand{\subfigcapskip}{3\p@}
+\PassOptionsToPackage{hang, tight, FIGBOTCAP, TABBOTCAP}{subfigure}
+\providecommand{\subfigcapskip}{3\p@}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
