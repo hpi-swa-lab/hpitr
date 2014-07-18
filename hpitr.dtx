@@ -1,3 +1,4 @@
+%% \CheckSum{0}
 % \iffalse meta-comment
 % ============================================================================
 % hpitr.dtx
@@ -19,7 +20,6 @@
 %
 % ==========================================================================
 % \fi^^A meta-comment
-% \CheckSum{0}
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -43,7 +43,8 @@
 \fi
 %</dtx|ins>
 %<class>\NeedsTeXFormat{LaTeX2e}[1995/12/01]
-%<*dtx|ins|doc|class|manual>
+%<class>\ProvidesClass{hpitr}%
+%<*dtx|ins|doc|manual>
 \ProvidesFile{%
   hpitr%
 %<manual>  -manual%
@@ -52,15 +53,16 @@
 %</dtx>
 %<ins>  .ins%
 %<doc>  .ltx%
-%<class>  .cls%
-%</dtx|ins|doc|class|manual>
+}%
+%</dtx|ins|doc|manual>
 %<*dtx|ins|doc|class|README>
 %<README>hpitr
 %<README>  Copyright (c) Tobias Pape <tobias.pape at hpi.de>
 %<*!README>
-}[%
+[%
 %</!README>
   2014/07/18 v0.3
+%<!README>^^J
   A unified class for Technical Reports at the HPI
 %<*!README>
 ]
@@ -76,14 +78,10 @@
 % \changes{v2.0}{2014/07/10}{Minmial changes to play nice with babel and
 % subcaption}
 %
-% \tableofcontents
+% \GetFileInfo{hpitr.dtx}
 %
-% \StopEventually{
-%  \newpage
-%  \appendix
-%  \PrintChanges
-%  \PrintIndex
-%}
+% ^^A =========================================================================
+% ^^A =========================================================================
 % ^^A =========================================================================
 %
 %\makeatletter
@@ -237,6 +235,22 @@
 %\DoNotIndex{\undefined,\usecounter}
 %\DoNotIndex{\vfil,\vfill,\vspace}
 %\makeatother
+%
+% ^^A =========================================================================
+% ^^A =========================================================================
+% ^^A =========================================================================
+%
+% \tableofcontents
+%
+% ^^A =========================================================================
+% ^^A =========================================================================
+% ^^A =========================================================================
+% \StopEventually{
+%  \newpage
+%  \appendix
+%  \PrintChanges
+%  \PrintIndex
+%}
 %
 % \section{Implementation}
 % \label{sec:Implementation}
@@ -1251,14 +1265,29 @@ test
     \noexpand\endgroup\noexpand\savedPassOptionsToClass{#1}{%
       \tempc}}%
   \tempc}
+%    \end{macrocode}
+%
+% Should we need \textsc{url}s, we want them to break nicely, also on hyphens.
+% Since either \texttt{ltxdoc} or \texttt{hypdoc} loads the \texttt{url}
+% package, we pass this option early.
+%    \begin{macrocode}
 \PassOptionsToPackage{hyphens}{url}
-\documentclass[a4paper,pagesize,10pt]{ltxdoc}
+%    \end{macrocode}
+% Load the \texttt{ltxdoc} class (patched to subsequently load a KOMAScript
+% class). We set a calculating \texttt{DIV}\footnote{see KOMAScript guide} and
+% the two-column option, since we eventually end up kind-of two-column anyways.
+% However, we do this not by the normal means so we force |\onecolumn| once the
+% document commences.
+%    \begin{macrocode}
+\documentclass[a4paper,10pt]{ltxdoc}
+\KOMAoptions{pagesize,twocolumn=true,DIV=calc}
+\AtBeginDocument{\onecolumn}
 \usepackage{ifpdf,ifxetex}
 % Use two columns at index
 \setcounter{IndexColumns}{2}
 \MacroTopsep=0pt
 \MacrocodeTopsep=3pt
-\setlength\MacroIndent{0pt}
+\setlength\MacroIndent{50pt}
 \makeatletter
 \DeclareRobustCommand\textoractual[2]{\ifpdf
  \pdfliteral direct{/Span<</ActualText(#2)>>BDC}#1\pdfliteral direct{EMC}%
@@ -1269,17 +1298,19 @@ test
 \def\MacroFont{\ttfamily\small}
 \def\AltMacroFont{\ttfamily\footnotesize}
 \def\PrintMacroName#1{\strut\MacroFont\string #1\hskip15pt}
-
+\raggedbottom
 \usepackage{hypdoc}
-
+\usepackage[tocflat,toctextentriesindented]{tocstyle}%
+\usetocstyle{nopagecolumn}
+\usepackage[toc]{multitoc}
 \usepackage{fontspec}
 \usepackage[scale=MatchLowercase]{ebgaramond}
 \usepackage[scale=MatchLowercase]{sourcesanspro}
 \usepackage[scale=MatchLowercase]{sourcecodepro}
 \usepackage[english]{babel}
-%\usepackage{longtable,tabu}
 \usepackage{graphicx}
 \usepackage{xcolor}
+\usepackage{paracol}
 \setkomafont{subtitle}{\usekomafont{title}\LARGE}
 \addtokomafont{disposition}{\rmfamily}
 \setkomafont{title}{\rmfamily\mdseries}
@@ -1290,6 +1321,8 @@ test
 \renewcommand*\labelitemii{\normalfont\textendash}
 \setfootnoterule{4cc}
 
+\recalctypearea
+\usepackage{showframe}
 \newcommand*{\File}{}\def\File{\texttt}
 \errorcontextlines=999
 \CodelineIndex
@@ -1298,25 +1331,30 @@ test
 %<manual>\OnlyDescription
 \GetFileInfo{\jobname.ltx}
 \begin{document}
-\title{Class \File{hpitr}\footnote{This is file
-    version \fileversion{} of file \File{\filename}.}}
-\author{Tobias Pape\footnote{Tobias Pape \textless\protect\url{tobias.pape@hpi.de}\textgreater}}
+\title{Writing Technical Reports at the Hasso~Plattner~Institute ---
+  The Class \File{hpitr}\footnote{This is file version \fileversion{} of file
+    \File{\filename}.}} \author{Tobias Pape\footnote{Tobias Pape
+    \textless\protect\url{tobias.pape@hpi.de}\textgreater}}
 \date{\fileversion{} \filedate}
 \maketitle
 \begin{abstract}
 %</!README>
+%<*!manual>
 
-Creation of title pages is something most authors should not have to do. 
-But reality is not perfect, so a lot of authors have to do it.  In 2009
-%<!README>KOMA started the title page project at \texttt{<http://www.komascript.de/titlepage>}
-%<README>KOMA started the title page project at <http://www.komascript.de/titlepage>
-to collect real title pages and implement them with a well defined
-interface.  So changing from one title page style to another would be very
-simple.  Nevertheless implementation of a new title page style may be still
-difficult.  But maybe the guys of the title page project would help you.  Just
-ask!
+%<!README>This consititutes the \LaTeX\ class to creat technical reports at the 
+%<README>This consititutes the LaTeX class to creat technical reports at the 
+Plattner Institute, Potsdam in conjunction with the Universitätsverlag
+Potsdam. To maintain a unified appearance, this class provides macrotypographic
+(like paper size and general layout) and microtypographic (like fonts and their
+adjustmen) settings.
+
+%</!manual>
+% \end{macrocode}
+%
+% The installation instructions that end up in the README are from the
+% \texttt{titlepage.dtx} again.
+% \begin{macrocode}
 %<*README>
-
 Note: To generate all files, you should simply call
 
       pdftex -shell-escape hpitr.dtx
@@ -1334,6 +1372,13 @@ package folder.
 But maybe your distributpr already distributes a ready for installation
 package, so you do not need to create files and copy them yourself.
 %</README>
+%<*manual>
+This manual gives a concise usage guide for the \texttt{hpitr} class, used to
+prepare technical reports at the Hasso Plattner Institute, Potsdam
+in conjunction with the Universitätsverlag Potsdam. We describe newly
+introduced commands and environments and document deviations from what may seem
+typical, like non-standard paper size.
+%</manual>
 %<*!README>
 \end{abstract}
 \DocInput{hpitr.dtx}
