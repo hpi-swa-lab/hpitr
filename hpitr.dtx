@@ -1,0 +1,1353 @@
+% \iffalse meta-comment
+% ============================================================================
+% hpitr.dtx
+% Copyright (c) Daniel Richter, Uwe Haentschel 2013-2014
+% Copyright (c) Tobias Pape, 2014
+%
+% This work may be distributed and/or modified under the conditions of
+% the LaTeX Project Public License, version 1.3c of the license.
+% The latest version of this license is in
+%   http://www.latex-project.org/lppl.txt
+% and version 1.3c or later is part of all distributions of LaTeX 
+% version 2005/12/01 or later.
+%
+% This work has the LPPL maintenance status "maintained".
+%
+% The Current Maintainer and author of this work is Tobias Pape.
+%
+% This work consists of the file `hpitr.dtx'.
+%
+% ==========================================================================
+% \fi^^A meta-comment
+% \CheckSum{0}
+% \CharacterTable
+%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
+%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
+%   Digits        \0\1\2\3\4\5\6\7\8\9
+%   Exclamation   \!     Double quote  \"     Hash (number) \#
+%   Dollar        \$     Percent       \%     Ampersand     \&
+%   Acute accent  \'     Left paren    \(     Right paren   \)
+%   Asterisk      \*     Plus          \+     Comma         \,
+%   Minus         \-     Point         \.     Solidus       \/
+%   Colon         \:     Semicolon     \;     Less than     \<
+%   Equals        \=     Greater than  \>     Question mark \?
+%   Commercial at \@     Left bracket  \[     Backslash     \\
+%   Right bracket \]     Circumflex    \^     Underscore    \_
+%   Grave accent  \`     Left brace    \{     Vertical bar  \|
+%   Right brace   \}     Tilde         \~}
+%
+% \iffalse meta-comment
+%<*dtx|ins>
+\expandafter\ifx\csname ProvidesFile\endcsname\relax
+  \def\ProvidesFile#1[#2]{\message{#1: #2}}%
+\fi
+%</dtx|ins>
+%<class>\NeedsTeXFormat{LaTeX2e}[1995/12/01]
+%<*dtx|ins|doc|class|manual>
+\ProvidesFile{%
+  hpitr%
+%<manual>  -manual%
+%<*dtx>
+  .dtx%
+%</dtx>
+%<ins>  .ins%
+%<doc>  .ltx%
+%<class>  .cls%
+%</dtx|ins|doc|class|manual>
+%<*dtx|ins|doc|class|README>
+%<README>hpitr
+%<README>  Copyright (c) Tobias Pape <tobias.pape at hpi.de>
+%<*!README>
+}[%
+%</!README>
+  2014/07/18 v0.3
+  A unified class for Technical Reports at the HPI
+%<*!README>
+]
+%</!README>
+%</dtx|ins|doc|class|README>
+% \fi^^A meta-comment
+% ^^A -------------------------------------------------------------------------
+%
+%
+%
+%
+% \changes{v0.1}{2014/06/01}{Inital class derived from polze.cls}
+% \changes{v2.0}{2014/07/10}{Minmial changes to play nice with babel and
+% subcaption}
+%
+% \tableofcontents
+%
+% \StopEventually{
+%  \newpage
+%  \appendix
+%  \PrintChanges
+%  \PrintIndex
+%}
+% ^^A =========================================================================
+%
+%\makeatletter
+% ^^A Heiko Oberdiek's fix from latexbugs (latex/3540):
+%\begingroup
+%  \def\x\begingroup#1\@nil{\endgroup
+%    \def\DoNotIndex{\begingroup
+%      \@tfor\@tempa:=\#\$\&\^\_\|\~\ \<\do{\expandafter\@makeother\@tempa}#1}}
+%\expandafter\x\DoNotIndex\@nil
+%\def\PercentIndex{}\def\LeftBraceIndex{}\def\RightBraceIndex{}
+%
+% ^^A Non-Index list derived from microtype.dtx and titlepage.dtx
+%
+%\DoNotIndex{\!,\",\',\(,\),\*,\+,\,,\-,\.,\/,\:,\;,\<,\=,\>,\?,\[,\\,\],\`,
+%  \#,\$,\&,\^,\_,\|,\~,\ ,\@Alph,\@M,
+%  \advance,\afterassignment,\aftergroup,\begingroup,\bgroup,\catcode,\char,
+%  \chardef,\csname,\def,\divide,\edef,\egroup,\else,\endcsname,\endgroup,
+%  \endinput,\escapechar,\everypar,\expandafter,\fi,\futurelet,\gdef,\global,
+%  \hbadness,\hbox,\hsize,\hskip,\if,\ifcase,\ifcat,\ifdim,\iffalse,\ifhbox,
+%  \ifhmode,\ifmmode,\ifnum,\iftrue,\ifx,\immediate,\input,\inputlineno,\jobname,
+%  \kern,\lastkern,\lastskip,\let,\lowercase,\maxdimen,\meaning,\multiply,
+%  \newlinechar,\noexpand,\number,\or,\parfillskip,\pretolerance,\relax,\setbox,
+%  \showboxdepth,\string,\the,\tolerance,\unkern,\unskip,\uppercase,\vbox,\wd,
+%  \write,\xdef}
+%^^A\DoNotIndex{\font,\fontdimen,\nullfont,\sfcode,\spacefactor,\spaceskip,
+%^^A  \xspaceskip}                                                           ^^A tex
+%\DoNotIndex{\currentgrouplevel,\currentgrouptype,\detokenize,\dimexpr,
+%  \eTeXversion,\ifcsname,\ifdefined,\numexpr}
+%^^A\DoNotIndex{\fontcharwd,\iffontchar}                                     ^^A e-tex
+%\DoNotIndex{\pdfannot,\pdfescapestring,\pdfmatch,\pdfoutput,\pdfstrcmp,
+%  \pdftexrevision,\pdftexversion}
+%^^A\DoNotIndex{\(ef,lp,rp,kn(ac,bc),(kn,sh,st)bs)code,\(left,right)marginkern,
+%^^A  \tagcode,\letterspacefont,\pdfcopyfont,\pdffontexpand,\pdfnoligatures,
+%^^A  \pdfprotrudechars,\pdfadjust(interwordglue,spacing),\pdf(ap,pre)pendkern,
+%^^A  \pdftracingfonts}                                                      ^^A pdftex
+%\DoNotIndex{\XeTeXversion,\XeTeXrevision}                                   ^^A xetex
+%^^A\DoNotIndex{\XeTeXcharglyph,\XeTeXcountglyphs,\XeTeXfonttype,\XeTeXglyph,
+%^^A  \XeTeXglyphindex,\XeTeXglyphname,\XeTeXprotrudechars}
+%\DoNotIndex{\directlua,\luatexversion}                                      ^^A luatex
+%\DoNotIndex{\eplain,\usepkg@pkg}                                            ^^A eplain
+%\DoNotIndex{\@backslashchar,\@cclv,\@cclvi,\@classoptionslist,\@currext,
+%  \@currname,\@defaultunits,\@empty,\@expandtwoargs,\@firstofone,\@firstoftwo,
+%  \@gobble,\@gobbletwo,\@ifl@aded,\@ifpackagelater,\@ifpackageloaded,\@ifstar,
+%  \@ifundefined,\@let@token,\@m,\@makeother,\@minus,\@nameuse,\@ne,\@nil,\@nnil,
+%  \@onelevel@sanitize,\@onlypreamble,\@percentchar,\@pkgextension,\@plus,
+%  \@ptionlist,\@removeelement,\@secondoftwo,\@spaces,\@sptoken,\@tempa,\@tempb,
+%  \@tempc,\@tempcnta,\@tempcntb,\@tempdima,\@typeset@protect,\@undefined,
+%  \@unprocessedoptions,\@unusedoptionlist,\@xobeysp,\check@icr,\color@begingroup,
+%  \color@endgroup,\g@addto@macro,\hmode@bgroup,\m@ne,\maybe@ic,\maybe@ic@,
+%  \nfss@text,\not@math@alphabet,\on@line,\p@,\set@display@protect,\strip@prefix,
+%  \strip@pt,\tw@,\z@,\z@skip,\zap@space,\active,\documentclass,\leavevmode,
+%  \makeatletter,\mbox,\newcommand,\newcount,\newdimen,\newif,\newskip,
+%  \newtoks,\nobreak,\nonfrenchspacing,\normalsize,\renewcommand,\space,
+%  \AtBeginDocument,\AtEndOfPackage,\CheckCommand,\CurrentOption,
+%  \DeclareRobustCommand,\IfFileExists,\InputIfFileExists,\MessageBreak,
+%  \PackageError,\PackageInfo,\PackageWarning,\RequirePackage,
+%  \@@enc@update,\cf@encoding,\f@encoding}
+%^^A\DoNotIndex{\add@accent,\curr@fontshape,\define@newfont,\do@subst@correction,
+%^^A  \f@size,\font@name,\glb@currsize,\normalfont,\pickup@font,\selectfont,
+%^^A  \set@fontsize,\showhyphens}                                            ^^A latex
+%\DoNotIndex{\normalpdfoutput,\normalpdftexversion,\normalpdftexrevision}    ^^A tex live
+%\DoNotIndex{\foreign@language,\languagename,\select@language,\shorthandoff} ^^A babel
+%\DoNotIndex{\percentsign}                                                   ^^A babel/spanish,galician,mexican
+%\DoNotIndex{\CJK@ifundefined,\CJK@plane,\CJK@temp,\CJK@addcmap}             ^^A CJK,CJKutf8
+%\DoNotIndex{\@disablequotes}                                                ^^A csquotes
+%\DoNotIndex{\pdfstringdefDisableCommands,\pdfstringdefWarn}                 ^^A hyperref
+%\DoNotIndex{\ifpdf}                                                         ^^A ifpdf
+%\DoNotIndex{\@inpenc@undefined@,\IeC,\inputencoding,\inputencodingname}     ^^A inputenc
+%\DoNotIndex{\UTFviii@defined}                                               ^^A inputenc/utf8
+%\DoNotIndex{\PrerenderUnicode,\unicode@charfilter}                          ^^A inputenc/utf8x
+%\DoNotIndex{\define@key,\KV@@sp@def,\setkeys}                               ^^A keyval
+%\DoNotIndex{\l@dunhbox@line}                                                ^^A (e)ledmac,(e)ledpar
+%\DoNotIndex{\lst@ProcessLetter}                                             ^^A listings
+%\DoNotIndex{\RequireLuaModule}                                              ^^A luatexbase
+%\DoNotIndex{\pdf@escapestring}                                              ^^A pdftexcmds
+%\DoNotIndex{\py@macron}                                                     ^^A pinyin
+%\DoNotIndex{\SOUL@,\soulregister}                                           ^^A soul
+%\DoNotIndex{\tikz@expandcount}                                              ^^A tikz
+%\DoNotIndex{\conditionally@traceoff}                                        ^^A trace
+%\DoNotIndex{\@xspace,\@xspace@firsttrue}                                    ^^A xspace
+%\DoNotIndex{\x,\MT@dinfo,\MT@dinfo@nl,\tracingmicrotype,\tracingmicrotypeinpdf,
+%  \ifMT@inannot,\MT@inannottrue,\MT@inannotfalse,\MT@addto@annot,\MT@pdf@annot,
+%  \MT@show@pdfannot,\iftracingmicrotypeinpdfall,\tracingmicrotypeinpdfalltrue,
+%  \tracingmicrotypeinpdfallfalse,\DeclareMicroTypeSet,\DeclareMicroTypeAlias,
+%  \UseMicroTypeSet,\LoadMicroTypeFile,\MicroType@Hook}                      ^^A microtype% \DoNotIndex{\wd,\xdef,\year,\z@}
+%\DoNotIndex{\@abstrtfalse,\@abstrttrue,\@addtoreset,\@afterheading}
+%\DoNotIndex{\@afterindentfalse,\@alph,\@arabic}
+%\DoNotIndex{\@beginparpenalty}
+%\DoNotIndex{\@car,\@cdr,\@centercr}
+%\DoNotIndex{\@dblfloat,\@dotsep}
+%\DoNotIndex{\@dottedtocline,\@empty,\@endparpenalty}
+%\DoNotIndex{\@float,\@fontswitch}
+%\DoNotIndex{\@gobbletwo}
+%\DoNotIndex{\@hangfrom,\@highpenalty}
+%\DoNotIndex{\@ifnextchar,\@ifundefined,\@itempenalty}
+%\DoNotIndex{\@latex@warning}
+%\DoNotIndex{\@m,\@medpenalty,\@minus,\@mkboth,\@mparswitchfalse}
+%\DoNotIndex{\@mparswitchtrue}
+%\DoNotIndex{\@ne,\@nil,\@nobreakfalse,\@nobreaktrue,\@nomath}
+%\DoNotIndex{\@plus}
+%\DoNotIndex{\@tempa,\@tempcnta,\@tempdima,\@tempskipka}
+%\DoNotIndex{\@tempswafalse,\@tempswatrue}
+%\DoNotIndex{\@tempb,\@tempcntb,\@tempdimb,\@tempskipkb}
+%\DoNotIndex{\@tempswbfalse,\@tempswbtrue}
+%\DoNotIndex{\@tempc,\@tempcntc,\@tempdimc,\@tempskipkc}
+%\DoNotIndex{\@tocrmarg,\@topnewpage,\@topnum,\@twocolumnfalse}
+%\DoNotIndex{\@twocolumntrue,\@twosidefalse,\@twosidetrue}
+%\DoNotIndex{\@whiledim,\@whilenum}
+%\DoNotIndex{\addcontentsline,\addpenalty,\addtocontents,\addtolength}
+%\DoNotIndex{\addvspace,\advance}
+%\DoNotIndex{\begin,\begingroup,\bfseries,\box,\bullet}
+%\DoNotIndex{\c@figure,\c@page,\c@secnumdepth,\c@table,\c@tocdepth}
+%\DoNotIndex{\cdot,\centering,\changes,\cleardoublepage,\clearpage}
+%\DoNotIndex{\cmd,\col@number,\CurrentOption,\CodelineIndex,\cs}
+%\DoNotIndex{\day,\dblfloatpagefraction,\dbltopfraction}
+%\DoNotIndex{\DeclareOldFontCommand,\DeclareOption,\def,\DisableCrossrefs}
+%\DoNotIndex{\divide,\DoNotIndex}
+%\DoNotIndex{\ifdim,\else,\fi,\empty,\em,\EnableCrossrefs,\end}
+%\DoNotIndex{\end@dblfloat}
+%\DoNotIndex{\end@float,\endgroup,\endlist,\endquotation,\endtitlepage}
+%\DoNotIndex{\everypar,\ExecuteOptions,\expandafter}
+%\DoNotIndex{\fboxrule,\fboxsep}
+%\DoNotIndex{\gdef,\global}
+%\DoNotIndex{\hangindent,\hbox,\hfil,\hrule,\hsize,\hskip,\hspace,\hss}
+%\DoNotIndex{\if@tempswa,\ifcase,\or,\fi,\fi}
+%\DoNotIndex{\ifnum,\ifodd,\ifx,\fi,\fi,\fi}
+%\DoNotIndex{\include,\input,\InputIfFileExists,\item,\itshape}
+%\DoNotIndex{\kern,\leavevmode,\leftmark,\leftskip,\let,\lineskip}
+%\DoNotIndex{\list,\long}
+%\DoNotIndex{\m@ne,\m@th,\marginpar,\markboth,\markright,\mathbf,\mathcal}
+%\DoNotIndex{\mathit,\mathnormal,\mathrm,\mathsf,\mathtt,\MessageBreak}
+%\DoNotIndex{\month}
+%\DoNotIndex{\newblock,\newcommand,\newcount,\newcounter,\newdimen}
+%\DoNotIndex{\newenvironment,\newlength,\newpage,\nobreak,\noindent}
+%\DoNotIndex{\normalfont,\normallineskip,\normalsize,\null,\number}
+%\DoNotIndex{\numberline,\normalcolor}
+%\DoNotIndex{\OldMakeindex,\OnlyDescription,\overfullrule}
+%\DoNotIndex{\p@,\PackageError,\PackageInfo,\PackageWarningNoLine}
+%\DoNotIndex{\pagenumbering,\pagestyle,\par,\paragraph,\parbox}
+%\DoNotIndex{\PassOptionsToPackage,\pcal,\penalty,\pmit,\PrintChanges}
+%\DoNotIndex{\PrintIndex,\ProcessOptions,\protect,\providecommand}
+%\DoNotIndex{\ProvidesClass}
+%\DoNotIndex{\raggedbottom,\raggedleft,\raggedright,\refstepcounter,\relax}
+%\DoNotIndex{\renewcommand,\RequirePackage,\reset@font}
+%\DoNotIndex{\rightmargin,\rightmark,\rightskip,\rmfamily,\@Roman,\@roman}
+%\DoNotIndex{\scshape,\secdef,\setbox,\setcounter,\setlength}
+%\DoNotIndex{\settowidth,\sfcode,\sffamily,\skip,\sloppy,\slshape,\space}
+%\DoNotIndex{\string}
+%\DoNotIndex{\the,\thispagestyle,\triangleright,\ttfamily}
+%\DoNotIndex{\twocolumn,\typeout}
+%\DoNotIndex{\undefined,\usecounter}
+%\DoNotIndex{\vfil,\vfill,\vspace}
+%\makeatother
+%
+% \section{Implementation}
+% \label{sec:Implementation}
+%
+% \subsection{The Installation Driver `\protect\File{hpitr.ins}'}
+% \label{sec:hpitr-ins}
+% \iffalse meta-comment
+%<*dtx|ins>
+% \fi ^^A meta-comment
+% First of all we produce \File{hpitr.ins}, the installation driver. It
+% starts very common with loading \File{docstrip}, preamble declaration and
+% start of generation.
+%    \begin{macrocode}
+\def\batchfile{hpitr.dtx}
+\input docstrip.tex
+\ifToplevel{%
+  \Msg{********************************************************************}
+  \Msg{*}
+  \Msg{* Steps of hpitr generation:}
+  \Msg{* ==========================}
+  \Msg{*}
+  \Msg{* - Generation of all needed files:}
+  \keepsilent
+  \askforoverwritefalse
+}
+
+\preamble
+Copyright (c) Daniel Richter, Uwe Haentschel 2013-2014
+Copyright (c) Tobias Pape, 2014
+
+This file was generated from file(s) of hpitr distribution.
+----------------------------------------------------------------------
+
+This work may be distributed and/or modified under the conditions of
+the LaTeX Project Public License, version 1.3c of the license.
+The latest version of this license is in
+  http://www.latex-project.org/lppl.txt
+and version 1.3c or later is part of all distributions of LaTeX 
+version 2005/12/01 or later.
+
+This work has the LPPL maintenance status "maintained".
+
+The Current Maintainer and author of this work is Tobias Pape.
+
+This file may only be distributed together with the file
+`hpitr.dtx'. You may however distribute the file `hpitr.dtx' 
+without this file.
+\endpreamble
+
+\generate{%
+%    \end{macrocode}
+% But while the dtx file is the ins file itself, we will never generate this
+% file.
+% \begin{verbatim}
+%  \file{hpitr.ins}{\from{hpitr.dtx}{ins}}% not needed
+% \end{verbatim}\vskip-\baselineskip
+%    \begin{macrocode}
+  \file{hpitr.cls}{\from{hpitr.dtx}{class}}%
+  \file{hpitr-manual.ltx}{\from{hpitr.dtx}{doc,manual}}%
+  \file{hpitr.ltx}{\from{hpitr.dtx}{doc}}%
+  \nopreamble\nopostamble
+  \file{README.txt}{\from{hpitr.dtx}{README}}%
+}%
+
+%    \end{macrocode}
+% After file generation, wie use shell escapes (aka \verb|\write18| feature) to
+% create \File{hpitr-manual.pdf}, the manual, and \File{hpitr.pdf}, the full
+% documentation.
+%    \begin{macrocode}
+\ifToplevel{%
+  \Msg{* \space\space done.}
+  \Msg{* - Generation of manual and examples:}
+  \expandafter\ifx\csname pdfshellescape\endcsname\relax
+    \Msg{* WARNING: \string\pdfshellescape\space not available!}
+    \Msg{* WARNING: You should run this file with shell-escapes enabled.}
+    \Msg{* WARNING: Otherwise you have to call}
+    \Msg{* WARNING: \space\space xelatex hpitr.ltx}
+    \Msg{* WARNING: to generate the manual and examples on your own!}
+    \batchmode \errmessage{}\csname @@end\endcsname\csname end\endcsname
+  \else\ifnum \pdfshellescape=1 \else
+    \Msg{* WARNING: shell-escapes not activated!}
+    \Msg{* WARNING: You should run this file with shell-escapes enabled.}
+    \Msg{* WARNING: Otherwise you have to call}
+    \Msg{* WARNING: \space\space xelatex hpitr.ltx}
+    \Msg{* WARNING: to generate the manual and examples on your own!}
+    \batchmode \errmessage{}\csname @@end\endcsname\csname end\endcsname
+  \fi\fi
+}
+
+\immediate\write18{cp README.txt README || copy README.txt README}
+\immediate\write18{xelatex -interaction=nonstopmode hpitr.ltx}
+\immediate\write18{mkindex hpitr}
+\immediate\write18{xelatex -interaction=nonstopmode hpitr.ltx}
+\immediate\write18{mkindex hpitr}
+\immediate\write18{xelatex -interaction=nonstopmode hpitr.ltx}
+
+\immediate\write18{xelatex -interaction=nonstopmode hpitr-manual.ltx}
+\immediate\write18{mkindex hpitr-manual}
+\immediate\write18{xelatex -interaction=nonstopmode hpitr-manual.ltx}
+\immediate\write18{mkindex hpitr-manual}
+\immediate\write18{xelatex -interaction=nonstopmode hpitr-manual.ltx}
+
+\ifToplevel{%
+  \Msg{* \space\space done.}
+  \Msg{*}
+  \Msg{* You may install all the files now.}
+  \Msg{*}
+  \Msg{********************************************************************}
+}
+%    \end{macrocode}
+% At docstrip, this concludes the run.
+%    \begin{macrocode}
+\csname endinput\endcsname
+%    \end{macrocode}
+% \iffalse meta-comment
+%</dtx|ins>
+% \fi^^A meta-comment
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+% \iffalse meta-comment
+%<*class>
+% \fi^^A meta-comment
+%
+% \subsection{The Tech Report Class}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \subsubsection{Initialization}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%    \begin{macrocode}
+
+%% name of the base class
+\let\@BaseClass\@empty
+%% a part document?
+\newif\if@independent
+%% proceedings?
+\newif\if@proceedings
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Options
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% single paper
+\DeclareOption{single}{%
+        \def\@BaseClass{article}
+        \@independenttrue
+        \@proceedingsfalse
+}
+%% part of the proceedings
+\DeclareOption{inproceedings}{%
+        \def\@BaseClass{article}
+        \@independentfalse
+        \@proceedingsfalse
+}
+%% proceedings
+\DeclareOption{proceedings}{%
+        \def\@BaseClass{book}
+        \@independenttrue
+        \@proceedingstrue
+}
+
+
+%% special paper size (University Potsdam)
+\newif\if@universitypaper \@universitypaperfalse
+\DeclareOption{17x24paper}{\@universitypapertrue}
+
+
+%% show the page layout
+\newif\if@showlayout \@showlayoutfalse
+\DeclareOption{layout}{\@showlayouttrue}
+
+
+%% execute the standard options
+\ExecuteOptions{single}
+
+%% pass unknown options to the base class file
+\DeclareOption*{\PassOptionsToClass{\CurrentOption}{\@BaseClass}}
+
+%% process the options
+\ProcessOptions\relax
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Load base class file
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\LoadClass[a4paper, twoside, 12pt]{\@BaseClass}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Special paper size (University Potsdam)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\if@universitypaper
+        \setlength{\paperheight}{240mm}
+        \setlength{\paperwidth}{170mm}
+\fi
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Show the page layout
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\if@showlayout
+        \RequirePackage{layout}
+        \AtEndDocument{%
+                \clearpage
+                \layout
+        }
+\fi
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Environmental variables
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Title
+\renewcommand{\title}[1]{%
+        \gdef\@title{#1}
+        \ifpdf
+                \hypersetup{pdftitle = {#1}}
+        \fi
+}
+%% Author
+\renewcommand{\author}[1]{%
+        \gdef\@author{#1}
+        \ifpdf
+                \hypersetup{pdfauthor = {}}
+        \fi
+}
+%% Authors' names and affiliation
+%%
+%% This is done like in the IEEEtran.cls
+%% Thanks to Gerry Murray, Silvano Balemi, Jon Dixon, Peter N"uchter, Juergen von Hagen and Michael Shell
+\newcommand{\authorname}[1]{\let\\\newcr\normalfont\normalsize #1\texorpdfstring{\cr}{}}
+\newcommand{\authoraffiliation}[1]{\let\\\newcr\normalfont\footnotesize #1\texorpdfstring{\cr}{}}
+%% Title of the event
+\newcommand{\event}[1]{%
+        \def\@eventtitle{#1}
+        \ifpdf
+                \hypersetup{pdfsubject = {#1}}
+        \fi
+}
+\def\@eventtitle{\@latex@warning{No \noexpand\event given}}
+%% Paper number
+\newcommand{\papernumber}[1]{%
+        \def\@papernumber{#1}
+        \ifx\@papernumber\empty
+        \else
+                \renewcommand*{\thepage}{\@papernumber-\arabic{page}}
+        \fi
+}
+\let\@papernumber\@empty
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Save and restore font attributes
+%% 
+%% This is done like in the IEEEtran.cls
+%% Thanks to Gerry Murray, Silvano Balemi, Jon Dixon, Peter N"uchter, Juergen von Hagen and Michael Shell
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\gdef\@SAVESTATEfontsize{\f@size}
+\gdef\@SAVESTATEfontbaselineskip{\f@baselineskip}
+\gdef\@SAVESTATEfontencoding{\f@encoding}
+\gdef\@SAVESTATEfontfamily{\f@family}
+\gdef\@SAVESTATEfontseries{\f@series}
+\gdef\@SAVESTATEfontshape{\f@shape}
+
+%% Save the current font attributes
+\def\@curfontsave{%
+        \texorpdfstring{%
+                \global\let\@SAVESTATEfontsize\f@size%
+                \global\let\@SAVESTATEfontbaselineskip\f@baselineskip%
+                \global\let\@SAVESTATEfontencoding\f@encoding%
+                \global\let\@SAVESTATEfontfamily\f@family%
+                \global\let\@SAVESTATEfontseries\f@series%
+                \global\let\@SAVESTATEfontshape\f@shape%
+        }{}%
+}
+
+%% Restores the saved font attributes
+\def\@curfontrestore{%
+        \texorpdfstring{%
+                \fontsize{\@SAVESTATEfontsize}{\@SAVESTATEfontbaselineskip}%
+                \fontencoding{\@SAVESTATEfontencoding}%
+                \fontfamily{\@SAVESTATEfontfamily}%
+                \fontseries{\@SAVESTATEfontseries}%
+                \fontshape{\@SAVESTATEfontshape}%
+                \selectfont
+        }{}%
+}
+
+%% Save the current font attributes before linebreak and restore it afterwards
+\newcommand{\newcr}{\@curfontsave\cr\@curfontrestore}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Conditional statements
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage{ifthen}
+\RequirePackage{ifpdf}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Language
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage{babel}
+\let\@languagetag\@empty
+%% Afrikaans
+\ifthenelse{\equal{\languagename}{afrikaans}}{\def\@languagetag{af}}{}
+%% Bahasa
+\ifthenelse{%
+        \equal{\languagename}{bahasa} \or%
+        \equal{\languagename}{indonesian} \or%
+        \equal{\languagename}{indon} \or%
+        \equal{\languagename}{bahasai} \or%
+        \equal{\languagename}{bahasam} \or%
+        \equal{\languagename}{malay} \or%
+        \equal{\languagename}{meyalu}
+}{%
+        \def\@languagetag{id}
+}{}
+%% Basque
+\ifthenelse{\equal{\languagename}{basque}}{\def\@languagetag{eu}}{}
+%% Breton
+\ifthenelse{\equal{\languagename}{breton}}{\def\@languagetag{br}}{}
+%% Bulgarian
+\ifthenelse{\equal{\languagename}{bulgarian}}{\def\@languagetag{bg}}{}
+%% Catalan
+\ifthenelse{\equal{\languagename}{catalan}}{\def\@languagetag{ca}}{}
+%% Croatian
+\ifthenelse{\equal{\languagename}{croatian}}{\def\@languagetag{hr}}{}
+%% Czech
+\ifthenelse{\equal{\languagename}{czech}}{\def\@languagetag{cs}}{}
+%% Danish
+\ifthenelse{\equal{\languagename}{danish}}{\def\@languagetag{da}}{}
+%% Dutch
+\ifthenelse{\equal{\languagename}{dutch}}{\def\@languagetag{nl}}{}
+%% English
+\ifthenelse{%
+        \equal{\languagename}{english} \or%
+        \equal{\languagename}{USenglish} \or%
+        \equal{\languagename}{american} \or%
+        \equal{\languagename}{UKenglish} \or%
+        \equal{\languagename}{british} \or%
+        \equal{\languagename}{canadian} \or%
+        \equal{\languagename}{australian} \or%
+        \equal{\languagename}{newzealand}
+}{%
+        \def\@languagetag{en}
+}{}
+%% Esperanto
+\ifthenelse{\equal{\languagename}{esperanto}}{\def\@languagetag{eo}}{}
+%% Estonian
+\ifthenelse{\equal{\languagename}{estonian}}{\def\@languagetag{et}}{}
+%% Finnish
+\ifthenelse{\equal{\languagename}{finnish}}{\def\@languagetag{fi}}{}
+%% French
+\ifthenelse{%
+        \equal{\languagename}{french} \or%
+        \equal{\languagename}{francais} \or%
+        \equal{\languagename}{canadien} \or%
+        \equal{\languagename}{acadian}
+}{%
+        \def\@languagetag{fr}
+}{}
+%% Galician
+\ifthenelse{\equal{\languagename}{galician}}{\def\@languagetag{gl}}{}
+%% German
+\ifthenelse{%
+        \equal{\languagename}{german} \or%
+        \equal{\languagename}{germanb} \or%
+        \equal{\languagename}{ngerman} \or%
+        \equal{\languagename}{austrian} \or%
+        \equal{\languagename}{naustrian}
+}{%
+        \def\@languagetag{de}
+}{}
+%% Greek
+\ifthenelse{%
+        \equal{\languagename}{greek} \or%
+        \equal{\languagename}{polutonikogreek}
+}{%
+        \def\@languagetag{el}
+}{}
+%% Hebrew
+\ifthenelse{\equal{\languagename}{hebrew}}{\def\@languagetag{he}}{}
+%% Hungarian
+\ifthenelse{%
+        \equal{\languagename}{magyar} \or%
+        \equal{\languagename}{hungarian}
+}{%
+        \def\@languagetag{hu}
+}{}
+%% Icelandic
+\ifthenelse{\equal{\languagename}{icelandic}}{\def\@languagetag{is}}{}
+%% Interlingua
+\ifthenelse{\equal{\languagename}{interlingua}}{\def\@languagetag{ia}}{}
+%% Irish Gaelic
+\ifthenelse{\equal{\languagename}{irish}}{\def\@languagetag{ga}}{}
+%% Italian
+\ifthenelse{\equal{\languagename}{italian}}{\def\@languagetag{it}}{}
+%% Latin
+\ifthenelse{\equal{\languagename}{latin}}{\def\@languagetag{la}}{}
+%% North Sami
+\ifthenelse{\equal{\languagename}{samin}}{\def\@languagetag{se}}{}
+%% Norwegian
+\ifthenelse{\equal{\languagename}{norsk}}{\def\@languagetag{no}}{}
+%% Norwegian Nynorsk
+\ifthenelse{\equal{\languagename}{nynorsk}}{\def\@languagetag{nn}}{}
+%% Polish
+\ifthenelse{\equal{\languagename}{polish}}{\def\@languagetag{pl}}{}
+%% Portuguese
+\ifthenelse{%
+        \equal{\languagename}{portuges} \or%
+        \equal{\languagename}{portuguese} \or%
+        \equal{\languagename}{brazilian} \or%
+        \equal{\languagename}{brazil}
+}{%
+        \def\@languagetag{pt}
+}{}
+%% Romanian
+\ifthenelse{\equal{\languagename}{romanian}}{\def\@languagetag{ro}}{}
+%% Russian
+\ifthenelse{\equal{\languagename}{russian}}{\def\@languagetag{ru}}{}
+%% Scottish Gaelic
+\ifthenelse{\equal{\languagename}{scottish}}{\def\@languagetag{gd}}{}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Fonts
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage[T1]{fontenc}
+\RequirePackage{lmodern}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Text companion fonts
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage{textcomp}
+\RequirePackage{mathcomp}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Borders
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% minimum border sizes
+\newlength{\min@leftsidemargin}
+\newlength{\min@rightsidemargin}
+
+\setlength{\min@leftsidemargin}{25mm}
+\setlength{\min@rightsidemargin}{20mm}
+
+%% default reference point
+\setlength{\hoffset}{\z@}
+\setlength{\voffset}{\z@}
+
+%% horizontal setup
+\newlength{\tmp@width}
+\setlength{\tmp@width}{\paperwidth}
+
+%% ----------------------------------------------------------------------------
+%% 1) use a predefined text width and set the than the border width
+%% 2) if the border to small after step 1) set the border width to its minimum
+%%    and calculate the textwidth afterwards
+%% ----------------------------------------------------------------------------
+
+%% define the text width
+\ifcase \@ptsize\relax
+        \setlength{\textwidth}{0.65\paperwidth}                         % font size 10pt
+\or
+        \setlength{\textwidth}{0.72\paperwidth}                         % font size 11pt
+\or
+        \setlength{\textwidth}{0.78\paperwidth}                         % font size 12pt
+\fi
+
+\addtolength{\tmp@width}{-\textwidth}
+
+%% define left and right border
+\setlength{\oddsidemargin}{.55\tmp@width}
+\if@twoside
+        \setlength{\evensidemargin}{.45\tmp@width}
+\else
+        \setlength{\evensidemargin}{\z@}
+\fi
+
+%% check the minimum border size
+\ifthenelse{\lengthtest{\oddsidemargin < \min@leftsidemargin}}%
+{%
+        %% set the minimum border size
+        \setlength{\oddsidemargin}{\min@leftsidemargin}
+        \if@twoside
+                \setlength{\evensidemargin}{\min@rightsidemargin}
+        \fi
+        %% calculate the resulting text width
+        \setlength{\textwidth}{\paperwidth}
+        \addtolength{\textwidth}{-\oddsidemargin}
+        \addtolength{\textwidth}{-\min@rightsidemargin}
+}{}
+
+\setlength{\marginparwidth}{\z@}
+\setlength{\marginparsep}{\z@}
+
+
+%% vertical setup
+\newlength{\tmp@height}
+\setlength{\tmp@height}{\paperheight}
+
+%% header
+\setlength{\headheight}{2\baselineskip}                                 % 2 lines
+\setlength{\headsep}{2\baselineskip}
+
+\addtolength{\tmp@height}{-\headheight}
+\addtolength{\tmp@height}{-\headsep}
+
+%% footer
+\setlength{\footskip}{3\baselineskip}
+
+\addtolength{\tmp@height}{-\footskip}
+
+%% preserve top border
+\addtolength{\tmp@height}{-0.06\paperheight}
+
+%% keep the \topskip in mind
+\addtolength{\tmp@height}{-\topskip}
+
+%% calculate the possible text lines
+\setlength{\textheight}{\topskip}
+\whiledo{\lengthtest{\tmp@height > \baselineskip}}%
+{
+        \addtolength{\tmp@height}{-\baselineskip}
+        \addtolength{\textheight}{\baselineskip}
+}
+\ifthenelse{\lengthtest{\tmp@height = \baselineskip}}{\addtolength{\textheight}{\baselineskip}}
+
+%% set the top border
+\setlength{\tmp@height}{\paperheight}
+\addtolength{\tmp@height}{-\headheight}
+\addtolength{\tmp@height}{-\headsep}
+\addtolength{\tmp@height}{-\textheight}
+\addtolength{\tmp@height}{-\footskip}
+\setlength{\topmargin}{0.5\tmp@height}
+
+\setlength{\marginparpush}{\z@}
+
+
+%% reference point adjustment
+\addtolength{\oddsidemargin}{-1in}
+\addtolength{\evensidemargin}{-1in}
+\addtolength{\topmargin}{-1in}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Page breaks
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% no footnote breaks
+\interfootnotelinepenalty = 1000
+
+%% avoid widows (Hurenkinder) and orphans (Schusterjungen)
+\clubpenalty = \@M
+\widowpenalty = \@M 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Headers and footers
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage{fancyhdr}
+%% Fancy style
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE]{\leftmark}
+\fancyhead[RO]{\rightmark}
+\renewcommand{\headrulewidth}{.3\p@}
+\if@independent
+        \fancyfoot[LE,RO]{\thepage}    
+        \fancyfoot[RE,LO]{\@eventtitle}
+        \renewcommand{\footrulewidth}{.3\p@}
+\else
+        \renewcommand{\footrulewidth}{\z@}
+\fi
+%% Plain style
+\fancypagestyle{plain}{%
+        \fancyhf{}
+        \renewcommand{\headrulewidth}{\z@}
+        \if@independent
+                \fancyfoot[LE,RO]{\thepage}    
+                \fancyfoot[RE,LO]{\@eventtitle}  
+                \renewcommand{\footrulewidth}{.3\p@}
+        \else
+                \renewcommand{\footrulewidth}{\z@}
+        \fi
+}
+%% Empty style
+\fancypagestyle{empty}{%
+        \fancyhf{}
+        \renewcommand{\headrulewidth}{\z@}
+        \renewcommand{\footrulewidth}{\z@}
+}
+%% Header content
+\if@proceedings
+        \renewcommand{\chaptermark}[1]{\markboth{\thechapter\quad #1}{}}
+        \renewcommand{\sectionmark}[1]{\markright{\thesection\quad #1}}
+\else
+        \renewcommand{\sectionmark}[1]{\markboth{\@title}{\thesection\quad #1}}
+        \renewcommand{\subsectionmark}[1]{}
+\fi
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% include PDF Documents
+%% with more than 1 page
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\if@proceedings
+        \RequirePackage{pdfpages}
+        \pdfinclusioncopyfonts = 1
+        \includepdfset{pagecommand = {\thispagestyle{plain}}}
+\fi
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% PDF links and bookmarks
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage[hyphens]{url}
+\AtEndOfClass{\RequirePackage[bookmarks, hyperfootnotes, final]{hyperref}}
+%% PDF settings
+\AtBeginDocument{%
+  \ifpdf
+  \hypersetup{%
+    colorlinks = false,                                                             %% Colors the text of links and anchors.
+    pdfborder = 0 0 0,                                                              %% The style of box around links; (0, 0, 1) defaults to a box with lines of 1pt thickness,
+    %% but the colorlinks option resets it to produce no border.
+    bookmarksopenlevel = 1,                                                         %% level (\maxdimen) to which bookmarks are open
+    bookmarksnumbered = true,                                               %% If Acrobat bookmarks are requested, include section numbers.
+    hypertexnames = true,                                                   %% use guessable names for links
+    pdfkeywords = {},                                                                       %% Sets the document information Keywords field
+    pdfcreator = {},                                                                        %% Sets the document information Creator field
+    pdfproducer = {},                                                                       %% Sets the document information Producer field
+    pdflang = {\@languagetag},                                              %% PDF language identifier (RFC 3066)
+    pdfdisplaydoctitle = false,                                     %% display document title instead of file name in title bar
+    pdfpagemode = UseOutlines,                                              %% Determines how the file is opening in Acrobat; the possibilities are UseNone, UseThumbs (show thumbnails),
+    %% UseOutlines (show bookmarks), FullScreen, UseOC (PDF 1.5), and UseAttachments (PDF 1.6). If no mode
+    %% is explicitly chosen, but the bookmarks option is set, UseOutlines is used.
+    pdfview  = FitV,                                                                        %% Sets the default PDF view for each link
+    %% Fit   ... Fits the page to the window.
+    %% FitH  ... Fits the width of the page to the window.
+    %% FitV  ... Fits the height of the page to the window.
+    %% FitR  ... Fits the rectangle specified by the four coordinates (left, bottom, right, top) to the window.
+    %% FitB  ... Fits the page bounding box to the window.
+    %% FitBH ... Fits the width of the page bounding box to the window.
+    %% FitBV ... Fits the height of the page bounding box to the window.
+    pdfstartpage = 1,                                                                       %% Determines on which page the PDF file is opened.
+    pdfstartview = Fit,                                                             %% Set the startup page view (see 'pdfview')
+    pdfdirection = L2R,                                                             %% direction setting (an empty value disables the option)
+    %% valid values are L2R (Left to Right) and R2L (Right to Left)
+    pdfduplex = DuplexFlipLongEdge,                                 %% paper handling option for print dialog (an empty value disables the option)
+    %% valid values are Simplex, DuplexFlipShortEdge and DuplexFlipLongEdge
+    pdfnonfullscreenpagemode = UseOutlines,         %% page mode setting on exiting full-screen mode
+    pdfpagelayout = OneColumn                                               %% set layout of PDF pages
+    %% SinglePage     ... Displays a single page; advancing flips the page
+    %% OneColumn      ... Displays the document in one column; continuous scrolling.
+    %% TwoColumnLeft  ... Displays the document in two columns, odd-numbered pages to the left.
+    %% TwoColumnRight ... Displays the document in two columns, odd-numbered pages to the right.
+    %% TwoPageLeft    ... Displays two pages, odd-numbered pages to the left (since PDF 1.5).
+    %% TwoPageRight   ... Displays two pages, odd-numbered pages to the right (since PDF 1.5).
+  }
+  \fi
+}
+
+
+%    \end{macrocode}
+% References
+
+% well formed numeric citations
+%    \begin{macrocode}
+%\RequirePackage{cite}
+%    \end{macrocode}
+% adds page references to 'normal' references
+%    \begin{macrocode}
+\RequirePackage[\languagename]{varioref}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Titlepage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\if@proceedings
+\else
+\renewcommand{\maketitle}{%
+  \def\and{\end{tabular}\hspace{4em}\linebreak[0]\vspace{1em}\begin{tabular}[t]{c}}
+  \thispagestyle{plain}
+  \begin{center}
+    \huge\@title\par
+  \end{center}
+  \vspace{1em}
+  \begin{center}
+    \begin{tabular}[t]{c}\@author\end{tabular}
+  \end{center}
+  \par
+}
+\fi
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Table of contents
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% (environment: book.cls)
+\if@proceedings
+        %% show the header content of the page in normal style
+        \renewcommand{\tableofcontents}{%
+                \if@twocolumn
+                        \@restonecoltrue
+                        \onecolumn
+                \else
+                        \@restonecolfalse
+                \fi
+                \chapter*{%
+                        \contentsname
+                        \markboth{\contentsname}{\contentsname}
+                }
+                \@starttoc{toc}
+                \if@restonecol
+                        \twocolumn
+                \fi
+        }
+        
+        \renewcommand{\listoffigures}{%
+                \if@twocolumn
+                        \@restonecoltrue
+                        \onecolumn
+                \else
+                        \@restonecolfalse
+                \fi
+                \chapter*{%
+                        \listfigurename
+                        \markboth{\listfigurename}{\listfigurename}
+                }
+                \@starttoc{lof}%
+                \if@restonecol
+                        \twocolumn
+                \fi
+        }
+
+        \renewcommand{\listoftables}{%
+                \if@twocolumn
+                        \@restonecoltrue
+                        \onecolumn
+                \else
+                        \@restonecolfalse
+                \fi
+                \chapter*{%
+                        \listtablename
+                        \markboth{\listtablename}{\listtablename}
+                }
+                \@starttoc{lot}%
+                \if@restonecol
+                        \twocolumn
+                \fi
+        }
+
+        %% Entry styles
+        \renewcommand{\@pnumwidth}{4em}
+
+        %% Chapters without numbering
+%       \renewcommand*{\thechapter}{}
+        
+%       \renewcommand*{\l@chapter}[2]{%
+%               \ifnum \c@tocdepth > \m@ne
+%                       \addpenalty{-\@highpenalty}
+%                       \vskip 1.0em \@plus \p@
+%                       \setlength\@tempdima{\z@}
+%                       \begingroup
+%                               \parindent \z@
+%                               \rightskip \@pnumwidth
+%                               \parfillskip -\@pnumwidth
+%                               \leavevmode \bfseries
+%                               \hskip -\leftskip
+%                               {#1}\nobreak\hfil \nobreak\hb@xt@\@pnumwidth{\hss #2}\par
+%                               \penalty\@highpenalty
+%                       \endgroup
+%               \fi
+%       }
+        
+        %% Sections without numbering
+%       \renewcommand*{\thesection}{}
+
+%       \renewcommand*{\l@section}[2]{%
+%               \ifnum \c@tocdepth > \z@
+%                       \vskip \z@ \@plus .2\p@
+%                       \setlength\@tempdima{\z@}
+%                       \begingroup
+%                               \parindent 1.5em
+%                               \rightskip \z@
+%                               \parfillskip \z@
+%                               \leavevmode \mdseries
+%                               {#1}\nobreak\hfil \nobreak\par
+%                       \endgroup
+%               \fi
+%       }
+
+        %% Subsections without numbering
+%       \renewcommand*{\thesubsection}{}
+%       \renewcommand*{\thesubsubsection}{}
+%       \renewcommand*{\theparagraph}{}
+%       \renewcommand*{\thesubparagraph}{}
+\fi
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Abstract
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\if@proceedings
+        \newenvironment{abstract}{}{}
+\else
+        \renewenvironment{abstract}{}{}
+\fi
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Footnotes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\renewcommand{\footnoterule}{}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Bibliography
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\bibliographystyle{plain}
+
+%% show the header content of the page in normal style
+\renewenvironment{thebibliography}[1]{%
+        \section*{\refname}
+        \markboth{\refname}{\refname}
+        \list{\@biblabel{\@arabic\c@enumiv}}{%
+                \settowidth\labelwidth{\@biblabel{#1}}
+                \leftmargin\labelwidth
+                \advance\leftmargin\labelsep
+                \@openbib@code
+                \usecounter{enumiv}
+                \let\p@enumiv\@empty
+                \renewcommand\theenumiv{\@arabic\c@enumiv}
+        }
+        \sloppy
+        \clubpenalty 4000
+        \@clubpenalty \clubpenalty
+        \widowpenalty 4000
+        \sfcode`\.\@m
+}{%
+        \def\@noitemerr{\@latex@warning{Empty `thebibliography' environment}}
+        \endlist
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Math mode
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage{amsmath}
+\RequirePackage{amssymb}
+\RequirePackage{amsfonts}
+\RequirePackage{bm}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Tables
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage{array}
+\RequirePackage{tabularx}
+\RequirePackage{longtable}
+\RequirePackage{hhline}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Graphics
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage{graphicx}
+\PassOptionsToPackage{hang, tight, FIGBOTCAP, TABBOTCAP}{subfigure}
+\providecommand{\subfigcapskip}{3\p@}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Color
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage{color}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Proceedings file
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% print special information into a separate file (*.prc)
+\if@independent
+\else
+        \AtEndDocument{%
+                \addtocontents{prc}{\protect\title{\@title}}
+%               \addtocontents{prc}{\protect\author{\@author}}
+                \addtocontents{prc}{\protect\event{\@eventtitle}}
+                \addtocontents{prc}{\protect\papernumber{\@papernumber}}
+                \addtocontents{prc}{\protect\file{\jobname.pdf}}
+                \if@filesw
+                        \expandafter\newwrite\csname tf@prc\endcsname
+                        \immediate\openout \csname tf@prc\endcsname \jobname.prc\relax
+                \fi
+        }
+\fi
+%    \end{macrocode}
+% \iffalse meta-comment
+%</class>
+% \fi^^A meta-comment
+% \subsection{The Examples and the Manual}
+% \label{sec:The-Examples-and-the-Manual}
+% \iffalse meta-comment
+%<*doc|manual|README>
+%<*example>
+% \fi^^A meta-comment
+%    \begin{macrocode}
+\documentclass[a4paper,pagesize]{scrbook}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{xcolor}
+\begin{document}
+test
+\end{document}
+%    \end{macrocode}
+%
+% \iffalse meta-comment
+%</example>
+% \fi^^A meta-comment
+%    \begin{macrocode}
+%<*!README>
+% Load standard LaTeX documentation class, passing all options to it
+% but use scrartcl instead of article. (From \texttt{scrdoc.dtx})
+\newcommand*{\savedLoadClass}{}
+\let\savedLoadClass=\LoadClass
+\renewcommand*{\LoadClass}[2][]{%
+  \begingroup
+    \edef\tempc{#2}\def\tempb{article}%
+    \ifx\tempc\tempb
+      \let\LoadClass\savedLoadClass
+      \def\tempc{scrartcl}%
+    \fi
+  \edef\tempc{%
+    \noexpand\endgroup\noexpand\savedLoadClass[{#1}]{\tempc}}%
+  \tempc}
+\newcommand*{\savedPassOptionsToClass}{}
+\let\savedPassOptionsToClass=\PassOptionsToClass
+\renewcommand*{\PassOptionsToClass}[2]{%
+  \begingroup
+    \edef\tempc{#2}\def\tempb{article}%
+    \ifx\tempc\tempb
+      \def\tempc{scrartcl}%
+    \fi
+  \edef\tempc{%
+    \noexpand\endgroup\noexpand\savedPassOptionsToClass{#1}{%
+      \tempc}}%
+  \tempc}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[a4paper,pagesize,10pt]{ltxdoc}
+\usepackage{ifpdf,ifxetex}
+% Use two columns at index
+\setcounter{IndexColumns}{2}
+\MacroTopsep=0pt
+\MacrocodeTopsep=3pt
+\setlength\MacroIndent{0pt}
+\makeatletter
+\DeclareRobustCommand\textoractual[2]{\ifpdf
+ \pdfliteral direct{/Span<</ActualText(#2)>>BDC}#1\pdfliteral direct{EMC}%
+ \else #1\fi}
+\def\theCodelineNo{\reset@font\sffamily\color{black!50}\scriptsize
+  \textoractual{\arabic{CodelineNo}\ }{}}% don't copy line numbers
+\makeatother
+\def\MacroFont{\ttfamily\small}
+\def\AltMacroFont{\ttfamily\footnotesize}
+\def\PrintMacroName#1{\strut\MacroFont\string #1\hskip15pt}
+
+\usepackage{hypdoc}
+
+\usepackage{fontspec}
+\usepackage[scale=MatchLowercase]{ebgaramond}
+\usepackage[scale=MatchLowercase]{sourcesanspro}
+\usepackage[scale=MatchLowercase]{sourcecodepro}
+\usepackage[english]{babel}
+%\usepackage{longtable,tabu}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\setkomafont{subtitle}{\usekomafont{title}\LARGE}
+\addtokomafont{disposition}{\rmfamily}
+\setkomafont{title}{\rmfamily\mdseries}
+\addtokomafont{subject}{\mdseries}
+\addtokomafont{disposition}{\mdseries}
+\addtokomafont{descriptionlabel}{\mdseries}
+\addtokomafont{captionlabel}{\mdseries}
+\renewcommand*\labelitemii{\normalfont\textendash}
+\setfootnoterule{4cc}
+
+\newcommand*{\File}{}\def\File{\texttt}
+\errorcontextlines=999
+\CodelineIndex
+\RecordChanges
+\EnableCrossrefs
+%<manual>\OnlyDescription
+\GetFileInfo{\jobname.ltx}
+\begin{document}
+\title{Class \File{hpitr}\footnote{This is file
+    version \fileversion{} of file \File{\filename}.}}
+\author{Tobias Pape\footnote{Tobias Pape \textless\protect\url{tobias.pape@hpi.de}\textgreater}}
+\date{\fileversion{} \filedate}
+\maketitle
+\begin{abstract}
+%</!README>
+
+Creation of title pages is something most authors should not have to do. 
+But reality is not perfect, so a lot of authors have to do it.  In 2009
+%<!README>KOMA started the title page project at \texttt{<http://www.komascript.de/titlepage>}
+%<README>KOMA started the title page project at <http://www.komascript.de/titlepage>
+to collect real title pages and implement them with a well defined
+interface.  So changing from one title page style to another would be very
+simple.  Nevertheless implementation of a new title page style may be still
+difficult.  But maybe the guys of the title page project would help you.  Just
+ask!
+%<*README>
+
+Note: To generate all files, you should simply call
+
+      pdftex -shell-escape hpitr.dtx
+
+If you are using MiKTeX you have to use
+
+      pdftex --enable-write18 hpitr.dtx
+
+to fully enable shell escapes which are also known as \write18 feature.
+
+All ltx files should be installed together with all pdf files at documentation
+folder. The sty file together with all def files should be installed at latex
+package folder.
+
+But maybe your distributpr already distributes a ready for installation
+package, so you do not need to create files and copy them yourself.
+%</README>
+%<*!README>
+\end{abstract}
+\DocInput{hpitr.dtx}
+\end{document}
+%</!README>
+%    \end{macrocode}
+% \iffalse meta-comment
+%</doc|manual|README>
+% \fi^^A meta-comment
+%
+% \Finale
+%
+\endinput
+
+%% Local Variables:
+%% TeX-master: t
+%% End:
