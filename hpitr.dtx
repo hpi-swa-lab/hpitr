@@ -1283,22 +1283,32 @@ test
 \KOMAoptions{pagesize,twocolumn=true,DIV=calc}
 \AtBeginDocument{\onecolumn}
 \usepackage{ifpdf,ifxetex}
-% Use two columns at index
+%    \end{macrocode}
+% Customize the display of our code:
+% \begin{itemize}
+% \item Use two columns at index
+% \item Outdent a bit
+% \item Make line numbers gray
+% \item Print all code in monospaced font
+% \end{itemize}
+%    \begin{macrocode}
 \setcounter{IndexColumns}{2}
 \MacroTopsep=0pt
 \MacrocodeTopsep=3pt
-\setlength\MacroIndent{50pt}
+\setlength\MacroIndent{0pt}
 \makeatletter
-\DeclareRobustCommand\textoractual[2]{\ifpdf
- \pdfliteral direct{/Span<</ActualText(#2)>>BDC}#1\pdfliteral direct{EMC}%
- \else #1\fi}
 \def\theCodelineNo{\reset@font\sffamily\color{black!50}\scriptsize
-  \textoractual{\arabic{CodelineNo}\ }{}}% don't copy line numbers
+  \arabic{CodelineNo}\ }
 \makeatother
 \def\MacroFont{\ttfamily\small}
 \def\AltMacroFont{\ttfamily\footnotesize}
 \def\PrintMacroName#1{\strut\MacroFont\string #1\hskip15pt}
 \raggedbottom
+%    \end{macrocode}
+% Packages we want for hyper-reference support, a tight table of contents,
+% fonts (EB~Garamond and the Adobe Source family), and finally a package for
+% parallel typesetting, among others.
+%    \begin{macrocode}
 \usepackage{hypdoc}
 \usepackage[tocflat,toctextentriesindented]{tocstyle}%
 \usetocstyle{nopagecolumn}
@@ -1307,10 +1317,14 @@ test
 \usepackage[scale=MatchLowercase]{ebgaramond}
 \usepackage[scale=MatchLowercase]{sourcesanspro}
 \usepackage[scale=MatchLowercase]{sourcecodepro}
-\usepackage[english]{babel}
+\usepackage{polyglossia}
 \usepackage{graphicx}
 \usepackage{xcolor}
 \usepackage{paracol}
+%    \end{macrocode}
+% We predominantly want to use the set serif font for all sectioning. We also
+% want a good text area.
+%    \begin{macrocode}
 \setkomafont{subtitle}{\usekomafont{title}\LARGE}
 \addtokomafont{disposition}{\rmfamily}
 \setkomafont{title}{\rmfamily\mdseries}
@@ -1322,9 +1336,46 @@ test
 \setfootnoterule{4cc}
 
 \recalctypearea
+%    \end{macrocode}
+% For debugging only
+%    \begin{macrocode}
 \usepackage{showframe}
-\newcommand*{\File}{}\def\File{\texttt}
 \errorcontextlines=999
+%    \end{macrocode}
+% Configure languages
+%    \begin{macrocode}
+\setmainlanguage[variant=usmax,ordinalmonthday=true]{english}
+\setotherlanguage[spelling=new,latesthyphen=true]{german}
+%    \end{macrocode}
+% A semantic macro for files and paths. (\emph{Note:} cannot be a |\let|, or
+% else |hypdoc| is upset.)
+%    \begin{macrocode}
+\newcommand*{\File}{}\def\File{\texttt}
+
+\newenvironment{eng}[1][]%
+  {\begin{leftcolumn*}[#1]\begin{english}\upshape}%
+  {\end{english}\end{leftcolumn*}}
+\newenvironment*{ger}%
+  {\begin{rightcolumn}\begin{german}\itshape}%
+  {\end{german}\end{rightcolumn}}
+
+\IndexPrologue{
+\begin{paracol}{2}[\section*{Index}%
+  \markboth{Index}{Index}]
+\begin{eng}
+  Numbers written in italic refer to the page where the corresponding entry is
+  described; numbers underlined refer to the code line of the definition;
+  numbers in roman refer to the code lines where the entry is used.
+\end{eng}\begin{ger}
+  Kursive Zahlen bezeichnen die Seite, auf welcher ein Eintrag beschrieben ist;
+  unterstrichene Zahlen bezeichnen die Quelltextzeile seine Definition;
+  nicht-ausgezeichnete Zahlen beziehen sich auf Quelltextzeilen, wo der Eintrag
+  benutzt wird.
+\end{ger}
+\end{paracol}
+}
+
+
 \CodelineIndex
 \RecordChanges
 \EnableCrossrefs
