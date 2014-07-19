@@ -242,6 +242,18 @@
 %
 % \tableofcontents
 %
+% \begin{paracol}{2}
+% \begin{eng}
+% \section{Introduction}
+% \label{sec:intro}
+% test
+% \end{eng}
+% \begin{ger}
+% \section{Einführung}
+% test
+% \end{ger}
+% \end{paracol}
+%
 % ^^A =========================================================================
 % ^^A =========================================================================
 % ^^A =========================================================================
@@ -1356,8 +1368,15 @@ test
   {\begin{leftcolumn*}[#1]\begin{english}\upshape}%
   {\end{english}\end{leftcolumn*}}
 \newenvironment*{ger}%
-  {\begin{rightcolumn}\begin{german}\itshape}%
-  {\end{german}\end{rightcolumn}}
+  {\begin{rightcolumn}
+   \edef\savedTocDepth{\arabic{tocdepth}}
+   \addtocontents{toc}{\protect\setcounter{tocdepth}{0}}
+   \begin{german}\itshape}%
+  {\end{german}%
+   \expandafter\expandafter\expandafter\expandafter\expandafter\expandafter%
+   \expandafter\expandafter\expandafter%
+   \addtocontents{toc}{\protect\setcounter{tocdepth}{\savedTocDepth}}%
+   \end{rightcolumn}}
 
 \IndexPrologue{
 \begin{paracol}{2}[\section*{Index}%
