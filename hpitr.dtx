@@ -1,4 +1,3 @@
-%% \CheckSum{0}
 % \iffalse meta-comment
 % ============================================================================
 % hpitr.dtx
@@ -35,6 +34,7 @@
 %   Right bracket \]     Circumflex    \^     Underscore    \_
 %   Grave accent  \`     Left brace    \{     Vertical bar  \|
 %   Right brace   \}     Tilde         \~}
+% \CheckSum{0}
 %
 % \iffalse meta-comment
 %<*dtx|ins>
@@ -241,6 +241,20 @@
 % ^^A =========================================================================
 %
 % \tableofcontents
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 %
 % \begin{paracol}{2}
 % \begin{eng}
@@ -252,8 +266,48 @@
 % \section{Einführung}
 % test
 % \end{ger}
+
+
+% \begin{eng}
+% \section{Microtypography}
+% \label{sec:intro}
+% test
+% \end{eng}
+% \begin{ger}
+% \section{Detailtypographie}
+% test
+% \end{ger}
 % \end{paracol}
 %
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 % ^^A =========================================================================
 % ^^A =========================================================================
 % ^^A =========================================================================
@@ -262,7 +316,7 @@
 %  \appendix
 %  \PrintChanges
 %  \PrintIndex
-%}
+% }
 %
 % \section{Implementation}
 % \label{sec:Implementation}
@@ -324,9 +378,11 @@ without this file.
   \file{hpitr-manual.ltx}{\from{hpitr.dtx}{doc,manual}}%
   \file{hpitr.ltx}{\from{hpitr.dtx}{doc}}%
   \nopreamble\nopostamble
+  \file{example-single.tex}{\from{hpitr.dtx}{example,single}}%
+  \file{example-singlea.tex}{\from{hpitr.dtx}{example,single,article}}%
+  \file{example-proceedings.tex}{\from{hpitr.dtx}{example,proceedings}}%
   \file{README.txt}{\from{hpitr.dtx}{README}}%
 }%
-
 %    \end{macrocode}
 % After file generation, wie use shell escapes (aka \verb|\write18| feature) to
 % create \File{hpitr-manual.pdf}, the manual, and \File{hpitr.pdf}, the full
@@ -364,6 +420,10 @@ without this file.
 \immediate\write18{xelatex -interaction=nonstopmode hpitr-manual.ltx}
 \immediate\write18{mkindex hpitr-manual}
 \immediate\write18{xelatex -interaction=nonstopmode hpitr-manual.ltx}
+
+\immediate\write18{xelatex -interaction=nonstopmode example-single.tex}
+\immediate\write18{xelatex -interaction=nonstopmode example-singlea.tex}
+\immediate\write18{xelatex -interaction=nonstopmode example-proceedings.tex}
 
 \ifToplevel{%
   \Msg{* \space\space done.}
@@ -428,319 +488,404 @@ without this file.
 %
 % \subsection{The Tech Report Class}
 %
+%
+% \subsubsection{Preparation}
+%
+%    \begin{macrocode}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Basic tools
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage{etoolbox}
+\RequirePackage{scrbase}[2013/12/19]
+
+
+%%
+%% Id and error
+%%
+\edef\TR@ClassName{\@currname}
+\def\TR@warn{\ClassWarning{\TR@ClassName}}
+\def\TR@info{\ClassInfo{\TR@ClassName}}
+\def\TR@error{\ClassError{\TR@ClassName}}
+\newcommand*\TR@fonterror{\TR@error{%
+    Old font commands are not to be used}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Conditional statements
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage{ifthen,ifdraft,ifxetex,ifluatex}
+
+%    \end{macrocode}
+% 
 % \subsubsection{Initialization}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %    \begin{macrocode}
 
-%% name of the base class
-\let\@BaseClass\@empty
-%% a part document?
-\newif\if@independent
-%% proceedings?
-\newif\if@proceedings
 
+\errorcontextlines=99
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Options
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% single paper
-\DeclareOption{single}{%
-        \def\@BaseClass{article}
-        \@independenttrue
-        \@proceedingsfalse
-}
-%% part of the proceedings
-\DeclareOption{inproceedings}{%
-        \def\@BaseClass{article}
-        \@independentfalse
-        \@proceedingsfalse
-}
-%% proceedings
-\DeclareOption{proceedings}{%
-        \def\@BaseClass{book}
-        \@independenttrue
-        \@proceedingstrue
+
+% reach into the gut of latex' kernel to push back global vars
+\newcommand*\@pushback@classoption[1]{%
+  \xdef\@classoptionslist{%
+    \ifx\@classoptionslist\@empty\else\@classoptionslist,\fi
+    #1}%
 }
 
 
-%% special paper size (University Potsdam)
-\newif\if@universitypaper \@universitypaperfalse
-\DeclareOption{17x24paper}{\@universitypapertrue}
+\newcommand*{\TR@NowButAtEndOfClass}{\AtEndOfClass}
+\AtEndOfClass{\let\TR@NowButAtEndOfClass\@firstofone}
+
+% from scrkbase
+
+\DefineFamily{hpitr}
+\def\TRFamily{\DefineFamilyMember{hpitr}}
+\TRFamily%
 
 
-%% show the page layout
-\newif\if@showlayout \@showlayoutfalse
-\DeclareOption{layout}{\@showlayouttrue}
+\newcommand*{\TRKey}[1][.\@currname.\@currext]{%
+  \DefineFamilyKey[#1]{hpitr}%
+}
+\newcommand*{\TRExecuteOptions}[1][.\@currname.\@currext]{%
+  \FamilyExecuteOptions[#1]{hpitr}%
+}
+\newcommand*{\TRoptions}{\FamilyOptions{hpitr}}
+\newcommand*{\AfterTRoptions}{}
+\let\AfterTRoptions\AtEndOfFamilyOptions
+\newcommand*{\TRoption}{\FamilyOption{hpitr}}
+
+\newcommand*{\TRnewif}{\TRFamily\FamilyBoolKey{hpitr}}
+\newcommand*{\TRsetif}{\FamilySetBool{hpitr}}
+\newcommand*{\TRnewnumc}{\TRFamily\FamilyNumericalKey{hpitr}}
+\newcommand*{\TRsetnumc}{\FamilySetNumerical{hpitr}}
+
+\newcommand*{\TRnewifStd}[1]{%
+  \newbool{TR@#1}
+  \TRnewif{#1}{TR@#1}}
+
+\newcommand*{\TR@curropt}{}
+\newcommand*{\TRStdOption}[3][]{%
+  \let\TR@curropt\CurrentOption
+  \DeclareOption{#2}{
+    #1%
+    \TRExecuteOptions{#3}}
+  \let\CurrentOption\TR@curropt
+}
+
+\providebool{@draft}
+\newbool{TR@fulldraft}
+\TRKey{draft}[true]{%
+  \TRsetif{draft}{@draft}{#1}%
+  \ifx\FamilyKeyState\FamilyKeyStateProcessed
+    \boolfalse{TR@fulldraft}
+  \else
+    \ifstr{#1}{full}{%
+      \booltrue{@draft}
+      \booltrue{TR@fulldraft}
+    }{}
+  \fi
+  \AfterTRoptions{
+    \ifthenelse{\boolean{@draft}}{
+      \@pushback@classoption{draft}
+      \ifthenelse{\not\boolean{TR@fulldraft}}{
+        \PassOptionsToPackage{draft=false}{scrlayer-scrpage}
+        \PassOptionsToPackage{final}{listings}
+        \PassOptionsToPackage{final}{graphics}
+      }{}
+    }{}
+  }
+}
+\TRStdOption{final}{draft=false}
+\TRStdOption{draft}{draft=true}
+
+
+%% name of the base class
+\providecommand*\TR@BaseClass{\@empty}
+
+%% proceedings?
+\newbool{TR@proceedings}
+\newbool{TR@chapters}
+\booltrue{TR@chapters}
+
+\TRKey{trtype}{
+  \TRsetnumc{trtype}{@tempa}{%
+    {singlearticle}{0},{article}{0},%
+    {singlereport}{1},{report}{1},%
+    {proceedings}{2},{collection}{2}%
+  }{#1}
+  \ifcase \@tempa\relax
+    \renewcommand*\TR@BaseClass{scrartcl}
+    \boolfalse{TR@proceedings}
+    \boolfalse{TR@chapters}
+  \or
+    \renewcommand*\TR@BaseClass{scrreprt}
+    \boolfalse{TR@proceedings}
+    \booltrue{TR@chapters}
+  \or
+    \renewcommand*\TR@BaseClass{scrbook}
+    \booltrue{TR@proceedings}
+    \booltrue{TR@chapters}
+  \fi
+}
+\TRStdOption{single}{trtype=singlereport}
+\TRStdOption{singlereport}{trtype=singlereport}
+\TRStdOption{singlearticle}{trtype=singlearticle}
+\TRStdOption{proceedings}{trtype=proceedings}
+
+% Deprecated
+\DeclareOption{inproceedings}{
+  \let\TR@curropt\CurrentOption
+  \begingroup
+  \TR@warn{%
+    You've used obsolete option `inproceedings'.\MessageBreak
+    Usage of this option indicates an old document that\MessageBreak
+    used `polze.cls'.\MessageBreak
+    \MessageBreak
+    I switch to `trtype=singlearticle' for you.
+  }
+  \endgroup
+  \TRExecuteOptions{trtype=singlearticle}%
+  \let\CurrentOption\TR@curropt
+}
+
+\TRnewifStd{todotools}
+\TRnewifStd{ctableok}
 
 
 %% execute the standard options
-\ExecuteOptions{single}
+\TRExecuteOptions{
+  trtype=singlereport,%
+}
 
-%% pass unknown options to the base class file
-\DeclareOption*{\PassOptionsToClass{\CurrentOption}{\@BaseClass}}
-
-%% process the options
-\ProcessOptions\relax
+\FamilyProcessOptions{hpitr}\relax
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Load base class file
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\LoadClass[a4paper, twoside, 12pt]{\@BaseClass}
+\LoadClass{\TR@BaseClass}
+
+
+%%
+%% early stuff
+%%
+\ifthenelse{\boolean{xetex} \or \boolean{luatex}}{}{%
+  \RequirePackage[utf8]{inputenc}
+}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Special paper size (University Potsdam)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\KOMAoption{paper}{17cm:24cm}
+\AtEndPreamble{\recalctypearea}
 
-\if@universitypaper
-        \setlength{\paperheight}{240mm}
-        \setlength{\paperwidth}{170mm}
-\fi
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Show the page layout
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\if@showlayout
-        \RequirePackage{layout}
-        \AtEndDocument{%
-                \clearpage
-                \layout
-        }
-\fi
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Environmental variables
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%% Title
-\renewcommand{\title}[1]{%
-        \gdef\@title{#1}
-        \ifpdf
-                \hypersetup{pdftitle = {#1}}
-        \fi
+\KOMAoptions{
+  twoside=true,
+  pagesize=auto,
+  twocolumn=false,
+  fontsize=10pt,
+  footinclude=false,
+  headinclude=true,
+  DIV=calc,
 }
-%% Author
-\renewcommand{\author}[1]{%
-        \gdef\@author{#1}
-        \ifpdf
-                \hypersetup{pdfauthor = {}}
-        \fi
-}
-%% Authors' names and affiliation
+
+
+%
+% Fixes
+%
+%
+\RequirePackage{fixltx2e}[2014/06/10]
+\RequirePackage{scrhack}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%% Title.
 %%
-%% This is done like in the IEEEtran.cls
-%% Thanks to Gerry Murray, Silvano Balemi, Jon Dixon, Peter N"uchter, Juergen von Hagen and Michael Shell
-\newcommand{\authorname}[1]{\let\\\newcr\normalfont\normalsize #1\texorpdfstring{\cr}{}}
-\newcommand{\authoraffiliation}[1]{\let\\\newcr\normalfont\footnotesize #1\texorpdfstring{\cr}{}}
+%% No actual title, only a titlepage page when in draft mode.
+%%
+%% However, we collect the information for the pdf and also for
+%% convenience.
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\KOMAoption{titlepage}{firstiscover}
+
+\apptocmd{\title}{%
+  \hypersetup{pdftitle={#1}}}
+{}{%
+  \TR@warn{Cannot patch \string\title to set pdftitle}}
+
+\apptocmd{\author}{%
+  \begingroup
+  \appto\pdfstringdefPreHook{%
+    \def\and{,\ \ignorespaces}%
+  }
+  \hypersetup{pdfauthor={#1}}
+  \endgroup}
+{}{%
+  \TR@warn{Cannot patch \string\author to set pdfauthor}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Titlepage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\ifthenelse{\boolean{@draft}}{
+  \AtBeginDocument{
+    \setkomafont{author}{\normalfont\normalsize}
+    \setkomafont{date}{\normalfont\normalsize}
+    \setkomafont{dedication}{\normalfont\normalsize}
+    \setkomafont{publishers}{\normalfont\normalsize}
+    \setkomafont{subtitle}{\normalfont\small}
+    \setkomafont{title}{\normalfont\normalsize}
+    \setkomafont{titlehead}{\normalfont\normalsize}
+  }
+  \pretocmd{\titlepage}{%
+    \let\center\flushright%
+    \let\endcenter\endflushright%
+    \let\huge\normalsize
+    \def\and{\unskip ,\ \ignorespaces}%
+  }{}{%
+    \TR@warn{Cannot patch \string\maketitle}}
+  \apptocmd{\endtitlepage}{%
+    \cleardoubleemptypage%
+    \setcounter{page}{5}%
+  }{}{%
+    \TR@warn{Cannot patch \string\maketitle}}
+}{%
+  \def\maketitle{\relax}
+}
+
+
+\ifthenelse{\boolean{TR@proceedings}}{
+%
+%
+%  Proceedings stuff.
+%
+
 %% Title of the event
-\newcommand{\event}[1]{%
-        \def\@eventtitle{#1}
-        \ifpdf
-                \hypersetup{pdfsubject = {#1}}
-        \fi
-}
-\def\@eventtitle{\@latex@warning{No \noexpand\event given}}
+  \newcommand{\event}[1]{%
+    \def\@eventtitle{#1}
+    \hypersetup{pdfsubject = {#1}}
+  }
+  \def\@eventtitle{%
+    \TR@warn{No \string\event\space given}
+    \global\cslet{@eventtitle}\@empty}
 %% Paper number
-\newcommand{\papernumber}[1]{%
-        \def\@papernumber{#1}
-        \ifx\@papernumber\empty
-        \else
-                \renewcommand*{\thepage}{\@papernumber-\arabic{page}}
-        \fi
+  \newcommand{\papernumber}[1]{%
+    \def\@papernumber{#1}
+    \ifx\@papernumber\empty
+    \else
+      \renewcommand*{\thepage}{\@papernumber-\arabic{page}}
+    \fi
+  }
+  \let\@papernumber\@empty
 }
-\let\@papernumber\@empty
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Save and restore font attributes
-%% 
-%% This is done like in the IEEEtran.cls
-%% Thanks to Gerry Murray, Silvano Balemi, Jon Dixon, Peter N"uchter, Juergen von Hagen and Michael Shell
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\gdef\@SAVESTATEfontsize{\f@size}
-\gdef\@SAVESTATEfontbaselineskip{\f@baselineskip}
-\gdef\@SAVESTATEfontencoding{\f@encoding}
-\gdef\@SAVESTATEfontfamily{\f@family}
-\gdef\@SAVESTATEfontseries{\f@series}
-\gdef\@SAVESTATEfontshape{\f@shape}
-
-%% Save the current font attributes
-\def\@curfontsave{%
-        \texorpdfstring{%
-                \global\let\@SAVESTATEfontsize\f@size%
-                \global\let\@SAVESTATEfontbaselineskip\f@baselineskip%
-                \global\let\@SAVESTATEfontencoding\f@encoding%
-                \global\let\@SAVESTATEfontfamily\f@family%
-                \global\let\@SAVESTATEfontseries\f@series%
-                \global\let\@SAVESTATEfontshape\f@shape%
-        }{}%
-}
-
-%% Restores the saved font attributes
-\def\@curfontrestore{%
-        \texorpdfstring{%
-                \fontsize{\@SAVESTATEfontsize}{\@SAVESTATEfontbaselineskip}%
-                \fontencoding{\@SAVESTATEfontencoding}%
-                \fontfamily{\@SAVESTATEfontfamily}%
-                \fontseries{\@SAVESTATEfontseries}%
-                \fontshape{\@SAVESTATEfontshape}%
-                \selectfont
-        }{}%
-}
-
-%% Save the current font attributes before linebreak and restore it afterwards
-\newcommand{\newcr}{\@curfontsave\cr\@curfontrestore}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Conditional statements
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\RequirePackage{ifthen}
-\RequirePackage{ifpdf}
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Language
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \RequirePackage{babel}
-\let\@languagetag\@empty
-%% Afrikaans
-\ifthenelse{\equal{\languagename}{afrikaans}}{\def\@languagetag{af}}{}
-%% Bahasa
-\ifthenelse{%
-        \equal{\languagename}{bahasa} \or%
-        \equal{\languagename}{indonesian} \or%
-        \equal{\languagename}{indon} \or%
-        \equal{\languagename}{bahasai} \or%
-        \equal{\languagename}{bahasam} \or%
-        \equal{\languagename}{malay} \or%
-        \equal{\languagename}{meyalu}
-}{%
-        \def\@languagetag{id}
-}{}
-%% Basque
-\ifthenelse{\equal{\languagename}{basque}}{\def\@languagetag{eu}}{}
-%% Breton
-\ifthenelse{\equal{\languagename}{breton}}{\def\@languagetag{br}}{}
-%% Bulgarian
-\ifthenelse{\equal{\languagename}{bulgarian}}{\def\@languagetag{bg}}{}
-%% Catalan
-\ifthenelse{\equal{\languagename}{catalan}}{\def\@languagetag{ca}}{}
-%% Croatian
-\ifthenelse{\equal{\languagename}{croatian}}{\def\@languagetag{hr}}{}
-%% Czech
-\ifthenelse{\equal{\languagename}{czech}}{\def\@languagetag{cs}}{}
-%% Danish
-\ifthenelse{\equal{\languagename}{danish}}{\def\@languagetag{da}}{}
-%% Dutch
-\ifthenelse{\equal{\languagename}{dutch}}{\def\@languagetag{nl}}{}
-%% English
-\ifthenelse{%
-        \equal{\languagename}{english} \or%
-        \equal{\languagename}{USenglish} \or%
-        \equal{\languagename}{american} \or%
-        \equal{\languagename}{UKenglish} \or%
-        \equal{\languagename}{british} \or%
-        \equal{\languagename}{canadian} \or%
-        \equal{\languagename}{australian} \or%
-        \equal{\languagename}{newzealand}
-}{%
-        \def\@languagetag{en}
-}{}
-%% Esperanto
-\ifthenelse{\equal{\languagename}{esperanto}}{\def\@languagetag{eo}}{}
-%% Estonian
-\ifthenelse{\equal{\languagename}{estonian}}{\def\@languagetag{et}}{}
-%% Finnish
-\ifthenelse{\equal{\languagename}{finnish}}{\def\@languagetag{fi}}{}
-%% French
-\ifthenelse{%
-        \equal{\languagename}{french} \or%
-        \equal{\languagename}{francais} \or%
-        \equal{\languagename}{canadien} \or%
-        \equal{\languagename}{acadian}
-}{%
-        \def\@languagetag{fr}
-}{}
-%% Galician
-\ifthenelse{\equal{\languagename}{galician}}{\def\@languagetag{gl}}{}
-%% German
-\ifthenelse{%
-        \equal{\languagename}{german} \or%
-        \equal{\languagename}{germanb} \or%
-        \equal{\languagename}{ngerman} \or%
-        \equal{\languagename}{austrian} \or%
-        \equal{\languagename}{naustrian}
-}{%
-        \def\@languagetag{de}
-}{}
-%% Greek
-\ifthenelse{%
-        \equal{\languagename}{greek} \or%
-        \equal{\languagename}{polutonikogreek}
-}{%
-        \def\@languagetag{el}
-}{}
-%% Hebrew
-\ifthenelse{\equal{\languagename}{hebrew}}{\def\@languagetag{he}}{}
-%% Hungarian
-\ifthenelse{%
-        \equal{\languagename}{magyar} \or%
-        \equal{\languagename}{hungarian}
-}{%
-        \def\@languagetag{hu}
-}{}
-%% Icelandic
-\ifthenelse{\equal{\languagename}{icelandic}}{\def\@languagetag{is}}{}
-%% Interlingua
-\ifthenelse{\equal{\languagename}{interlingua}}{\def\@languagetag{ia}}{}
-%% Irish Gaelic
-\ifthenelse{\equal{\languagename}{irish}}{\def\@languagetag{ga}}{}
-%% Italian
-\ifthenelse{\equal{\languagename}{italian}}{\def\@languagetag{it}}{}
-%% Latin
-\ifthenelse{\equal{\languagename}{latin}}{\def\@languagetag{la}}{}
-%% North Sami
-\ifthenelse{\equal{\languagename}{samin}}{\def\@languagetag{se}}{}
-%% Norwegian
-\ifthenelse{\equal{\languagename}{norsk}}{\def\@languagetag{no}}{}
-%% Norwegian Nynorsk
-\ifthenelse{\equal{\languagename}{nynorsk}}{\def\@languagetag{nn}}{}
-%% Polish
-\ifthenelse{\equal{\languagename}{polish}}{\def\@languagetag{pl}}{}
-%% Portuguese
-\ifthenelse{%
-        \equal{\languagename}{portuges} \or%
-        \equal{\languagename}{portuguese} \or%
-        \equal{\languagename}{brazilian} \or%
-        \equal{\languagename}{brazil}
-}{%
-        \def\@languagetag{pt}
-}{}
-%% Romanian
-\ifthenelse{\equal{\languagename}{romanian}}{\def\@languagetag{ro}}{}
-%% Russian
-\ifthenelse{\equal{\languagename}{russian}}{\def\@languagetag{ru}}{}
-%% Scottish Gaelic
-\ifthenelse{\equal{\languagename}{scottish}}{\def\@languagetag{gd}}{}
+\newcommand*\TR@lang{}\let\TR@lang\@empty
 
+% extract ISO 639-2 code from babel language name
+{
+  \def\@l#1{\equal{\languagename}{#1}}
+  \def\@L#1{\gdef\TR@lang{#1}}
+\ifthenelse{\@l{afrikaans}}{\@L{af}}{}
+\ifthenelse{\@l{bahasa}\OR\@l{indonesian}\OR\@l{indon}\OR%
+  \@l{bahasai}\OR\@l{bahasam}\OR\@l{malay}\OR\@l{meyalu}}{\@L{id}}{}
+\ifthenelse{\@l{basque}}{\@L{eu}}{}
+\ifthenelse{\@l{breton}}{\@L{br}}{}
+\ifthenelse{\@l{bulgarian}}{\@L{bg}}{}
+\ifthenelse{\@l{catalan}}{\@L{ca}}{}
+\ifthenelse{\@l{croatian}}{\@L{hr}}{}
+\ifthenelse{\@l{czech}}{\@L{cs}}{}
+\ifthenelse{\@l{danish}}{\@L{da}}{}
+\ifthenelse{\@l{dutch}}{\@L{nl}}{}
+\ifthenelse{\@l{english}\OR\@l{USenglish}\OR\@l{american}\OR%
+  \@l{UKenglish}\OR\@l{british}\OR\@l{canadian}\OR%
+  \@l{australian}\OR\@l{newzealand}}{\@L{en}}{}
+\ifthenelse{\@l{esperanto}}{\@L{eo}}{}
+\ifthenelse{\@l{estonian}}{\@L{et}}{}
+\ifthenelse{\@l{finnish}}{\@L{fi}}{}
+\ifthenelse{%
+  \@l{french}\OR\@l{francais}\OR\@l{canadien}\OR\@l{acadian}}{\@L{fr}}{}
+\ifthenelse{\@l{galician}}{\@L{gl}}{}
+\ifthenelse{\@l{german}\OR\@l{germanb}\OR\@l{ngerman}\OR%
+  \@l{ngermanb}\OR\@l{austrian}\OR\@l{naustrian}}{\@L{de}}{}
+\ifthenelse{\@l{greek}\OR\@l{polutonikogreek}}{\@L{el}}{}
+\ifthenelse{\@l{hebrew}}{\@L{he}}{}
+\ifthenelse{\@l{magyar}\OR\@l{hungarian}}{\@L{hu}}{}
+\ifthenelse{\@l{icelandic}}{\@L{is}}{}
+\ifthenelse{\@l{interlingua}}{\@L{ia}}{}
+\ifthenelse{\@l{irish}}{\@L{ga}}{}
+\ifthenelse{\@l{italian}}{\@L{it}}{}
+\ifthenelse{\@l{latin}}{\@L{la}}{}
+\ifthenelse{\@l{samin}}{\@L{se}}{}
+\ifthenelse{\@l{norsk}}{\@L{no}}{}
+\ifthenelse{\@l{nynorsk}}{\@L{nn}}{}
+\ifthenelse{\@l{polish}}{\@L{pl}}{}
+\ifthenelse{%
+  \@l{portuges}\OR\@l{portuguese}\OR\@l{brazilian}\OR\@l{brazil}}{\@L{pt}}{}
+\ifthenelse{\@l{romanian}}{\@L{ro}}{}
+\ifthenelse{\@l{russian}}{\@L{ru}}{}
+\ifthenelse{\@l{scottish}}{\@L{gd}}{}
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Fonts
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+
+\RequirePackage[final,babel=true]{microtype}[2013/05/23]
+%
+% engine-dependent, eg, encoding, loading.
+%
 \RequirePackage[T1]{fontenc}
-\RequirePackage{lmodern}
+\ifthenelse{\boolean{luatex} \or \boolean{xetex}}{%
+  \RequirePackage{fontspec}
+}{}
+
+% math font: euler
+\RequirePackage[euler-digits,T1]{eulervm}
+\let\mathbf\mathbold
+\ifthenelse{\boolean{luatex} \or \boolean{xetex}}{%
+  \RequirePackage[scale=MatchLowercase]{sourcecodepro}
+  \RequirePackage[scale=MatchLowercase]{sourcesanspro}
+  \defaultfontfeatures{Scale=MatchLowercase,Ligatures={Common,TeX}}
+  \setmainfont[ExternalLocation,
+      Numbers={Proportional,OldStyle},
+      UprightFont= *-regular,
+      BoldFont=*-bold,
+      ItalicFont=*-italic,
+      BoldItalicFont=*-bolditalic]{texgyrepagella}
+}{
+  \RequirePackage[scaled=.9]{DejaVuSansMono}
+  \RequirePackage[osf,sc]{mathpazo} % Palatino with real small caps and old style figures
+}
+\linespread{1.05} % a bit more for Palatino
+
+\ifthenelse{\boolean{xetex}}{
+  \microtypesetup{stretch=9,shrink=15,step=3}
+}{
+  \ifthenelse{\boolean{luatex}}{
+    \microtypesetup{stretch=9,shrink=15,step=3,tracking=smallcaps}
+  }{%
+    \microtypesetup{stretch=9,shrink=15,step=3,tracking=smallcaps,letterspace=75}
+  }
+}
+
+\addtokomafont{disposition}{\rmfamily}
+\setkomafont{title}{\rmfamily\mdseries}
+\addtokomafont{descriptionlabel}{\rmfamily}
+\renewcommand*\labelitemii{\normalfont\textendash}
+\setfootnoterule{4cc}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -749,118 +894,27 @@ without this file.
 
 \RequirePackage{textcomp}
 \RequirePackage{mathcomp}
+\RequirePackage{relsize}
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Borders
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%% minimum border sizes
-\newlength{\min@leftsidemargin}
-\newlength{\min@rightsidemargin}
-
-\setlength{\min@leftsidemargin}{25mm}
-\setlength{\min@rightsidemargin}{20mm}
-
-%% default reference point
-\setlength{\hoffset}{\z@}
-\setlength{\voffset}{\z@}
-
-%% horizontal setup
-\newlength{\tmp@width}
-\setlength{\tmp@width}{\paperwidth}
-
-%% ----------------------------------------------------------------------------
-%% 1) use a predefined text width and set the than the border width
-%% 2) if the border to small after step 1) set the border width to its minimum
-%%    and calculate the textwidth afterwards
-%% ----------------------------------------------------------------------------
-
-%% define the text width
-\ifcase \@ptsize\relax
-        \setlength{\textwidth}{0.65\paperwidth}                         % font size 10pt
-\or
-        \setlength{\textwidth}{0.72\paperwidth}                         % font size 11pt
-\or
-        \setlength{\textwidth}{0.78\paperwidth}                         % font size 12pt
-\fi
-
-\addtolength{\tmp@width}{-\textwidth}
-
-%% define left and right border
-\setlength{\oddsidemargin}{.55\tmp@width}
-\if@twoside
-        \setlength{\evensidemargin}{.45\tmp@width}
-\else
-        \setlength{\evensidemargin}{\z@}
-\fi
-
-%% check the minimum border size
-\ifthenelse{\lengthtest{\oddsidemargin < \min@leftsidemargin}}%
-{%
-        %% set the minimum border size
-        \setlength{\oddsidemargin}{\min@leftsidemargin}
-        \if@twoside
-                \setlength{\evensidemargin}{\min@rightsidemargin}
-        \fi
-        %% calculate the resulting text width
-        \setlength{\textwidth}{\paperwidth}
-        \addtolength{\textwidth}{-\oddsidemargin}
-        \addtolength{\textwidth}{-\min@rightsidemargin}
+%
+% microtypesetup
+%
+\ifthenelse{\boolean{xetex}}{%
+  \let\textls\undefined
+  \DeclareRobustCommand{\textls}[2][80]{%
+    {{\addfontfeature{LetterSpace=\the\numexpr#1/10\relax}#2}}}
 }{}
-
-\setlength{\marginparwidth}{\z@}
-\setlength{\marginparsep}{\z@}
-
-
-%% vertical setup
-\newlength{\tmp@height}
-\setlength{\tmp@height}{\paperheight}
-
-%% header
-\setlength{\headheight}{2\baselineskip}                                 % 2 lines
-\setlength{\headsep}{2\baselineskip}
-
-\addtolength{\tmp@height}{-\headheight}
-\addtolength{\tmp@height}{-\headsep}
-
-%% footer
-\setlength{\footskip}{3\baselineskip}
-
-\addtolength{\tmp@height}{-\footskip}
-
-%% preserve top border
-\addtolength{\tmp@height}{-0.06\paperheight}
-
-%% keep the \topskip in mind
-\addtolength{\tmp@height}{-\topskip}
-
-%% calculate the possible text lines
-\setlength{\textheight}{\topskip}
-\whiledo{\lengthtest{\tmp@height > \baselineskip}}%
-{
-        \addtolength{\tmp@height}{-\baselineskip}
-        \addtolength{\textheight}{\baselineskip}
+\ifthenelse{\boolean{xetex} \or \boolean{luatex}}{}{%
+  \microtypesetup{stretch=9,shrink=15,step=3,tracking=smallcaps,letterspace=75}
 }
-\ifthenelse{\lengthtest{\tmp@height = \baselineskip}}{\addtolength{\textheight}{\baselineskip}}
-
-%% set the top border
-\setlength{\tmp@height}{\paperheight}
-\addtolength{\tmp@height}{-\headheight}
-\addtolength{\tmp@height}{-\headsep}
-\addtolength{\tmp@height}{-\textheight}
-\addtolength{\tmp@height}{-\footskip}
-\setlength{\topmargin}{0.5\tmp@height}
-
-\setlength{\marginparpush}{\z@}
 
 
-%% reference point adjustment
-\addtolength{\oddsidemargin}{-1in}
-\addtolength{\evensidemargin}{-1in}
-\addtolength{\topmargin}{-1in}
-
-
+%%%
+%%% Details
+%%%
+\KOMAoptions{
+  headings=big
+}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Page breaks
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -870,65 +924,44 @@ without this file.
 
 %% avoid widows (Hurenkinder) and orphans (Schusterjungen)
 \clubpenalty = \@M
-\widowpenalty = \@M 
+\widowpenalty = \@M
+
+\setlength{\textfloatsep}{2\baselineskip}
+\setlength{\floatsep}{\baselineskip}
+\setlength{\intextsep}{2\baselineskip}
+
+\frenchspacing
+\raggedbottom
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Headers and footers
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\RequirePackage{fancyhdr}
-%% Fancy style
-\pagestyle{fancy}
-\fancyhf{}
-\fancyhead[LE]{\leftmark}
-\fancyhead[RO]{\rightmark}
-\renewcommand{\headrulewidth}{.3\p@}
-\if@independent
-        \fancyfoot[LE,RO]{\thepage}    
-        \fancyfoot[RE,LO]{\@eventtitle}
-        \renewcommand{\footrulewidth}{.3\p@}
-\else
-        \renewcommand{\footrulewidth}{\z@}
-\fi
-%% Plain style
-\fancypagestyle{plain}{%
-        \fancyhf{}
-        \renewcommand{\headrulewidth}{\z@}
-        \if@independent
-                \fancyfoot[LE,RO]{\thepage}    
-                \fancyfoot[RE,LO]{\@eventtitle}  
-                \renewcommand{\footrulewidth}{.3\p@}
-        \else
-                \renewcommand{\footrulewidth}{\z@}
-        \fi
+\KOMAoptions{
+  headsepline=false,
+  footsepline=false,
 }
-%% Empty style
-\fancypagestyle{empty}{%
-        \fancyhf{}
-        \renewcommand{\headrulewidth}{\z@}
-        \renewcommand{\footrulewidth}{\z@}
+\RequirePackage{scrlayer-scrpage}
+\pagestyle{scrheadings}
+
+\ifthenelse{\boolean{TR@chapters}}{
+  \renewcommand*\chapterpagestyle{plain.scrheadings}
+
+  \automark[chapter]{chapter}
+  \automark*[section]{}
+}{
+  \lehead{\@title}
+  \automark*[section]{}
 }
-%% Header content
-\if@proceedings
-        \renewcommand{\chaptermark}[1]{\markboth{\thechapter\quad #1}{}}
-        \renewcommand{\sectionmark}[1]{\markright{\thesection\quad #1}}
-\else
-        \renewcommand{\sectionmark}[1]{\markboth{\@title}{\thesection\quad #1}}
-        \renewcommand{\subsectionmark}[1]{}
-\fi
 
+\lefoot{\thepage}
+\rofoot{\thepage}
+\ifthenelse{\boolean{TR@proceedings}}{
+  \refoot[\@eventtitle]{\@eventtitle}
+  \lofoot[\@eventtitle]{\@eventtitle}
+}{}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% include PDF Documents
-%% with more than 1 page
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\if@proceedings
-        \RequirePackage{pdfpages}
-        \pdfinclusioncopyfonts = 1
-        \includepdfset{pagecommand = {\thispagestyle{plain}}}
-\fi
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -936,49 +969,34 @@ without this file.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \RequirePackage[hyphens]{url}
-\AtEndOfClass{\RequirePackage[bookmarks, hyperfootnotes, final]{hyperref}}
-%% PDF settings
+\AtEndOfClass{%
+  \RequirePackage[%
+    final,%
+    unicode=true,%
+    plainpages=false,%
+    pdfpagelabels=true,%
+    ]{hyperref}
+  \RequirePackage{hyperxmp}
+}
 \AtBeginDocument{%
-  \ifpdf
   \hypersetup{%
-    colorlinks = false,                                                             %% Colors the text of links and anchors.
-    pdfborder = 0 0 0,                                                              %% The style of box around links; (0, 0, 1) defaults to a box with lines of 1pt thickness,
-    %% but the colorlinks option resets it to produce no border.
-    bookmarksopenlevel = 1,                                                         %% level (\maxdimen) to which bookmarks are open
-    bookmarksnumbered = true,                                               %% If Acrobat bookmarks are requested, include section numbers.
-    hypertexnames = true,                                                   %% use guessable names for links
-    pdfkeywords = {},                                                                       %% Sets the document information Keywords field
-    pdfcreator = {},                                                                        %% Sets the document information Creator field
-    pdfproducer = {},                                                                       %% Sets the document information Producer field
-    pdflang = {\@languagetag},                                              %% PDF language identifier (RFC 3066)
-    pdfdisplaydoctitle = false,                                     %% display document title instead of file name in title bar
-    pdfpagemode = UseOutlines,                                              %% Determines how the file is opening in Acrobat; the possibilities are UseNone, UseThumbs (show thumbnails),
-    %% UseOutlines (show bookmarks), FullScreen, UseOC (PDF 1.5), and UseAttachments (PDF 1.6). If no mode
-    %% is explicitly chosen, but the bookmarks option is set, UseOutlines is used.
-    pdfview  = FitV,                                                                        %% Sets the default PDF view for each link
-    %% Fit   ... Fits the page to the window.
-    %% FitH  ... Fits the width of the page to the window.
-    %% FitV  ... Fits the height of the page to the window.
-    %% FitR  ... Fits the rectangle specified by the four coordinates (left, bottom, right, top) to the window.
-    %% FitB  ... Fits the page bounding box to the window.
-    %% FitBH ... Fits the width of the page bounding box to the window.
-    %% FitBV ... Fits the height of the page bounding box to the window.
-    pdfstartpage = 1,                                                                       %% Determines on which page the PDF file is opened.
-    pdfstartview = Fit,                                                             %% Set the startup page view (see 'pdfview')
-    pdfdirection = L2R,                                                             %% direction setting (an empty value disables the option)
-    %% valid values are L2R (Left to Right) and R2L (Right to Left)
-    pdfduplex = DuplexFlipLongEdge,                                 %% paper handling option for print dialog (an empty value disables the option)
-    %% valid values are Simplex, DuplexFlipShortEdge and DuplexFlipLongEdge
-    pdfnonfullscreenpagemode = UseOutlines,         %% page mode setting on exiting full-screen mode
-    pdfpagelayout = OneColumn                                               %% set layout of PDF pages
-    %% SinglePage     ... Displays a single page; advancing flips the page
-    %% OneColumn      ... Displays the document in one column; continuous scrolling.
-    %% TwoColumnLeft  ... Displays the document in two columns, odd-numbered pages to the left.
-    %% TwoColumnRight ... Displays the document in two columns, odd-numbered pages to the right.
-    %% TwoPageLeft    ... Displays two pages, odd-numbered pages to the left (since PDF 1.5).
-    %% TwoPageRight   ... Displays two pages, odd-numbered pages to the right (since PDF 1.5).
+    breaklinks=true,
+    colorlinks = true,
+    linkcolor=MidnightBlue,%
+    citecolor=MidnightBlue,%
+    urlcolor=MidnightBlue,%
+    %pdfborder = 0 0 0,
+    bookmarksopenlevel = 1,
+    bookmarksnumbered = true,
+    pdfkeywords = {},
+    pdfcreator = {HPI},
+    pdfcopyright = {Copyright (c) \the\year, HPI},
+    pdfmetalang = {en},
+    pdfproducer = {\TR@ClassName - Technical Reports at the HPI},
+    pdflang = {\TR@lang},
+    pdfdisplaydoctitle = false,
+    pdfpagemode = UseOutlines,
   }
-  \fi
 }
 
 
@@ -987,187 +1005,76 @@ without this file.
 
 % well formed numeric citations
 %    \begin{macrocode}
+
 %\RequirePackage{cite}
+
 %    \end{macrocode}
 % adds page references to 'normal' references
 %    \begin{macrocode}
-\RequirePackage[\languagename]{varioref}
+
+\PassOptionsToPackage{\languagename}{varioref}
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Titlepage
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\if@proceedings
-\else
-\renewcommand{\maketitle}{%
-  \def\and{\end{tabular}\hspace{4em}\linebreak[0]\vspace{1em}\begin{tabular}[t]{c}}
-  \thispagestyle{plain}
-  \begin{center}
-    \huge\@title\par
-  \end{center}
-  \vspace{1em}
-  \begin{center}
-    \begin{tabular}[t]{c}\@author\end{tabular}
-  \end{center}
-  \par
-}
-\fi
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%
 %% Table of contents
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%% no protrusion there
+%% starts on own page.
 
-%% (environment: book.cls)
-\if@proceedings
-        %% show the header content of the page in normal style
-        \renewcommand{\tableofcontents}{%
-                \if@twocolumn
-                        \@restonecoltrue
-                        \onecolumn
-                \else
-                        \@restonecolfalse
-                \fi
-                \chapter*{%
-                        \contentsname
-                        \markboth{\contentsname}{\contentsname}
-                }
-                \@starttoc{toc}
-                \if@restonecol
-                        \twocolumn
-                \fi
-        }
-        
-        \renewcommand{\listoffigures}{%
-                \if@twocolumn
-                        \@restonecoltrue
-                        \onecolumn
-                \else
-                        \@restonecolfalse
-                \fi
-                \chapter*{%
-                        \listfigurename
-                        \markboth{\listfigurename}{\listfigurename}
-                }
-                \@starttoc{lof}%
-                \if@restonecol
-                        \twocolumn
-                \fi
-        }
+\RequirePackage{tocbasic}
+\setcounter{tocdepth}{1}
+\tocbasicautomode
+\setuptoc{toc}{noprotrusion}
 
-        \renewcommand{\listoftables}{%
-                \if@twocolumn
-                        \@restonecoltrue
-                        \onecolumn
-                \else
-                        \@restonecolfalse
-                \fi
-                \chapter*{%
-                        \listtablename
-                        \markboth{\listtablename}{\listtablename}
-                }
-                \@starttoc{lot}%
-                \if@restonecol
-                        \twocolumn
-                \fi
-        }
-
-        %% Entry styles
-        \renewcommand{\@pnumwidth}{4em}
-
-        %% Chapters without numbering
-%       \renewcommand*{\thechapter}{}
-        
-%       \renewcommand*{\l@chapter}[2]{%
-%               \ifnum \c@tocdepth > \m@ne
-%                       \addpenalty{-\@highpenalty}
-%                       \vskip 1.0em \@plus \p@
-%                       \setlength\@tempdima{\z@}
-%                       \begingroup
-%                               \parindent \z@
-%                               \rightskip \@pnumwidth
-%                               \parfillskip -\@pnumwidth
-%                               \leavevmode \bfseries
-%                               \hskip -\leftskip
-%                               {#1}\nobreak\hfil \nobreak\hb@xt@\@pnumwidth{\hss #2}\par
-%                               \penalty\@highpenalty
-%                       \endgroup
-%               \fi
-%       }
-        
-        %% Sections without numbering
-%       \renewcommand*{\thesection}{}
-
-%       \renewcommand*{\l@section}[2]{%
-%               \ifnum \c@tocdepth > \z@
-%                       \vskip \z@ \@plus .2\p@
-%                       \setlength\@tempdima{\z@}
-%                       \begingroup
-%                               \parindent 1.5em
-%                               \rightskip \z@
-%                               \parfillskip \z@
-%                               \leavevmode \mdseries
-%                               {#1}\nobreak\hfil \nobreak\par
-%                       \endgroup
-%               \fi
-%       }
-
-        %% Subsections without numbering
-%       \renewcommand*{\thesubsection}{}
-%       \renewcommand*{\thesubsubsection}{}
-%       \renewcommand*{\theparagraph}{}
-%       \renewcommand*{\thesubparagraph}{}
-\fi
+\AfterPackage{listings}{
+  \setuptoc{lol}{noprotrusion}
+}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Abstract
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\if@proceedings
-        \newenvironment{abstract}{}{}
-\else
-        \renewenvironment{abstract}{}{}
-\fi
+\ifthenelse{\boolean{TR@proceedings}}{%
+  \def\abstract{\TR@error{Proceedings should not have \MessageBreak
+      abstracts. Please remove it.}}
+  \let\endabstract\relax
+}{}
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Footnotes
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\renewcommand{\footnoterule}{}
-
+\renewenvironment{abstract}{%
+  \thispagestyle{plain.scrheadings}
+  \null\vfil\leavevmode%
+  \noindent%
+  \ignorespaces
+}{%
+  \par\vfil%
+  \ifthenelse{\boolean{TR@proceedings}}{%
+    \cleardoubleemptypage%
+  }{
+    \clearpage%
+  }
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Bibliography
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\bibliographystyle{plain}
 
-%% show the header content of the page in normal style
-\renewenvironment{thebibliography}[1]{%
-        \section*{\refname}
-        \markboth{\refname}{\refname}
-        \list{\@biblabel{\@arabic\c@enumiv}}{%
-                \settowidth\labelwidth{\@biblabel{#1}}
-                \leftmargin\labelwidth
-                \advance\leftmargin\labelsep
-                \@openbib@code
-                \usecounter{enumiv}
-                \let\p@enumiv\@empty
-                \renewcommand\theenumiv{\@arabic\c@enumiv}
-        }
-        \sloppy
-        \clubpenalty 4000
-        \@clubpenalty \clubpenalty
-        \widowpenalty 4000
-        \sfcode`\.\@m
-}{%
-        \def\@noitemerr{\@latex@warning{Empty `thebibliography' environment}}
-        \endlist
+\PassOptionsToPackage{style=numeric}{biblatex}
+\AtEndPreamble{
+  \@ifpackageloaded{biblatex}{}{
+% normal bibtex
+    \bibliographystyle{plain}
+  }
 }
 
+\ifthenelse{\boolean{TR@chapters}}{%
+  \defcaptionname{german,ngerman}{\bibname}{Literatur}
+  \defcaptionname{english,USenglish,american,british}{\bibname}{References}
+}{}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Math mode
@@ -1175,108 +1082,693 @@ without this file.
 
 \RequirePackage{amsmath}
 \RequirePackage{amssymb}
-\RequirePackage{amsfonts}
-\RequirePackage{bm}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Tables
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\RequirePackage{array}
 \RequirePackage{tabularx}
 \RequirePackage{longtable}
-\RequirePackage{hhline}
-
+\RequirePackage{booktabs}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Graphics
+%% Graphics and Floats
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \RequirePackage{graphicx}
-\PassOptionsToPackage{hang, tight, FIGBOTCAP, TABBOTCAP}{subfigure}
-\providecommand{\subfigcapskip}{3\p@}
 
+
+% mock float
+\providecommand*\floatname[2]{\@namedef{fname@#1}{#2}}
+\providecommand*\floatplacement[2]{\@namedef{fps@#1}{#2}}
+\floatplacement{figure}{htbp}
+\floatplacement{table}{htp}
+
+\AfterPackage{float}{
+% disable [H]
+  \def\@float@HH#1{%
+    \TR@error{The [H] specifier for floats is forbidden for\MessageBreak
+      the hpitr class.}}
+  \floatstyle{komabelow}
+}
+
+\setcapindent{1em}
+\addtokomafont{captionlabel}{\bfseries}
+\PassOptionsToPackage{ruled}{algorithm2e}
+
+\AfterPackage{listings}{
+  \AtEndPreamble{
+    \lstset{%
+      basicstyle=\ttfamily\small,
+      floatplacement=htbp,
+      captionpos=t,
+      abovecaptionskip=0pt,
+      belowcaptionskip=0pt,
+    }
+  }
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Color
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \RequirePackage{color}
-
+\RequirePackage[table,svgnames,dvipsnames]{xcolor}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Proceedings file
+%% include PDF Documents
+%% with more than 1 page
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% print special information into a separate file (*.prc)
-\if@independent
-\else
-        \AtEndDocument{%
-                \addtocontents{prc}{\protect\title{\@title}}
-%               \addtocontents{prc}{\protect\author{\@author}}
-                \addtocontents{prc}{\protect\event{\@eventtitle}}
-                \addtocontents{prc}{\protect\papernumber{\@papernumber}}
-                \addtocontents{prc}{\protect\file{\jobname.pdf}}
-                \if@filesw
-                        \expandafter\newwrite\csname tf@prc\endcsname
-                        \immediate\openout \csname tf@prc\endcsname \jobname.prc\relax
-                \fi
-        }
-\fi
+\ifthenelse{\boolean{TR@proceedings}}{
+  \RequirePackage{pdfpages}
+  \ifthenelse{\boolean{xetex}}{}{\pdfinclusioncopyfonts = 1}
+  \includepdfset{pagecommand={\thispagestyle{plain}}}
+}{}
+
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %% Comments and Todo help
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\ifthenelse{\boolean{TR@todotools}}{%
+  \RequirePackage[obeyDraft,colorinlistoftodos]{todonotes}
+  \newcommand*\todosec{\par\noindent\todo[inline]}
+  \newcommand*\secmissing{\par\noindent\todo[color=red,inline,size=\Large]}
+  \newcommand\todolist[2]{%
+    \par\noindent%
+    \todo[inline,color={red!100!green!50},caption={#1}]{%
+      \begin{minipage}{\linewidth}%
+        \begin{itemize}
+          #2%
+        \end{itemize}
+      \end{minipage}
+    }%
+  }
+  \newcommand\todoauthor[2][\empty]{
+    \expandafter\newcommand\csname #2\endcsname[2][\empty]{%
+      \todo[color=#1,##1]{#2: ##2}}}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  Draft Stuff
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\ifthenelse{\boolean{@draft}}{%
+  \RequirePackage{blindtext}
+  \errorcontextlines=999
+  \RequirePackage{eso-pic}
+  \newkomafont{draftline}{\sffamily}
+  \newsavebox{\TR@draftPageLine}
+  \AddToShipoutPicture{%
+    \AtPageUpperLeft{%
+      \raisebox{-\height}[\height][0pt]{\usebox{\TR@draftPageLine}}}%
+    \AtPageLowerLeft{%
+      \raisebox{\depth}[\height][0pt]{\usebox{\TR@draftPageLine}}}%
+  }
+  \AddToShipoutPicture{
+    \begingroup
+    \setlength{\@tempdima}{.5pt}%
+    \setlength{\@tempdimb}{\dimexpr\paperwidth-1.75pt\relax}%
+    \setlength{\@tempdimc}{\dimexpr\paperheight-1.5pt\relax}%
+    \thicklines%
+    \put(\LenToUnit{\@tempdima},\LenToUnit{\@tempdima}){%
+      \framebox(\LenToUnit{\@tempdimb},\LenToUnit{\@tempdimc}){}}%
+    \endgroup
+  }
+  \AtBeginDocument{
+    \def\TR@draftInfo{%
+      {\usekomafont{draftline}
+      Draft Draft Draft%
+      \hspace*{4cm}\today\hspace*{4cm}%
+      Draft Draft Draft%
+    }}
+    \sbox{\TR@draftPageLine}{%
+      \colorbox{black!10}{%
+        % enlarge box vertically by 2/3 lines
+        \raisebox{0pt}%
+        [\dimexpr .33\baselineskip + \height]%
+        [\dimexpr .33\baselineskip + \depth]{%
+          \makebox[\paperwidth]{\color{black!50}\TR@draftInfo}}}}
+  }
+  \AtEndDocument{\listoftodos}
+}{
+  \let\blindtext\relax
+  \let\Blindtext\relax
+  \let\blinddocument\relax
+  \let\Blinddocument\relax
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Show the page layout
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\RequirePackage{showframe}
+% \if@showlayout
+%         \RequirePackage{layout}
+%         \AtEndDocument{%
+%                 \clearpage
+%                 \layout
+%         }
+% \fiifthenelse{\boolean{xetex} \or \boolean{luatex}}{}{%
+% }
+
+
+
+\PreventPackageFromLoading[\message{nono}]{%
+%
+% Disallowed
+%
+% Layout
+  geometry,a4,a4wide,%
+% Fonts
+  mathptmx,helvet,courier,newtxtext,newtxmath,fourier,%
+%
+  fancyhdr
+%
+% Not to use.
+%
+% Fonts / encoding
+  ae,aecompl,zefonts,times,mathptm,pslatex,palatino,mathpple,%
+  utopia,euler,%
+  isolatin,umlaut,t1enc,%
+% Graphics
+  epsf,psfig,epsfig,subfig,subfigure%
+% Outdated
+  fancyheadings,scrpage,caption2,glossary,SIstyle,SIunits,%
+% Typography
+  doublespace%
+}
+
+\csgappto{bf}{\TR@fonterror}
+\csgappto{it}{\TR@fonterror}
+\csgappto{sc}{\TR@fonterror}
+\csgappto{rm}{\TR@fonterror}
+\csgappto{sc}{\TR@fonterror}
+\csgappto{sf}{\TR@fonterror}
+\csgappto{sl}{\TR@fonterror}
+\csgappto{tt}{\TR@fonterror}
+
+
+%%%%%%% Set counter to 5 (or v), respectively (See above)
+
+\setcounter{page}{5}
+\ifthenelse{\boolean{TR@proceedings}}{
+  \apptocmd{\frontmatter}{%
+    \setcounter{page}{5}%
+  }{}{\TR@warn{Cannot patch \string\frontmatter}}
+}{}
+
+
+\RequirePackage{xspace}
+\RequirePackage{csquotes}
+
+\PassOptionsToPackage{binary-units}{siunitx}
+\AtEndPreamble{\RequirePackage{siunitx}}
+
 %    \end{macrocode}
 % \iffalse meta-comment
 %</class>
 % \fi^^A meta-comment
-% \subsection{The Examples and the Manual}
+%
+% \subsection{The Examples}
 % \label{sec:The-Examples-and-the-Manual}
 % \iffalse meta-comment
-%<*doc|manual|README>
 %<*example>
 % \fi^^A meta-comment
 %    \begin{macrocode}
-\documentclass[a4paper,pagesize]{scrbook}
-\usepackage[utf8]{inputenc}
-\usepackage[ngerman]{babel}
-\usepackage[T1]{fontenc}
-\usepackage{lmodern}
-\usepackage{xcolor}
+\documentclass[%
+  english,%
+  todotools=true,%
+%<proceedings>  trtype=proceedings%
+%<single&article>  trtype=singlearticle%
+%<single&!article>  trtype=singlereport,draft%
+]{hpitr}
+\usepackage{blindtext}
+\usepackage{threeparttable}
+\usepackage{listings}
+%
+% Pseudo-code example
+%
+\usepackage{algpseudocode}
+\DeclareNewTOC[name=Algorithm,
+  type=algorithm,
+  atbegin=\KOMAoptions{captions=above},
+  float]{alg}
+
+\rowcolors*{1}{lightgray!25}{}
+
+\begin{filecontents}{example.bib}
+@article{953350,
+  Address = {New York, NY, USA},
+  Author = {Nassi, I. and Shneiderman, B.},
+  Doi = {10.1145/953349.953350},
+  Issn = {0362-1340},
+  Journal = {SIGPLAN Not.},
+  Number = {8},
+  Pages = {12--26},
+  Publisher = {ACM},
+  Title = {Flowchart techniques for structured programming},
+  Volume = {8},
+  Year = {1973}}
+\end{filecontents}
+
 \begin{document}
-test
+
+% \authorrunning{Author}
+% \titlerunning{The importance of work}
+\title{The importance of why and how to do work}
+\subtitle{An imaginary paper to showcase a document}
+\author{Anna Author\and Bert Betatester}
+% \institute{%
+%   Hasso-Plattner-Institut, Potsdam\\
+%   \email{\{firstname.lastname\}@student.hpi.uni-potsdam.de}
+% }
+% \supervisors{%
+%   Prof.\,Dr.\,William Withaname \and%
+%  Dr.\,John Doe}
+\maketitle
+
+%<*!proceedings>
+\begin{abstract}
+  Hello, here is some text without a meaning. This text should show what a
+  printed text will look like at this place. If you read this text, you will
+  get no information. Really? Is there no information? Is there a difference
+  between this text and some nonsense like “Huardest gefburn”? Kjift – not at
+  all! A blind text like this gives you information about the selected font,
+  how the letters are written and an impression of the look. This text should
+  contain all letters of the alphabet and it should be written in of the
+  original language. There is no need for special content, but the length of
+  words should match the language.
+\end{abstract}
+%</!proceedings>
+%<proceedings>\frontmatter
+%<!article>\tableofcontents
+%<!article>\lstlistoflistings
+%<proceedings>\mainmatter
+
+%<*!article>
+\Blinddocument
+
+\chapter{Other examples}
+\label{cha:other}
+
+Other sectioning examples, including listings and tables.
+
+%</!article>
+\section{Introduction}
+\label{sec:introduction}
+
+Hello, here is some text without a meaning. This text should show what a
+printed text will look like at this place. If you read this text, you will get
+no information. Really? Is there no information? Is there a difference between
+this text and some nonsense like “Huardest gefburn”? Kjift – not at all! A
+blind text like this gives you information about the selected font, how the
+letters are written and an impression of the look. This text should contain all
+letters of the alphabet and it should be written in of the original language.
+There is no need for special content, but the length of words should match the
+language.\todo{cite}
+
+\subsection{Contributions}
+\label{sec:contributions}
+
+
+Hello, here is some text without a meaning. This text should show what a
+printed text will look like at this place. If you read this text, you will get
+no information. Really? Is there no information? Is there a difference between
+this text and some nonsense like “Huardest gefburn”? Kjift – not at all! A
+blind text like this gives you information about the selected font, how the
+letters are written and an impression of the look. This text should contain all
+letters of the alphabet and it should be written in of the original language.
+There is no need for special content, but the length of words should match the
+language.
+
+\section{Context}
+\label{sec:context}
+
+Hello, here is some text without a meaning. This text should show what a
+printed text will look like at this place. If you read this text, you will get
+no information. Really? Is there no information? Is there a difference between
+this text and some nonsense like “Huardest gefburn”? Kjift – not at all! A
+blind text like this gives you information about the selected font, how the
+letters are written and an impression of the look. This text should contain all
+letters of the alphabet and it should be written in of the original language.
+There is no need for special content, but the length of words should match the
+language.
+
+\todosec{Is that redundant?}
+
+\subsection{Background}
+\label{sec:background}
+
+Hello, here is some text without a meaning. This text should show what a
+printed text will look like at this place. If you read this text, you will get
+no information. Really? Is there no information? Is there a difference between
+this text and some nonsense like “Huardest gefburn”? Kjift – not at all! A
+blind text like this gives you information about the selected font, how the
+letters are written and an impression of the look. This text should contain all
+letters of the alphabet and it should be written in of the original language.
+There is no need for special content, but the length of words should match the
+language.
+
+\section{Problem}
+\label{sec:problem}
+
+\secmissing{The Main Problem}
+Hello, here is some text without a meaning. This text should show what a
+printed text will look like at this place. If you read this text, you will get
+no information. Really? Is there no information? Is there a difference between
+this text and some nonsense like “Huardest gefburn”? Kjift – not at all! A
+blind text like this gives you information about the selected font, how the
+letters are written and an impression of the look. This text should contain all
+letters of the alphabet and it should be written in of the original language.
+There is no need for special content, but the length of words should match the
+language.~\cite{953350}
+
+
+
+\subsection{Specific Problem}
+\label{sec:specific-problem}
+
+Hello, here is some text without a meaning. This text should show what a
+printed text will look like at this place. If you read this text, you will get
+no information. Really? Is there no information? Is there a difference between
+this text and some nonsense like “Huardest gefburn”? Kjift – not at all! A
+blind text like this gives you information about the selected font, how the
+letters are written and an impression of the look. This text should contain all
+letters of the alphabet and it should be written in of the original language.
+There is no need for special content, but the length of words should match the
+language.
+
+\section{Solution}
+\label{sec:solution}
+
+\todolist{anton}{
+\item Put A onto B
+\item Put B into C
+\item Pull D from C
+}%
+Hello, here is some text without a meaning. This text should show what a
+printed text will look like at this place. If you read this text, you will get
+no information. Really? Is there no information? Is there a difference between
+this text and some nonsense like “Huardest gefburn”? Kjift – not at all! A
+blind text like this gives you information about the selected font, how the
+letters are written and an impression of the look. This text should contain all
+letters of the alphabet and it should be written in of the original language.
+There is no need for special content, but the length of words should match the
+language.
+
+\subsection{Specific Solution}
+\label{sec:specific-solution}
+
+Hello, here is some text without a meaning. This text should show what a
+printed text will look like at this place. If you read this text, you will get
+no information. Really? Is there no information? Is there a difference between
+this text and some nonsense like “Huardest gefburn”? Kjift – not at all! A
+blind text like this gives you information about the selected font, how the
+letters are written and an impression of the look. This text should contain all
+letters of the alphabet and it should be written in of the original language.
+There is no need for special content, but the length of words should match the
+language.
+
+
+\begin{table}
+  \centering
+  \caption{Different Animals, different values}
+  \label{tab:different}
+  \begin{tabular}{@{}llSs@{}}
+    \hiderowcolors
+    \toprule
+    \multicolumn{2}{c}{Item}\\ \cmidrule(r){1-2}
+    Animal    & Description & {Value}   & Unit\\
+    \midrule
+    Gnat      & per gram    &    2.3456 & \dB                       \\
+              & each        &    1.2e-3 & \metre\squared\per\second \\
+    Gnu       & stuffed     &       e3  & \kilo\hertz               \\
+    Emu       & stuffed     &   90.473  & \percent                  \\
+    Armadillo & frozen      & 5642.5    & \mega\byte                \\
+    \bottomrule
+    \showrowcolors
+  \end{tabular}
+\end{table}
+
+\section{Implementation}
+\label{sec:implementation}
+
+Hello, here is some text without a meaning. This text should show what a
+printed text will look like at this place. If you read this text, you will get
+no information. Really? Is there no information? Is there a difference between
+this text and some nonsense like “Huardest gefburn”? Kjift – not at all! A
+blind text like this gives you information about the selected font, how the
+letters are written and an impression of the look. This text should contain all
+letters of the alphabet and it should be written in of the original language.
+There is no need for special content, but the length of words should match the
+language.
+
+\begin{figure}
+  \centering
+  \setlength{\unitlength}{.01in}%{.025in}
+  \begin{picture}(200,75)
+    \put(0,25){\vector(1,0){200}}
+    \put(25,0){\vector(0,1){75}}
+    \put(75,22){\line(0,1){6}}
+    \put(125,22){\line(0,1){6}}
+    \put(22,50){\line(1,0){6}}
+    \thicklines
+    \put(25,25){\line(1,0){50}}
+    \put(75,50){\line(1,0){50}}
+    \put(125,25){\line(1,0){72}}
+    \put(17,50){\makebox(0,0){$1$}}
+    \put(75,13){\makebox(0,0)[b]{$\pi$}}
+    \put(125,13){\makebox(0,0)[b]{$2\pi$}}
+    \put(195,13){\makebox(0,0)[b]{$t$}}
+    \put(175,60){\makebox(0,0){$g(t)$}}
+  \end{picture}
+  \caption{A test figure}
+  \label{fig:test}
+\end{figure}
+
+Hello, here is some text without a meaning. This text should show what a
+printed text will look like at this place. If you read this text, you will get
+no information. Really? Is there no information? Is there a difference between
+this text and some nonsense like “Huardest gefburn”? Kjift – not at all! A
+blind text like this gives you information about the selected font, how the
+letters are written and an impression of the look. This text should contain all
+letters of the alphabet and it should be written in of the original language.
+There is no need for special content, but the length of words should match the
+language.
+
+\missingfigure{Make a overview sketch of the whole system}
+
+\subsection{Minor Detail}
+\label{sec:detail}
+
+\begin{algorithm}
+\caption{The Bellman-Kalaba algorithm}
+\begin{algorithmic}[1]
+\Procedure {BellmanKalaba}{$G$, $u$, $l$, $p$}
+\ForAll {$v \in V(G)$}
+\State $l(v) \leftarrow \infty$
+\EndFor
+\State $l(u) \leftarrow 0$
+\Repeat
+\For {$i \leftarrow 1, n$}
+\State $min \leftarrow l(v_i)$
+\For {$j \leftarrow 1, n$}
+\If {$min > e(v_i, v_j) + l(v_j)$}
+\State $min \leftarrow e(v_i, v_j)$\State $p(i) \leftarrow v_j$
+\EndIf
+$+l(v_j)$
+\EndFor
+\State $l’(i) \leftarrow min$
+\EndFor
+\State $changed \leftarrow l \not= l’$
+\State $l \leftarrow l’$
+\Until{$\neg changed$}
+\EndProcedure
+\Statex
+\Procedure {FindPathBK}{$v$, $u$, $p$}
+\If {$v = u$}
+\State \textbf{Write} $v$
+\Else
+\State $w \leftarrow v$
+\While {$w \not= u$}
+\State \textbf{Write} $w$
+\State $w \leftarrow p(w)$
+\EndWhile
+\EndIf
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+Hello, here is some text without a meaning. This text should show what a
+printed text will look like at this place. If you read this text, you will get
+no information. Really? Is there no information? Is there a difference between
+this text and some nonsense like “Huardest gefburn”? Kjift – not at all! A
+blind text like this gives you information about the selected font, how the
+letters are written and an impression of the look. This text should contain all
+letters of the alphabet and it should be written in of the original language.
+There is no need for special content, but the length of words should match the
+language.
+
+\section{Evaluation}
+\label{sec:evaluation}
+
+Hello, here is some text without a meaning. This text should show what a
+printed text will look like at this place. If you read this text, you will get
+no information. Really? Is there no information? Is there a difference between
+this text and some nonsense like “Huardest gefburn”? Kjift – not at all! A
+blind text like this gives you information about the selected font, how the
+letters are written and an impression of the look. This text should contain all
+letters of the alphabet and it should be written in of the original language.
+There is no need for special content, but the length of words should match the
+language.
+
+\lstset{language=Java}
+\begin{lstlisting}[label=lst:example,caption={An example code snippet},float,numbers=left]
+class HelloWorldApp {
+    public static void main(String[] args) {
+        System.out.println("Hello World!"); // Display the string.
+    }
+}
+\end{lstlisting}
+
+
+We have nice things: some code in \autoref{lst:example} and some information
+in \autoref{tbl:things}.
+
+\[\nabla \cdot \mathbf{E} = \frac{\rho}{\varepsilon_0}\]
+\[\nabla \cdot \mathbf{B} = 0\]
+\[\nabla \times \mathbf{E} = -\frac {\partial \mathbf{B}}{\partial t}\]
+\[\nabla \times \mathbf{B} = \mu_0 \mathbf{J} + \mu_0\varepsilon_0  \frac{\partial \mathbf{E}}{\partial t}\]
+
+
+\subsection{Threats to Valitidy}
+\label{sec:threats-valitidy}
+
+
+Hello, here is some text without a meaning. This text should show what a
+printed text will look like at this place. If you read this text, you will get
+no information. Really? Is there no information? Is there a difference between
+this text and some nonsense like “Huardest gefburn”? Kjift – not at all! A
+blind text like this gives you information about the selected font, how the
+letters are written and an impression of the look. This text should contain all
+letters of the alphabet and it should be written in of the original language.
+There is no need for special content, but the length of words should match the
+language.
+
+\section{Related Work}
+\label{sec:related-work}
+
+Hello, here is some text without a meaning. This text should show what a
+printed text will look like at this place. If you read this text, you will get
+no information. Really? Is there no information? Is there a difference between
+this text and some nonsense like “Huardest gefburn”? Kjift – not at all! A
+blind text like this gives you information about the selected font, how the
+letters are written and an impression of the look. This text should contain all
+letters of the alphabet and it should be written in of the original language.
+There is no need for special content, but the length of words should match the
+language.
+
+Hello, here is some text without a meaning. This text should show what a
+printed text will look like at this place. If you read this text, you will get
+no information. Really? Is there no information? Is there a difference between
+this text and some nonsense like “Huardest gefburn”? Kjift – not at all! A
+blind text like this gives you information about the selected font, how the
+letters are written and an impression of the look. This text should contain all
+letters of the alphabet and it should be written in of the original language.
+There is no need for special content, but the length of words should match the
+language.
+
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+Hello, here is some text without a meaning. This text should show what a
+printed text will look like at this place. If you read this text, you will get
+no information. Really? Is there no information? Is there a difference between
+this text and some nonsense like “Huardest gefburn”? Kjift – not at all! A
+blind text like this gives you information about the selected font, how the
+letters are written and an impression of the look. This text should contain all
+letters of the alphabet and it should be written in of the original language.
+There is no need for special content, but the length of words should match the
+language.
+
+
+
+
+\begin{table}
+  \centering
+  \begin{threeparttable}
+    \caption{Differences between things projected and things achieved}
+    \label{tbl:things}
+    \begin{tabular}{>{}p{.4\linewidth}@{}c}
+      \toprule
+      Part           & done \\
+      \midrule
+      Title          & yes  \\
+      Abstract       & no   \\
+      Intro          & yes  \\
+      \midrule
+      \multicolumn{2}{c}{Rest is not entirely true} \\
+      \midrule
+      Context        & yes  \\
+      Problem        & no\tnote{a} \\
+      Solution       & yes  \\
+      Implementation & yes  \\
+      Evaluation     & no   \\
+      Related Work   & no   \\
+      Conclusion     & yes  \\
+      \bottomrule
+    \end{tabular}
+    \begin{tablenotes}
+    \item [a] Just a few things missing
+    \end{tablenotes}
+  \end{threeparttable}
+\end{table}
+
+We have nice things: some code in \autoref{lst:example} and some information
+in \autoref{tbl:things}.
+
+Hello, here is some text without a meaning. This text should show what a
+printed text will look like at this place. If you read this text, you will get
+no information. Really? Is there no information? Is there a difference between
+this text and some nonsense like “Huardest gefburn”? Kjift – not at all! A
+blind text like this gives you information about the selected font, how the
+letters are written and an impression of the look. This text should contain all
+letters of the alphabet and it should be written in of the original language.
+There is no need for special content, but the length of words should match the
+language.
+
+
+\bibliography{example}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% End: 
 \end{document}
 %    \end{macrocode}
 %
 % \iffalse meta-comment
 %</example>
 % \fi^^A meta-comment
+%
+%
+% \subsection{The Manual}
+% \label{sec:manual}
+%
+% Load standard \LaTeX documentation class, passing all options to it
+% but use |scrartcl| instead of |article|.
 %    \begin{macrocode}
+%<*doc|manual|README>
 %<*!README>
-% Load standard LaTeX documentation class, passing all options to it
-% but use scrartcl instead of article. (From \texttt{scrdoc.dtx})
-\newcommand*{\savedLoadClass}{}
-\let\savedLoadClass=\LoadClass
-\renewcommand*{\LoadClass}[2][]{%
-  \begingroup
-    \edef\tempc{#2}\def\tempb{article}%
-    \ifx\tempc\tempb
-      \let\LoadClass\savedLoadClass
-      \def\tempc{scrartcl}%
-    \fi
-  \edef\tempc{%
-    \noexpand\endgroup\noexpand\savedLoadClass[{#1}]{\tempc}}%
-  \tempc}
-\newcommand*{\savedPassOptionsToClass}{}
-\let\savedPassOptionsToClass=\PassOptionsToClass
-\renewcommand*{\PassOptionsToClass}[2]{%
-  \begingroup
-    \edef\tempc{#2}\def\tempb{article}%
-    \ifx\tempc\tempb
-      \def\tempc{scrartcl}%
-    \fi
-  \edef\tempc{%
-    \noexpand\endgroup\noexpand\savedPassOptionsToClass{#1}{%
-      \tempc}}%
-  \tempc}
+\usepackage{scrbase}
+\ReplaceClass{article}{scrartcl}
 %    \end{macrocode}
 %
 % Should we need \textsc{url}s, we want them to break nicely, also on hyphens.
@@ -1331,13 +1823,13 @@ test
 \usepackage[scale=MatchLowercase]{sourcecodepro}
 \usepackage{polyglossia}
 \usepackage{graphicx}
-\usepackage{xcolor}
+\usepackage[dvipsnames]{xcolor}
 \usepackage{paracol}
 %    \end{macrocode}
 % We predominantly want to use the set serif font for all sectioning. We also
 % want a good text area.
 %    \begin{macrocode}
-\setkomafont{subtitle}{\usekomafont{title}\LARGE}
+\setkomafont{subtitle}{\usekomafont{title}\LARGE\em}
 \addtokomafont{disposition}{\rmfamily}
 \setkomafont{title}{\rmfamily\mdseries}
 \addtokomafont{subject}{\mdseries}
@@ -1346,12 +1838,18 @@ test
 \addtokomafont{captionlabel}{\mdseries}
 \renewcommand*\labelitemii{\normalfont\textendash}
 \setfootnoterule{4cc}
+\hypersetup{%
+  colorlinks=true,   %% true for printout
+  linkcolor=MidnightBlue,%
+  citecolor=MidnightBlue,%
+  urlcolor=MidnightBlue,%
+}
 
 \recalctypearea
 %    \end{macrocode}
 % For debugging only
 %    \begin{macrocode}
-\usepackage{showframe}
+%\usepackage{showframe}
 \errorcontextlines=999
 %    \end{macrocode}
 % Configure languages
@@ -1364,19 +1862,22 @@ test
 %    \begin{macrocode}
 \newcommand*{\File}{}\def\File{\texttt}
 
+\addcontentsonly{toc}{0} 
+\footnotelayout{m}
 \newenvironment{eng}[1][]%
   {\begin{leftcolumn*}[#1]\begin{english}\upshape}%
   {\end{english}\end{leftcolumn*}}
 \newenvironment*{ger}%
-  {\begin{rightcolumn}
-   \edef\savedTocDepth{\arabic{tocdepth}}
-   \addtocontents{toc}{\protect\setcounter{tocdepth}{0}}
-   \begin{german}\itshape}%
-  {\end{german}%
-   \expandafter\expandafter\expandafter\expandafter\expandafter\expandafter%
-   \expandafter\expandafter\expandafter%
-   \addtocontents{toc}{\protect\setcounter{tocdepth}{\savedTocDepth}}%
-   \end{rightcolumn}}
+{\begin{rightcolumn}
+ \begin{german}%
+   \let\mdseries\em%
+   \em}%
+{\end{german}%
+ \end{rightcolumn}}
+
+\renewcommand*\listoftocname{%
+  \textenglish{Contents} / \emph{\textgerman{Inhalt}}}
+\let\contentsname\mycontentsname
 
 \IndexPrologue{
 \begin{paracol}{2}[\section*{Index}%
@@ -1401,9 +1902,12 @@ test
 %<manual>\OnlyDescription
 \GetFileInfo{\jobname.ltx}
 \begin{document}
-\title{Writing Technical Reports at the Hasso~Plattner~Institute ---
-  The Class \File{hpitr}\footnote{This is file version \fileversion{} of file
-    \File{\filename}.}} \author{Tobias Pape\footnote{Tobias Pape
+\title{The Class \File{hpitr} for Writing Technical Reports at the
+  Hasso~Plattner~Institute\footnote{This is file version \fileversion{} of
+    file \File{\filename}.}}
+\subtitle{Die Klasse \File{hpitr} zur Erstellung technischer Berichte am
+  Hasso-Plattner-Institut}
+\author{Tobias Pape\footnote{Tobias Pape
     \textless\protect\url{tobias.pape@hpi.de}\textgreater}}
 \date{\fileversion{} \filedate}
 \maketitle
@@ -1411,12 +1915,27 @@ test
 %</!README>
 %<*!manual>
 
+%<!README>\begin{paracol}{2}[]\begin{eng}
 %<!README>This consititutes the \LaTeX\ class to creat technical reports at the 
 %<README>This consititutes the LaTeX class to creat technical reports at the 
 Plattner Institute, Potsdam in conjunction with the Universitätsverlag
 Potsdam. To maintain a unified appearance, this class provides macrotypographic
 (like paper size and general layout) and microtypographic (like fonts and their
-adjustmen) settings.
+adjustment) settings.
+%<!README>\end{eng}
+
+%<README> ---
+
+%<!README>\begin{ger}
+%<!README>Diese \LaTeX-Klasse dient zur Erstellung von technischen Berichten
+%<README>Diese LaTeX-Klasse dient zur Erstellung von technischen Berichten
+am Hasso-Plattner-Institut, Potsdam, in Zusammenarbeit mit dem
+Universitätsverlag Potsdam. Zur Erhaltung eines einheitlichen
+Erscheinungsbildes bietet diese Klasses Einstellungen zu Makrotypographie (wie
+Papiergröße, allgemeines Layout) und auch zur Detailtypographie (wie
+Schriftwahl).
+%<!README>\end{ger}\end{paracol}
+
 
 %</!manual>
 % \end{macrocode}
@@ -1425,6 +1944,8 @@ adjustmen) settings.
 % \texttt{titlepage.dtx} again.
 % \begin{macrocode}
 %<*README>
+
+-------------------------------------------------------------------------------
 Note: To generate all files, you should simply call
 
       pdftex -shell-escape hpitr.dtx
@@ -1439,7 +1960,7 @@ All ltx files should be installed together with all pdf files at documentation
 folder. The sty file together with all def files should be installed at latex
 package folder.
 
-But maybe your distributpr already distributes a ready for installation
+But maybe your distributor already distributes a ready for installation
 package, so you do not need to create files and copy them yourself.
 %</README>
 %<*manual>
