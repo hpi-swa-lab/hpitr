@@ -1,7 +1,7 @@
 % \iffalse meta-comment
 % ============================================================================
 % hpitr.dtx
-% Copyright (c) Daniel Richter, Uwe Haentschel 2013-2014
+% Copyright (c) Daniel Richter, Uwe Hentschel 2013-2014
 % Copyright (c) Tobias Pape, 2014
 %
 % This work may be distributed and/or modified under the conditions of
@@ -34,7 +34,7 @@
 %   Right bracket \]     Circumflex    \^     Underscore    \_
 %   Grave accent  \`     Left brace    \{     Vertical bar  \|
 %   Right brace   \}     Tilde         \~}
-% \CheckSum{0}
+% \CheckSum{1498}
 %
 % \iffalse meta-comment
 %<*dtx|ins>
@@ -61,7 +61,7 @@
 %<*!README>
 [%
 %</!README>
-  2014/07/18 v0.3
+  2014/08/01 v0.3
 %<!README>^^J
   A unified class for Technical Reports at the HPI
 %<*!README>
@@ -344,7 +344,7 @@
 }
 
 \preamble
-Copyright (c) Daniel Richter, Uwe Haentschel 2013-2014
+Copyright (c) Daniel Richter, Uwe Hentschel 2013-2014
 Copyright (c) Tobias Pape, 2014
 
 This file was generated from file(s) of hpitr distribution.
@@ -421,9 +421,9 @@ without this file.
 \immediate\write18{mkindex hpitr-manual}
 \immediate\write18{xelatex -interaction=nonstopmode hpitr-manual.ltx}
 
-\immediate\write18{xelatex -interaction=nonstopmode example-single.tex}
-\immediate\write18{xelatex -interaction=nonstopmode example-singlea.tex}
-\immediate\write18{xelatex -interaction=nonstopmode example-proceedings.tex}
+\immediate\write18{lualatex -interaction=nonstopmode example-single.tex}
+\immediate\write18{lualatex -interaction=nonstopmode example-singlea.tex}
+\immediate\write18{lualatex -interaction=nonstopmode example-proceedings.tex}
 
 \ifToplevel{%
   \Msg{* \space\space done.}
@@ -498,6 +498,8 @@ without this file.
 
 \RequirePackage{etoolbox}
 \RequirePackage{scrbase}[2013/12/19]
+\RequirePackage{expl3}[2011/09/05]
+\RequirePackage{xparse}
 
 
 %%
@@ -653,7 +655,6 @@ without this file.
 }
 
 \TRnewifStd{todotools}
-\TRnewifStd{ctableok}
 
 
 %% execute the standard options
@@ -694,7 +695,9 @@ without this file.
   headinclude=true,
   DIV=calc,
 }
-
+\ifthenelse{\boolean{TR@proceedings}}{
+  \KOMAoption{open}{right}
+}{}
 
 %
 % Fixes
@@ -702,6 +705,15 @@ without this file.
 %
 \RequirePackage{fixltx2e}[2014/06/10]
 \RequirePackage{scrhack}
+
+% https://tex.stackexchange.com/questions/185713/fontspec-2-4-and-scale-matchlowercase-causes-error
+\ExplSyntaxOn
+\cs_new_protected:Npn \fp_div:Nn #1 #2
+{
+  \fp_set:Nn #1 { #1/#2 }
+}
+\ExplSyntaxOff
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %% Title.
@@ -856,8 +868,8 @@ without this file.
 \RequirePackage[euler-digits,T1]{eulervm}
 \let\mathbf\mathbold
 \ifthenelse{\boolean{luatex} \or \boolean{xetex}}{%
-  \RequirePackage[scale=MatchLowercase]{sourcecodepro}
-  \RequirePackage[scale=MatchLowercase]{sourcesanspro}
+  \RequirePackage[scale=MatchLowercase,semibold]{sourcecodepro}
+  \RequirePackage[scale=MatchLowercase,semibold,osf]{sourcesanspro}
   \defaultfontfeatures{Scale=MatchLowercase,Ligatures={Common,TeX}}
   \setmainfont[ExternalLocation,
       Numbers={Proportional,OldStyle},
@@ -866,8 +878,9 @@ without this file.
       ItalicFont=*-italic,
       BoldItalicFont=*-bolditalic]{texgyrepagella}
 }{
-  \RequirePackage[scaled=.9]{DejaVuSansMono}
-  \RequirePackage[osf,sc]{mathpazo} % Palatino with real small caps and old style figures
+  \RequirePackage[scale=.9,semibold]{sourcecodepro}
+  \RequirePackage[scale=.9,semibold,osf]{sourcesanspro}
+  \RequirePackage[osf,sc]{mathpazo}
 }
 \linespread{1.05} % a bit more for Palatino
 
@@ -896,19 +909,6 @@ without this file.
 \RequirePackage{mathcomp}
 \RequirePackage{relsize}
 
-%
-% microtypesetup
-%
-\ifthenelse{\boolean{xetex}}{%
-  \let\textls\undefined
-  \DeclareRobustCommand{\textls}[2][80]{%
-    {{\addfontfeature{LetterSpace=\the\numexpr#1/10\relax}#2}}}
-}{}
-\ifthenelse{\boolean{xetex} \or \boolean{luatex}}{}{%
-  \microtypesetup{stretch=9,shrink=15,step=3,tracking=smallcaps,letterspace=75}
-}
-
-
 %%%
 %%% Details
 %%%
@@ -930,8 +930,10 @@ without this file.
 \setlength{\floatsep}{\baselineskip}
 \setlength{\intextsep}{2\baselineskip}
 
-\frenchspacing
-\raggedbottom
+\AtEndPreamble{
+  \frenchspacing
+  \raggedbottom
+}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -961,6 +963,27 @@ without this file.
   \refoot[\@eventtitle]{\@eventtitle}
   \lofoot[\@eventtitle]{\@eventtitle}
 }{}
+
+%
+%
+% Sectioning
+%
+
+\ifthenelse{\boolean{TR@chapters}}{
+  \renewcommand*{\chapterheadstartvskip}{\vspace*{3\baselineskip}}
+  \renewcommand*{\chapterheadendvskip}{\vspace*{2\baselineskip}}
+}{}
+% for sections, not so easy.
+\def\TR@patchw{\TR@warn{Cannot patch sectioning command.\MessageBreak This is
+    not severe.}}
+\patchcmd{\section}{-3.5ex \@plus -1ex \@minus -.2ex}{-2\baselineskip}{}{\TR@patchw}
+\patchcmd{\section}{2.3ex \@plus.2ex}{\baselineskip}{}{\TR@patchw}
+\patchcmd{\subsection}{-3.25ex\@plus -1ex \@minus -.2ex}{-\baselineskip}{}{\TR@patchw}
+\patchcmd{\subsection}{1.5ex \@plus .2ex}{\baselineskip}{}{\TR@patchw}
+\patchcmd{\subsubsection}{-3.25ex\@plus -1ex \@minus -.2ex}{-\baselineskip}{}{\TR@patchw}
+\patchcmd{\subsubsection}{1.5ex \@plus .2ex}{\p@ \@plus \p@ \@minus \p@}{}{\TR@patchw}
+\patchcmd{\paragraph}{3.25ex \@plus1ex \@minus .2ex}{\baselineskip}{}{\TR@patchw}
+\patchcmd{\subparagraph}{3.25ex \@plus1ex \@minus .2ex}{\baselineskip}{}{\TR@patchw}
 
 
 
@@ -1032,6 +1055,9 @@ without this file.
   \setuptoc{lol}{noprotrusion}
 }
 
+\ifthenelse{\boolean{TR@chapters}}{
+  \renewcommand*\raggedchapterentry{\raggedright}
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Abstract
@@ -1117,18 +1143,34 @@ without this file.
 \addtokomafont{captionlabel}{\bfseries}
 \PassOptionsToPackage{ruled}{algorithm2e}
 
+\providecommand*\TR@listingfont{}
+\ifthenelse{\boolean{xetex}}{%
+  \newcommand*\TRlistingfont[1]{\gdef\TR@listingfont{#1\addfontfeature{Mapping=}}}%
+}{%
+  \ifthenelse{\boolean{luatex}}{%
+    \newcommand*\TRlistingfont[1]{\gdef\TR@listingfont{#1\addfontfeature{RawFeature={-tlig;-trep}}}}%
+  }{
+    \newcommand*\TRlistingfont[1]{\gdef\TR@listingfont{#1}}}
+}{}
+\TRlistingfont{\ttfamily\small}
+
+\AfterPackage{verbatim}{
+  \renewcommand*\verbatim@font{\TR@listingfont}
+}
 \AfterPackage{listings}{
   \AtEndPreamble{
     \lstset{%
-      basicstyle=\ttfamily\small,
+      basicstyle=\TR@listingfont,
       floatplacement=htbp,
       captionpos=t,
       abovecaptionskip=0pt,
       belowcaptionskip=0pt,
+      upquote=true,
+      showstringspaces=false,
+      inputencoding=utf8,
     }
   }
 }
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Color
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1273,6 +1315,20 @@ without this file.
 \csgappto{sf}{\TR@fonterror}
 \csgappto{sl}{\TR@fonterror}
 \csgappto{tt}{\TR@fonterror}
+
+%% Warn about global use of sloppy
+\let\TR@sloppy\sloppy
+\patchcmd{\sloppypar}{\sloppy}{\TR@sloppy}{}{}
+\patchcmd{\@arrayparboxrestore}{\sloppy}{\TR@sloppy}{}{}
+\patchcmd{\thebibliography}{\sloppy}{\TR@sloppy}{}{}
+\def\sloppy{\TR@warn{You should not use \string\sloppy. \MessageBreak
+Instead, use a sloppypar, when necessary:\MessageBreak
+\MessageBreak
+\string\begin{sloppypar}\MessageBreak
+\space\space...\MessageBreak
+\string\end{sloppypar}}%
+\TR@sloppy}
+
 
 
 %%%%%%% Set counter to 5 (or v), respectively (See above)
@@ -1763,11 +1819,13 @@ language.
 % \label{sec:manual}
 %
 % Load standard \LaTeX documentation class, passing all options to it
-% but use |scrartcl| instead of |article|.
+% but use |scrartcl| instead of |article|. (A small patch is needed to allow
+% loading |scrbase| before |\documentlcass|)
 %    \begin{macrocode}
 %<*doc|manual|README>
 %<*!README>
-\usepackage{scrbase}
+\makeatletter\let\@classoptionslist\empty\makeatother
+\RequirePackage{scrbase}
 \ReplaceClass{article}{scrartcl}
 %    \end{macrocode}
 %
@@ -1819,8 +1877,8 @@ language.
 \usepackage[toc]{multitoc}
 \usepackage{fontspec}
 \usepackage[scale=MatchLowercase]{ebgaramond}
-\usepackage[scale=MatchLowercase]{sourcesanspro}
-\usepackage[scale=MatchLowercase]{sourcecodepro}
+\usepackage[scale=MatchLowercase,semibold,osf]{sourcesanspro}
+\usepackage[scale=MatchLowercase,semibold]{sourcecodepro}
 \usepackage{polyglossia}
 \usepackage{graphicx}
 \usepackage[dvipsnames]{xcolor}
@@ -1850,7 +1908,7 @@ language.
 % For debugging only
 %    \begin{macrocode}
 %\usepackage{showframe}
-\errorcontextlines=999
+% \errorcontextlines=999
 %    \end{macrocode}
 % Configure languages
 %    \begin{macrocode}
