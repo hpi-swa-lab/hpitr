@@ -498,8 +498,6 @@ without this file.
 
 \RequirePackage{etoolbox}
 \RequirePackage{scrbase}[2013/12/19]
-\RequirePackage{expl3}[2011/09/05]
-\RequirePackage{xparse}
 
 
 %%
@@ -522,9 +520,6 @@ without this file.
 % 
 % \subsubsection{Initialization}
 %    \begin{macrocode}
-
-
-\errorcontextlines=99
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Options
@@ -596,7 +591,12 @@ without this file.
       \ifthenelse{\not\boolean{TR@fulldraft}}{
         \PassOptionsToPackage{draft=false}{scrlayer-scrpage}
         \PassOptionsToPackage{final}{listings}
-        \PassOptionsToPackage{final}{graphics}
+%    \end{macrocode}
+% \changes{v0.3a}{2014/08/08}{Require grffile for non-trivial file names}
+%    For non-fulldraft to work with grffile, we unconditionally use the
+%    graphics internal draft boolean.
+%    \begin{macrocode}
+        \AtBeginDocument{\Gin@draftfalse}
       }{}
     }{}
   }
@@ -656,7 +656,6 @@ without this file.
 
 \TRnewifStd{todotools}
 
-
 %% execute the standard options
 \TRExecuteOptions{
   trtype=singlereport,%
@@ -706,6 +705,8 @@ without this file.
 \RequirePackage{fixltx2e}[2014/06/10]
 \RequirePackage{scrhack}
 
+\RequirePackage{expl3}[2011/09/05]
+\RequirePackage{xparse}
 % https://tex.stackexchange.com/questions/185713/fontspec-2-4-and-scale-matchlowercase-causes-error
 \ExplSyntaxOn
 \cs_new_protected:Npn \fp_div:Nn #1 #2
@@ -715,6 +716,7 @@ without this file.
 \ExplSyntaxOff
 
 
+%    \end{macrocode}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %% Title.
 %%
@@ -722,29 +724,40 @@ without this file.
 %%
 %% However, we collect the information for the pdf and also for
 %% convenience.
+% \changes{v0.4}{2014/08/12}{Delay \string\title/\string\author pdf setting
+% to latest point}
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%    \begin{macrocode}
 \KOMAoption{titlepage}{firstiscover}
 
 \apptocmd{\title}{%
-  \hypersetup{pdftitle={#1}}}
+  \AfterPreamble{\hypersetup{pdftitle={#1}}}}
 {}{%
   \TR@warn{Cannot patch \string\title to set pdftitle}}
 
 \apptocmd{\author}{%
-  \begingroup
-  \appto\pdfstringdefPreHook{%
-    \def\and{,\ \ignorespaces}%
+  \AfterPreamble{
+    \begingroup
+    \appto\pdfstringdefPreHook{\def\and{,\ \ignorespaces}}
+    \hypersetup{pdfauthor={#1}}
+    \endgroup}
   }
-  \hypersetup{pdfauthor={#1}}
-  \endgroup}
 {}{%
   \TR@warn{Cannot patch \string\author to set pdfauthor}}
 
+%    \end{macrocode}
+% \changes{v0.4}{2014/08/12}{Provide email command based on hyperref}
+%    \begin{macrocode}
+\providecommand*\email[1]{\href{mailto:#1}{\nolinkurl{#1}}\xspace}
 
+%    \end{macrocode}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Titlepage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \changes{v0.4}{2014/08/12}{If draft-titlepage, set its numbering in Roman
+% (for pdftex)}
+%    \begin{macrocode}
 
 \ifthenelse{\boolean{@draft}}{
   \AtBeginDocument{
@@ -757,14 +770,17 @@ without this file.
     \setkomafont{titlehead}{\normalfont\normalsize}
   }
   \pretocmd{\titlepage}{%
+    \ifthenelse{\boolean{@mainmatter}}{\pagenumbering{Roman}}{}
     \let\center\flushright%
     \let\endcenter\endflushright%
     \let\huge\normalsize
-    \def\and{\unskip ,\ \ignorespaces}%
   }{}{%
     \TR@warn{Cannot patch \string\maketitle}}
   \apptocmd{\endtitlepage}{%
     \cleardoubleemptypage%
+    \ifthenelse{\boolean{@mainmatter}}{%
+      \pagenumbering{arabic}}{%
+      \pagenumbering{roman}}
     \setcounter{page}{5}%
   }{}{%
     \TR@warn{Cannot patch \string\maketitle}}
@@ -774,19 +790,26 @@ without this file.
 
 
 \ifthenelse{\boolean{TR@proceedings}}{
+%    \end{macrocode}
 %
 %
 %  Proceedings stuff.
 %
-
 %% Title of the event
-  \newcommand{\event}[1]{%
-    \def\@eventtitle{#1}
-    \hypersetup{pdfsubject = {#1}}
+% \changes{v0.4}{2014/08/12}{Delay to latest point for hyperref}
+%    \begin{macrocode}
+  \newcommand*\event[1]{%
+    \gdef\@eventtitle{#1}
+    \AfterPreamble{hypersetup{pdfsubject = {#1}}}
   }
   \def\@eventtitle{%
     \TR@warn{No \string\event\space given}
     \global\cslet{@eventtitle}\@empty}
+%    \end{macrocode}
+% No event: clear it cleanly
+% \changes{v0.4}{2014/08/12}{Provide \string\noevent}
+%    \begin{macrocode}
+  \newcommand*\noevent{\gdef\@eventtitle{}}
 %% Paper number
   \newcommand{\papernumber}[1]{%
     \def\@papernumber{#1}
@@ -796,14 +819,333 @@ without this file.
     \fi
   }
   \let\@papernumber\@empty
-}
 
+%    \end{macrocode}
+% Collections
+% \changes{v0.4}{2014/08/12}{Add facilities to make collections.}
+%    \begin{macrocode}
+  \RequirePackage{ragged2e}
+  \AtEndPreamble{\RequirePackage{biblatex}}
+%    \end{macrocode}
+% Automatically pick up \texttt{preamble.tex} and \texttt{content.tex} for each
+% contribution.
+%    \begin{macrocode}
+  \providecommand\TR@contributions{}
+  \newcommand*{\contributions}[1]{%
+    \xdef\TR@contributions{#1}%
+    \configureContributions%
+  }
+  \newcommand*{\TR@preamble}[1]{%
+    \InputIfFileExists {#1/preamble}{}{}}
+
+  \newcommand*{\configureContributions}{%
+    \def\doit{}%
+    \@for\next:=\TR@contributions\do{%
+      \ifx\@empty\next\relax\else%
+      \expandafter\appto\expandafter\doit\expandafter%
+      {\expandafter\TR@preamble\expandafter{\next}}%
+      \fi%
+    }%
+    \doit{}%
+  }
+  \newcommand*{\includeContributionContents}{%
+    \def\doit{}%
+    \@for\next:=\TR@contributions\do{%
+      \ifx\@empty\next\else%
+      \expandafter\appto\expandafter\doit\expandafter%
+      {\expandafter\TR@includedir\expandafter{\next}}%
+      \fi%
+    }%
+    \doit{}%
+  }
+%    \end{macrocode}
+% Include \texttt{content.tex}, make it appear local and pick up bibliography.
+%    \begin{macrocode}
+  \newcommand*{\TR@includedir}[1]{%
+    \global\let\TR@saved@include\include
+    \global\let\TR@saved@input\input
+    \gdef\include##1{\TR@saved@include{#1/##1}}
+    \gdef\input##1{\TR@saved@input{#1/##1}}
+    \graphicspath{{#1/}}
+    \begin{refsection}[#1/references.bib]
+       \cleardoubleemptypage%
+      \TR@saved@input{#1/content}%
+      \printbibliography[%
+         heading=subbibliography, %
+         title=\refname, %
+       ]%
+    \end{refsection}
+    \global\let\include\TR@saved@include%
+    \global\let\input\TR@saved@input%
+  }
+
+%    \end{macrocode}
+% Support for multiple seperate work titles, portions from llncs.cls
+%    \begin{macrocode}
+  \newcounter{@inst}
+  \newcounter{@auth}
+  \newcounter{auco}
+  \newbox\headrun
+  \newtoks\authorrunning
+  \newtoks\tocauthor
+  \newtoks\titlerunning
+  \newtoks\toctitle
+
+  \def\clearheadinfo{\gdef\@author{No Author Given}%
+    \gdef\@title{No Title Given}%
+    \gdef\@subtitle{}%
+    \gdef\@institute{No Institute Given}%
+    \gdef\@thanks{}}
+
+  \def\institute#1{\gdef\@institute{#1}}
+
+  \def\institutename{\par\begingroup
+    \parskip=\z@
+    \parindent=\z@
+    \setcounter{@inst}{1}%
+    \def\and{\par\stepcounter{@inst}%
+      \noindent$^{\the@inst}$\enspace\ignorespaces}%
+    \setbox0=\vbox{\def\thanks##1{}\@institute}%
+    \ifnum\c@@inst=1\relax
+      \gdef\fnnstart{0}%
+    \else
+      \xdef\fnnstart{\c@@inst}%
+      \setcounter{@inst}{1}%
+      \noindent$^{\the@inst}$\enspace
+    \fi
+    \ignorespaces
+    \@institute\par
+    \endgroup}
+
+  \def\inst#1{\unskip$^{#1}$}
+  \def\fnmsep{\unskip$^,$}
+
+  \AtBeginDocument{
+    \providecommand{\keywords}[1]{\par\addvspace\baselineskip
+      \noindent\keywordname\enspace\ignorespaces#1}%
+  }
+%    \end{macrocode}
+% ToC-formatters for title and author, also llncs style
+%    \begin{macrocode}
+  \def\l@title#1#2{%
+   \addpenalty{-\@highpenalty}
+   \addvspace\baselineskip
+   \@tempdima \z@
+   \begingroup
+     \parindent \z@ \rightskip \@tocrmarg
+     \advance\rightskip by 0pt plus 2cm
+     \parfillskip -\rightskip \pretolerance=10000
+     \leavevmode \advance\leftskip\@tempdima \hskip -\leftskip
+     \begingroup%
+       \setlength{\RaggedRightRightskip}{0pt plus 1fil}%
+       \RaggedRight%
+       #1\nobreak
+       \leaders\hbox{$\m@th \mkern \@dotsep mu.\mkern
+         \@dotsep mu$}\hfill
+       \nobreak\hbox to\@pnumwidth{\hss #2}\par
+     \endgroup
+     % \penalty\@highpenalty \endgroup
+   \penalty10000\endgroup}
+
+ \def\l@author#1#2{%\addpenalty{\@highpenalty}
+   \addpenalty{10000}
+   \@tempdima=15\p@ %\z@
+   \begingroup%
+     \parindent \z@ \rightskip \@tocrmarg%
+     \advance\rightskip by 0pt plus 2cm%
+     \pretolerance=10000
+     \leavevmode \advance\leftskip\@tempdima %\hskip -\leftskip
+     {\itshape #1\par}
+     % \penalty\@highpenalty
+     \penalty0\relax
+     \endgroup}
+
+  %%% to avoid hyperref warnings
+  \providecommand*{\toclevel@author}{999}
+  %%% to make title-entry parent of section-entries
+  \providecommand*{\toclevel@title}{1}
+
+%    \end{macrocode}
+% Patch maketitle to allow one global and multiple local titles.
+%    \begin{macrocode}
+  \newbool{TR@firsttitleseen}
+  \boolfalse{TR@firsttitleseen}
+
+  \let\TR@firsttitle@maketitle\maketitle
+  \renewcommand*\maketitle{
+    \ifthenelse{\boolean{TR@firsttitleseen}}{%
+      \TR@contrib@maketitle%
+      }{
+        \TR@firsttitle@maketitle%
+        \clearheadinfo%
+        \booltrue{TR@firsttitleseen}}}
+    % we switch to title seen also when people do not use \maketitle
+    \apptocmd{\tableofcontents}{\booltrue{TR@firsttitleseen}}{}{%
+      \TR@warn{Cannot patch \string\tableofcontents}}
+
+  \let\TR@firsttitle@author\author
+  \renewcommand*\author{
+    \ifthenelse{\boolean{TR@firsttitleseen}}%
+    {\TR@contrib@author}%
+    {\TR@firsttitle@author}}
+
+  \def\TR@authcount#1{\setcounter{auco}{#1}\setcounter{@auth}{1}}
+  \pretocmd{\tableofcontents}{%
+    \let\authcount\TR@authcount%
+    \def\lastand{\ifnum\value{auco}=2\relax
+        \unskip{} \andname\
+      \else
+        \unskip \lastandname\
+      \fi}%
+    \def\and{\stepcounter{@auth}\relax
+      \ifnum\value{@auth}=\value{auco}%
+        \lastand
+      \else
+        \unskip,
+      \fi}%
+  }{}{%
+    \TR@warn{Cannot patch \string\tableofcontents}}
+
+  \newcommand*\TR@contrib@maketitle{\newpage
+    \phantomsection
+    \refstepcounter{chapter}%
+    \stepcounter{section}%
+    \setcounter{section}{0}%
+    \setcounter{subsection}{0}%
+    \setcounter{figure}{0}
+    \setcounter{table}{0}
+    \setcounter{equation}{0}
+    \setcounter{footnote}{0}%
+    \begingroup
+    \parindent=\z@
+    \renewcommand\thefootnote{\@fnsymbol\c@footnote}%
+    \newpage
+    \global\@topnum\z@   % Prevents figures from going at top of page.
+    \TR@contrib@@maketitle
+    \thispagestyle{\chapterpagestyle}%
+    \@thanks
+%
+    \def\\{\unskip\ \ignorespaces}\def\inst##1{\unskip{}}%
+    \def\thanks##1{\unskip{}}\def\fnmsep{\unskip}%
+    \if!\the\toctitle!\addcontentsline{toc}{title}{\@title}\else
+      \addcontentsline{toc}{title}{\the\toctitle}\fi
+    \if!\the\titlerunning!\else
+      \edef\@title{\the\titlerunning}%
+    \fi
+%
+    \ifx\@author\empty\relax%
+      \xdef\@runninghead{\ignorespaces\@title}
+    \else
+      \if!\the\tocauthor!\relax
+        {\def\and{\noexpand\protect\noexpand\and}%
+          \protected@xdef\toc@uthor{\@author}}%
+      \else
+        \def\\{\noexpand\protect\noexpand\newline}%
+        \protected@xdef\scratch{\the\tocauthor}%
+        \protected@xdef\toc@uthor{\scratch}%
+      \fi
+      \addtocontents{toc}{\noexpand\protect\noexpand\authcount{\the\c@auco}}%
+      \addcontentsline{toc}{author}{\toc@uthor}%
+
+      \if!\the\authorrunning!
+        \value{@inst}=\value{@auth}%
+        \setcounter{@auth}{1}%
+      \else
+        \edef\@author{\the\authorrunning}%
+      \fi
+
+      \xdef\@runninghead{\unskip\ignorespaces\@author: \@title}
+    \fi
+
+    \global\setbox\headrun=\hbox{\usekomafont{pagehead}\@runninghead}%
+    \ifdim\wd\headrun>\hsize
+      \TR@warn{Title and author names too long for running head. Please supply
+        a shorter form with \string\titlerunning\space and
+        \string\authorrunning\space prior to \string\maketitle}%
+      \xdef\@runninghead{Authors/Title Suppressed Due to Excessive Length}%
+    \fi
+    \addchapmark{\@runninghead}%
+  \endgroup
+  \setcounter{footnote}{\fnnstart}%
+  \clearheadinfo}
+
+   \newcommand*\TR@contrib@@maketitle{\newpage
+     \def\lastand{\ifnum\value{@inst}=2\relax
+         \unskip{} \andname\
+       \else
+         \unskip \lastandname\
+       \fi}%
+     \def\and{\stepcounter{@auth}\relax
+       \ifnum\value{@auth}=\value{@inst}%
+         \lastand
+       \else
+         \unskip,
+       \fi}%
+     \begin{center}%
+       \let\newline\\
+       {\Large \bfseries\boldmath
+         \pretolerance=10000
+         \@title \par}\vskip .8cm
+       \if!\@subtitle!\else {\large \bfseries\boldmath
+         \vskip -.65cm
+         \pretolerance=10000
+         \@subtitle \par}\vskip .8cm\fi
+       \setbox0=\vbox{\setcounter{@auth}{1}\def\and{\stepcounter{@auth}}%
+         \def\thanks##1{}\@author}%
+       \global\value{@inst}=\value{@auth}%
+       \global\value{auco}=\value{@auth}%
+       \setcounter{@auth}{1}%
+       {\lineskip .5em
+         \noindent\ignorespaces
+         \@author\vskip.35cm}
+       {\small\institutename}
+     \end{center}%
+   }
+
+  \newcommand*\TR@contrib@author[1]{\gdef\@author{#1}}
+
+%    \end{macrocode}
+% as for title, as for abstract.
+%    \begin{macrocode}
+  \newenvironment{abstract}{%
+    \ifthenelse{\boolean{TR@firsttitleseen}}{
+      \list{}{\advance\topsep by0.35cm\relax\small
+        \leftmargin=1cm
+        \labelwidth=\z@
+        \listparindent=\z@
+        \itemindent\listparindent
+        \rightmargin\leftmargin}\item[]%
+      }{%
+        \TR@error{Proceedings should not have \MessageBreak
+          abstracts. Please remove it.}}
+    }%
+  {\ifthenelse{\boolean{TR@firsttitleseen}}{\endlist}{}}
+
+  \AfterPackage{listings}{
+    \lstset{numberbychapter=true}}
+
+  %for compat with swathesis
+  \let\supervisors\@gobble
+  \let\statements\relax
+}{}
+%    \end{macrocode}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Language
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+%    \begin{macrocode}
 \RequirePackage{babel}
 \newcommand*\TR@lang{}\let\TR@lang\@empty
+
+%    \end{macrocode}
+% \changes{v0.4}{2014/08/12}{Silence babel+hyperref+shorthands}
+%    \begin{macrocode}
+\AfterPackage{hyperref}{
+  % https://tex.stackexchange.com/questions/193025/babel-hyperref-redefining-shorthand-several-times-per-page
+  \patchcmd{\pdfstringdef}
+    {\csname HyPsd@babel@}
+    {\let\bbl@info\@gobble\csname HyPsd@babel@}
+    {}{}
+}
 
 % extract ISO 639-2 code from babel language name
 {
@@ -849,34 +1191,40 @@ without this file.
 \ifthenelse{\@l{russian}}{\@L{ru}}{}
 \ifthenelse{\@l{scottish}}{\@L{gd}}{}
 }
-
+%    \end{macrocode}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Fonts
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
+%    \begin{macrocode}
 \RequirePackage[final,babel=true]{microtype}[2013/05/23]
 %
 % engine-dependent, eg, encoding, loading.
 %
 \RequirePackage[T1]{fontenc}
 \ifthenelse{\boolean{luatex} \or \boolean{xetex}}{%
-  \RequirePackage{fontspec}
+  \RequirePackage{fontspec}[2014/06/21]
 }{}
 
 % math font: euler
 \RequirePackage[euler-digits,T1]{eulervm}
 \let\mathbf\mathbold
 \ifthenelse{\boolean{luatex} \or \boolean{xetex}}{%
+%    \end{macrocode}
+% \changes{v0.4}{2014/08/12}{Load TeX Gyre Pagella before Adobe Source for
+% MatchLowercase reference.}
+%    \begin{macrocode}
+  \setmainfont{texgyrepagella}[ExternalLocation,%
+      Numbers={Proportional,OldStyle},%
+      UprightFont= *-regular,%
+      BoldFont=*-bold,%
+      ItalicFont=*-italic,%
+      SlantedFont=*-italic,%
+      BoldItalicFont=*-bolditalic,%
+      BoldSlantedFont=*-bolditalic,%
+      Ligatures={Common,TeX},%
+      ]
   \RequirePackage[scale=MatchLowercase,semibold]{sourcecodepro}
   \RequirePackage[scale=MatchLowercase,semibold,osf]{sourcesanspro}
-  \defaultfontfeatures{Scale=MatchLowercase,Ligatures={Common,TeX}}
-  \setmainfont[ExternalLocation,
-      Numbers={Proportional,OldStyle},
-      UprightFont= *-regular,
-      BoldFont=*-bold,
-      ItalicFont=*-italic,
-      BoldItalicFont=*-bolditalic]{texgyrepagella}
 }{
   \RequirePackage[scale=.9,semibold]{sourcecodepro}
   \RequirePackage[scale=.9,semibold,osf]{sourcesanspro}
@@ -884,14 +1232,14 @@ without this file.
 }
 \linespread{1.05} % a bit more for Palatino
 
-\ifthenelse{\boolean{xetex}}{
+
+%    \end{macrocode}
+% \changes{v0.4}{2014/08/12}{Disable tracking=smallcaps in luatex, also. Is broken.}
+%    \begin{macrocode}
+\ifthenelse{\boolean{xetex}\OR\boolean{luatex}}{
   \microtypesetup{stretch=9,shrink=15,step=3}
 }{
-  \ifthenelse{\boolean{luatex}}{
-    \microtypesetup{stretch=9,shrink=15,step=3,tracking=smallcaps}
-  }{%
-    \microtypesetup{stretch=9,shrink=15,step=3,tracking=smallcaps,letterspace=75}
-  }
+  \microtypesetup{stretch=9,shrink=15,step=3,tracking=smallcaps,letterspace=75}
 }
 
 \addtokomafont{disposition}{\rmfamily}
@@ -949,7 +1297,6 @@ without this file.
 
 \ifthenelse{\boolean{TR@chapters}}{
   \renewcommand*\chapterpagestyle{plain.scrheadings}
-
   \automark[chapter]{chapter}
   \automark*[section]{}
 }{
@@ -957,13 +1304,20 @@ without this file.
   \automark*[section]{}
 }
 
-\lefoot{\thepage}
-\rofoot{\thepage}
+%    \end{macrocode}
+% \changes{v0.4}{2014/08/12}{Fix pagenumber}
+%    \begin{macrocode}
+\lefoot[\pagemark]{\pagemark}
+\rofoot[\pagemark]{\pagemark}
 \ifthenelse{\boolean{TR@proceedings}}{
   \refoot[\@eventtitle]{\@eventtitle}
   \lofoot[\@eventtitle]{\@eventtitle}
 }{}
 
+ %\setkomafont{pagefoot}{}
+\setkomafont{pagehead}{\itshape}
+\setkomafont{pageheadfoot}{\normalcolor}
+\setkomafont{pagenumber}{\normalfont}
 %
 %
 % Sectioning
@@ -981,24 +1335,29 @@ without this file.
 \patchcmd{\subsection}{-3.25ex\@plus -1ex \@minus -.2ex}{-\baselineskip}{}{\TR@patchw}
 \patchcmd{\subsection}{1.5ex \@plus .2ex}{\baselineskip}{}{\TR@patchw}
 \patchcmd{\subsubsection}{-3.25ex\@plus -1ex \@minus -.2ex}{-\baselineskip}{}{\TR@patchw}
-\patchcmd{\subsubsection}{1.5ex \@plus .2ex}{\p@ \@plus \p@ \@minus \p@}{}{\TR@patchw}
+\patchcmd{\subsubsection}{1.5ex \@plus .2ex}{1sp \@plus 1sp \@minus 1sp}{}{\TR@patchw}
 \patchcmd{\paragraph}{3.25ex \@plus1ex \@minus .2ex}{\baselineskip}{}{\TR@patchw}
 \patchcmd{\subparagraph}{3.25ex \@plus1ex \@minus .2ex}{\baselineskip}{}{\TR@patchw}
 
 
 
+%    \end{macrocode}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% PDF links and bookmarks
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \changes{v0.4}{2014/08/12}{Delay hyperreft to the latest possible point.}
+%    \begin{macrocode}
 
-\RequirePackage[hyphens]{url}
-\AtEndOfClass{%
-  \RequirePackage[%
-    final,%
-    unicode=true,%
-    plainpages=false,%
-    pdfpagelabels=true,%
-    ]{hyperref}
+
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{%
+  final,%
+  unicode=true,%
+  plainpages=false,%
+  pdfpagelabels=true,%
+}{hyperref}
+\AtEndPreamble{%
+  \RequirePackage{hyperref}%
   \RequirePackage{hyperxmp}
 }
 \AtBeginDocument{%
@@ -1063,33 +1422,37 @@ without this file.
 %% Abstract
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\ifthenelse{\boolean{TR@proceedings}}{%
-  \def\abstract{\TR@error{Proceedings should not have \MessageBreak
-      abstracts. Please remove it.}}
-  \let\endabstract\relax
-}{}
-
-
-\renewenvironment{abstract}{%
-  \thispagestyle{plain.scrheadings}
-  \null\vfil\leavevmode%
-  \noindent%
-  \ignorespaces
-}{%
-  \par\vfil%
-  \ifthenelse{\boolean{TR@proceedings}}{%
-    \cleardoubleemptypage%
-  }{
+\ifthenelse{\boolean{TR@proceedings}}{}{
+  \renewenvironment{abstract}{%
+    \thispagestyle{plain.scrheadings}
+    \null\vfil\leavevmode%
+    \noindent%
+    \ignorespaces
+  }{%
+    \par\vfil%
     \clearpage%
   }
 }
 
+%    \end{macrocode}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Bibliography
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \changes{v0.4}{2014/08/12}{Provide common biblatex ground}
+%    \begin{macrocode}
 
 
-\PassOptionsToPackage{style=numeric}{biblatex}
+\PassOptionsToPackage{citestyle=numeric-comp}{biblatex}
+\AfterPackage{biblatex}{
+  \setcounter{biburllcpenalty}{7000}
+  \setcounter{biburlucpenalty}{8000}
+  \ExecuteBibliographyOptions{
+    url=false,%
+    urldate=iso8601,%
+    abbreviate=false,%
+    maxnames=20,%
+  }
+}
 \AtEndPreamble{
   \@ifpackageloaded{biblatex}{}{
 % normal bibtex
@@ -1097,9 +1460,19 @@ without this file.
   }
 }
 
+%%%%
+%%
+%%%
+%    \end{macrocode}
+% Use references name instead of bibliography throughout
+% \changes{v0.4}{2014/08/12}{More robust variand of refname forcing}
+%    \begin{macrocode}
 \ifthenelse{\boolean{TR@chapters}}{%
-  \defcaptionname{german,ngerman}{\bibname}{Literatur}
-  \defcaptionname{english,USenglish,american,british}{\bibname}{References}
+  \global\let\@auto@bibname\refname
+  \global\let\bibname\refname
+  \defcaptionname{ngerman}{\bibname}{\refname}
+  \defcaptionname{german}{\bibname}{\refname}
+  \defcaptionname{english}{\bibname}{\refname}
 }{}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1123,7 +1496,10 @@ without this file.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \RequirePackage{graphicx}
-
+%    \end{macrocode}
+% \changes{v0.4}{2014/08/12}{Require grffile for non-trivial file names}
+%    \begin{macrocode}
+\RequirePackage{grffile}
 
 % mock float
 \providecommand*\floatname[2]{\@namedef{fname@#1}{#2}}
@@ -1186,7 +1562,7 @@ without this file.
 \ifthenelse{\boolean{TR@proceedings}}{
   \RequirePackage{pdfpages}
   \ifthenelse{\boolean{xetex}}{}{\pdfinclusioncopyfonts = 1}
-  \includepdfset{pagecommand={\thispagestyle{plain}}}
+  \includepdfset{pagecommand={\thispagestyle{plain.scrheadings}}}
 }{}
 
 
@@ -1258,7 +1634,11 @@ without this file.
         [\dimexpr .33\baselineskip + \depth]{%
           \makebox[\paperwidth]{\color{black!50}\TR@draftInfo}}}}
   }
-  \AtEndDocument{\listoftodos}
+%    \end{macrocode}
+% \changes{v0.3a}{2014/08/08}{Fix listoftodos, only to appear with todotools}
+%    \begin{macrocode}
+  \ifthenelse{\boolean{TR@todotools}}{
+    \AtEndDocument{\listoftodos}}{}
 }{
   \let\blindtext\relax
   \let\Blindtext\relax
@@ -1282,7 +1662,7 @@ without this file.
 
 
 
-\PreventPackageFromLoading[\message{nono}]{%
+\PreventPackageFromLoading[\message{Do not use.}]{%
 %
 % Disallowed
 %
@@ -1343,7 +1723,11 @@ Instead, use a sloppypar, when necessary:\MessageBreak
 
 \RequirePackage{xspace}
 \RequirePackage{csquotes}
-
+\ifthenelse{\boolean{luatex}\OR\boolean{xetex}}{
+  %% http://tex.stackexchange.com/a/16995
+  \DeclareUTFcharacter[\UTFencname]{x201C}{\grqq}
+  \DeclareUTFcharacter[\UTFencname]{x201E}{\glqq}
+}{}
 \PassOptionsToPackage{binary-units}{siunitx}
 \AtEndPreamble{\RequirePackage{siunitx}}
 
@@ -1377,7 +1761,7 @@ Instead, use a sloppypar, when necessary:\MessageBreak
   atbegin=\KOMAoptions{captions=above},
   float]{alg}
 
-\rowcolors*{1}{lightgray!25}{}
+\rowcolors*{2}{lightgray!25}{}
 
 \begin{filecontents}{example.bib}
 @article{953350,
@@ -1406,7 +1790,7 @@ Instead, use a sloppypar, when necessary:\MessageBreak
 %   \email{\{firstname.lastname\}@student.hpi.uni-potsdam.de}
 % }
 % \supervisors{%
-%   Prof.\,Dr.\,William Withaname \and%
+%   Prof.\,Dr.\,William Withaname\and%
 %  Dr.\,John Doe}
 \maketitle
 
@@ -1819,13 +2203,11 @@ language.
 % \label{sec:manual}
 %
 % Load standard \LaTeX documentation class, passing all options to it
-% but use |scrartcl| instead of |article|. (A small patch is needed to allow
-% loading |scrbase| before |\documentlcass|)
+% but use |scrartcl| instead of |article|.
 %    \begin{macrocode}
 %<*doc|manual|README>
 %<*!README>
-\makeatletter\let\@classoptionslist\empty\makeatother
-\RequirePackage{scrbase}
+\RequirePackage{scrfile}
 \ReplaceClass{article}{scrartcl}
 %    \end{macrocode}
 %
