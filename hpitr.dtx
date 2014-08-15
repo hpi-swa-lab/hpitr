@@ -2208,8 +2208,11 @@ language.
 % However, we do this not by the normal means so we force |\onecolumn| once the
 % document commences.
 %    \begin{macrocode}
-\documentclass[a4paper,10pt]{ltxdoc}
-\KOMAoptions{pagesize,twocolumn=true,DIV=calc}
+\documentclass{ltxdoc}
+\KOMAoptions{%
+  paper=a4,
+  fontsize=9pt,
+  pagesize,twocolumn=true,DIV=calc}
 \AtBeginDocument{\onecolumn}
 \usepackage{ifpdf,ifxetex}
 %    \end{macrocode}
@@ -2225,6 +2228,7 @@ language.
 \MacroTopsep=0pt
 \MacrocodeTopsep=3pt
 \setlength\MacroIndent{0pt}
+\setlength{\columnsep}{18pt}
 \makeatletter
 \def\theCodelineNo{\reset@font\sffamily\color{black!50}\scriptsize
   \arabic{CodelineNo}\ }
@@ -2256,9 +2260,13 @@ language.
 %    \begin{macrocode}
 \setkomafont{subtitle}{\usekomafont{title}\LARGE\em}
 \addtokomafont{disposition}{\rmfamily}
+
+\providecommand*\generalshape{\upshape}
 \setkomafont{title}{\rmfamily\mdseries}
 \addtokomafont{subject}{\mdseries}
-\addtokomafont{disposition}{\mdseries}
+\setkomafont{disposition}{\rmfamily\mdseries\generalshape}
+\addtokomafont{footnote}{\generalshape}
+\addtokomafont{paragraph}{\em}
 \addtokomafont{descriptionlabel}{\mdseries}
 \addtokomafont{captionlabel}{\mdseries}
 \renewcommand*\labelitemii{\normalfont\textendash}
@@ -2290,12 +2298,14 @@ language.
 \addcontentsonly{toc}{0} 
 \footnotelayout{m}
 \newenvironment{eng}[1][]%
-  {\begin{leftcolumn*}[#1]\begin{english}\upshape}%
+  {\begin{leftcolumn*}[#1]\begin{english}%
+        \let\generalshape\upshape%
+      }%
   {\end{english}\end{leftcolumn*}}
 \newenvironment*{ger}%
 {\begin{rightcolumn}
  \begin{german}%
-   \let\mdseries\em%
+   \let\generalshape\em%
    \em}%
 {\end{german}%
  \end{rightcolumn}}
@@ -2304,6 +2314,8 @@ language.
   \textenglish{Contents} / \emph{\textgerman{Inhalt}}}
 \let\contentsname\mycontentsname
 
+\GlossaryPrologue{%
+  \section*{\textenglish{Change History} / \emph{\textgerman{Änderungsverlauf}} }}
 \IndexPrologue{
 \begin{paracol}{2}[\section*{Index}%
   \markboth{Index}{Index}]
