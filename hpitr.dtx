@@ -34,7 +34,7 @@
 %   Right bracket \]     Circumflex    \^     Underscore    \_
 %   Grave accent  \`     Left brace    \{     Vertical bar  \|
 %   Right brace   \}     Tilde         \~}
-% \CheckSum{1498}
+% \CheckSum{2151}
 %
 % \iffalse meta-comment
 %<*dtx|ins>
@@ -61,7 +61,7 @@
 %<*!README>
 [%
 %</!README>
-  2014/08/01 v0.3
+  2014/08/15 v0.5
 %<!README>^^J
   A unified class for Technical Reports at the HPI
 %<*!README>
@@ -75,8 +75,9 @@
 %
 %
 % \changes{v0.1}{2014/06/01}{Inital class derived from polze.cls}
-% \changes{v2.0}{2014/07/10}{Minmial changes to play nice with babel and
+% \changes{v0.2}{2014/07/10}{Minmial changes to play nice with babel and
 % subcaption}
+% \changes{v0.5}{2014/08/15}{Small fixes to abstract and title, loading of float}
 %
 % \GetFileInfo{hpitr.dtx}
 %
@@ -705,6 +706,7 @@ without this file.
 \RequirePackage{fixltx2e}[2014/06/10]
 \RequirePackage{scrhack}
 
+\PassOptionsToPackage{log-declarations=false}{xparse}
 \RequirePackage{expl3}[2011/09/05]
 \RequirePackage{xparse}
 % https://tex.stackexchange.com/questions/185713/fontspec-2-4-and-scale-matchlowercase-causes-error
@@ -732,14 +734,18 @@ without this file.
 \KOMAoption{titlepage}{firstiscover}
 
 \apptocmd{\title}{%
-  \AfterPreamble{\hypersetup{pdftitle={#1}}}}
+  \AfterPreamble{
+    \begingroup
+    \appto\pdfstringdefPreHook{\def\\{\space\ignorespaces}}
+    \hypersetup{pdftitle={#1}}
+    \endgroup}}
 {}{%
   \TR@warn{Cannot patch \string\title to set pdftitle}}
 
 \apptocmd{\author}{%
   \AfterPreamble{
     \begingroup
-    \appto\pdfstringdefPreHook{\def\and{,\ \ignorespaces}}
+    \appto\pdfstringdefPreHook{\def\and{,\space\ignorespaces}}
     \hypersetup{pdfauthor={#1}}
     \endgroup}
   }
@@ -988,6 +994,13 @@ without this file.
     \ifthenelse{\boolean{TR@firsttitleseen}}%
     {\TR@contrib@author}%
     {\TR@firsttitle@author}}
+
+  \providecaptionname{english}{\andname}{and}
+  \providecaptionname{english}{\lastandname}{\unskip, and}
+  \providecaptionname{german}{\andname}{und}
+  \providecaptionname{german}{\lastandname}{und}
+  \providecaptionname{ngerman}{\andname}{und}
+  \providecaptionname{ngerman}{\lastandname}{und}
 
   \def\TR@authcount#1{\setcounter{auco}{#1}\setcounter{@auth}{1}}
   \pretocmd{\tableofcontents}{%
@@ -1430,7 +1443,7 @@ without this file.
     \ignorespaces
   }{%
     \par\vfil%
-    \clearpage%
+    \cleardoublepage%
   }
 }
 
@@ -1501,11 +1514,14 @@ without this file.
 %    \begin{macrocode}
 \RequirePackage{grffile}
 
-% mock float
-\providecommand*\floatname[2]{\@namedef{fname@#1}{#2}}
-\providecommand*\floatplacement[2]{\@namedef{fps@#1}{#2}}
-\floatplacement{figure}{htbp}
-\floatplacement{table}{htp}
+\AtEndPreamble{
+  \@ifpackageloaded{float}{}{% mock float
+    \providecommand*\floatname[2]{\@namedef{fname@#1}{#2}}
+    \providecommand*\floatplacement[2]{\@namedef{fps@#1}{#2}}
+    \floatplacement{figure}{htbp}
+    \floatplacement{table}{htp}
+  }
+}
 
 \AfterPackage{float}{
 % disable [H]
@@ -1662,7 +1678,9 @@ without this file.
 
 
 
-\PreventPackageFromLoading[\message{Do not use.}]{%
+\PreventPackageFromLoading[%
+\message{%
+  ^^J^^JERROR: You tried to load a package that is not to be used with this class.^^J^^J}]{%
 %
 % Disallowed
 %
@@ -2207,7 +2225,7 @@ language.
 %    \begin{macrocode}
 %<*doc|manual|README>
 %<*!README>
-\RequirePackage{scrfile}
+\RequirePackage{scrlfile}
 \ReplaceClass{article}{scrartcl}
 %    \end{macrocode}
 %
