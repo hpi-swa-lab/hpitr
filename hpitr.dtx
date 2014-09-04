@@ -17,7 +17,9 @@
 %
 % This work consists of the file `hpitr.dtx'.
 %
-% ==========================================================================
+%^^A ==========================================================================
+%^^A ==========================================================================
+%^^A ==========================================================================
 % \fi^^A meta-comment
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -34,7 +36,7 @@
 %   Right bracket \]     Circumflex    \^     Underscore    \_
 %   Grave accent  \`     Left brace    \{     Vertical bar  \|
 %   Right brace   \}     Tilde         \~}
-% \CheckSum{2151}
+% \CheckSum{2743}
 %
 % \iffalse meta-comment
 %<*dtx|ins>
@@ -61,7 +63,7 @@
 %<*!README>
 [%
 %</!README>
-  2014/08/15 v0.5
+  2014/09/04 v0.7
 %<!README>^^J
   A unified class for Technical Reports at the HPI
 %<*!README>
@@ -78,12 +80,13 @@
 % \changes{v0.2}{2014/07/10}{Minmial changes to play nice with babel and
 % subcaption}
 % \changes{v0.5}{2014/08/15}{Small fixes to abstract and title, loading of float}
+% \changes{v0.6}{2014/08/27}{Provide \cs{keywords} command.}
+% \changes{v0.7}{2014/09/04}{Discriminate between proceedings and collections}
 %
 % \GetFileInfo{hpitr.dtx}
-%
-% ^^A =========================================================================
-% ^^A =========================================================================
-% ^^A =========================================================================
+%^^A ==========================================================================
+%^^A ==========================================================================
+%^^A ==========================================================================
 %
 %\makeatletter
 % ^^A Heiko Oberdiek's fix from latexbugs (latex/3540):
@@ -198,13 +201,18 @@
 % \DoNotIndex{\twocolumn,\typeout}
 %  \DoNotIndex{\undefined,\usecounter}
 % \DoNotIndex{\vfil,\vfill,\vspace}
+%  \DoNotIndex{\ifthenelse,\OR,\AND,\boolean}
 % \makeatother
 %
-% ^^A =========================================================================
-% ^^A =========================================================================
-% ^^A =========================================================================
-%
+%^^A ==========================================================================
+%^^A ==========================================================================
+%^^A ==========================================================================
 % \tableofcontents
+% \iffalse meta-comment
+
+% TODO:
+
+% Einheitlichen Zitations-stil dokumentieren.
 
 
 
@@ -216,6 +224,52 @@
 
 
 
+
+
+% 1. Benutze, wenn möglich, LuaLaTeX oder XeLaTeX (lieber lualatex). Die Uni möchte gerne 
+%   Unicode-Schriften und das ist mit reinem pdfLaTeX nicht zu machen. Außerdem können
+%   beide nativ UTF-8:
+% 2. Bitte nutze ausschließlich utf-8-codierte .tex dateien (nicht latin1 oder ansi-new)
+
+% - microtype, graphicx, amsmath, amssymb, url, booktabs, color, fixltx2e und hyperref
+%  Werden von hpitr schon geladen, man kann sie also aufführen, muss aber nicht.
+% - times, subfig
+%  Sind veraltet und times ist außerdem mit hpitr nicht zulässig
+% - ctable, wrapfix, algorithmic, algorithm2e
+%  Werden gar nicht verwendet, also habe ich sie entfernt sodass sie nicht stören.
+% - WICHTIG: inputenc
+%  Habe ich entfernt, da ich deinen TR mit lualatex gebaut habe. 
+%  Außerdem ist mit hpitr nur utf-8 zulässig:
+%    - Wenn man mit pdflatex baut, ruft hpitr automatisch \cs\usepackage[utf8]{inputenc} auf.
+
+%  Nebenbei: 
+% 	%\cs\usepackage[latin1]{inputenc} %Linux
+% 	\cs\usepackage[ansinew]{inputenc} %Windows
+% 	%\cs\usepackage[applemac]{inputenc} %Mac
+%  Sollte in deinen Dokumenten nicht auftauchen.
+%  Denn zumeist stimmt dass nicht mehr. Auf den meisten Linux'en ist
+%  nicht mehr latin-1, sondern utf-8 der standard. Bei windows kommt es aufs
+%  land an. Auf dem mach wird seit 14 jahren kein 'applemac' mehr verwendet.
+%  Auch hier wäre utf-8 besser.
+%  :)
+
+
+% Die Änderungen and labelitemi... verändern das Geseamtaussehen und
+% sind mit hpitr nicht zulässig.
+% %%%%%
+
+% title/author
+% Hier ist der Titel von oben. hpitr trägt diese werte automatisch in das pdf ein (und kann auch mit \\ im titel umgehen)
+
+
+
+% %%%%%
+% For conversions from llncs:
+
+% Du benutzt die Defintion-umgebung. Die gibts in lncs, aber nicht
+% sonst. Ich habe sie dir mit amsthm nachgebaut.
+
+% \fi ^^A meta-comment
 
 
 
@@ -230,68 +284,107 @@
 % \section{Einführung}
 % test
 % \end{ger}
-
-
-
+% \end{paracol}
+% \DescribeOption{trtype}
+% \begin{paracol}{2}
 % \begin{eng}
 % \section{Types of Reports}
 % \label{sec:types}
 % This class support the types of technical reports that are common at the HPI.
 % In essence, there are three variants.
+% \end{eng}
+% \begin{ger}
+% \section{Berichtarten}
+% Die Klasse unterstütz die am HPI üblichen Arten von technischen Berichten.
+% Grob sind das drei Varianten.
+% \end{ger}
+% \end{paracol}
 %
+%
+% \begin{Describe}
+%   \DescribeValue{trtype}{singlearticle}\\
+%   \DescribeValue{trtype}{article}
+% \end{Describe}
+% \begin{paracol}{2}
+% \begin{eng}
 % \paragraph{Article-like reports}
 % \label{sec:art-like}
 % Reports that are basically similar to conference or journal articles or
 % extend such articles have an \emph{article-like} character. Their top-level
 % sectioning element is the \emph{sections}.
+% \end{eng}
+% \begin{ger}
+% \paragraph{Artikelartige Berichte} ^^A\oarg{trtype=singlearticle}\quad
+% Berichte, die im Kern ähnlich zu Tagungs-, Konferenz- oder
+% Zeitschriftenartikeln sind, oder erweiterte Varianten davon sind, haben
+% \emph{artikelartigen} Charakter. Ihre höchste Gliederungsebene sind
+% \emph{Abschnitte}.
+% \end{ger}
+% \end{paracol}
 %
+%
+% \begin{Describe}
+% \DescribeValue{trtype}{singlereport}\\
+% \DescribeValue{trtype}{report}
+% \end{Describe}
+% \begin{paracol}{2}
+% \begin{eng}
 % \paragraph{Original reports}
 % \label{sec:original-rprt}
 % Reports that are like monographs (such as theses) or inherently independent
 % reports are report in the strict sense.\footnote{Not implying that the other
 % types are inadequate as technical reports, to the contrary!} Their top-level
 % sectioning element is the \emph{chapter}.
-%
-% \paragraph{Collection-like reports}
-% \label{sec:coll-like}
-% Reports comprising several individual contributions are
-% \emph{collection-like}. This may include conference proceedings, seminar
-% compilations, or special issues, among others. Their top-level sectioning
-% element is the \emph{chapter} (starting \emph{recto}). Some commands to
-% manage such collections are provided for convenience.
-%
 % \end{eng}
 % \begin{ger}
-% \section{Berichtarten}
-% Die Klasse unterstütz die am HPI üblichen Arten von technischen Berichten.
-% Grob sind das drei Varianten.
-%
-% \paragraph{Artikelartige Berichte} ^^A\oarg{trtype=singlearticle}\quad
-% Berichte, die im Kern ähnlich zu Konferenz-, Tagungs- oder
-% Zeitschriftenartikeln sind, oder erweiterte Varianten davon sind, haben
-% \emph{artikelartigen} Charakter. Ihre höchste Gliederungsebene sind
-% \emph{Abschnitte}.
-%
 % \paragraph{Eigentliche Berichte} ^^A\oarg{trtype=singlereport}\quad
 % Berichte, die ähnlich zu Monographien wie Abschlussarbeiten sind oder
 % grundsätzlich eigenständige Berichte sind im eigentlichen Sinne
 % \emph{berichtartig}.\footnote{Das bedeutet nicht, dass die anderen Arten sich
 % nicht als technische Berichte eignen.} Ihre höchste Gliederungsebene sind
 % \emph{Kapitel}.
+% \end{ger}
+% \end{paracol}
 %
+%
+% \begin{Describe}
+%   \DescribeValue{trtype}{collection}\\
+%   \DescribeValue{trtype}{proceedings}
+% \end{Describe}
+% \begin{paracol}{2}
+% \begin{eng}
+% \paragraph{Collection-like reports}
+% \label{sec:coll-like}
+% Reports comprising several individual contributions are
+% \emph{collection-like}. This may include conference proceedings, seminar
+% compilations, or special issues, among others. Their top-level sectioning
+% element is the \emph{chapter}. Some commands to
+% manage such collections are provided for convenience.
+%
+% Note that proceeding use a different formatting for the individual
+% contributions. They start with their own title, author information, and
+% abstract, while in normal collections, this information is absent. In normal
+% collections, all sections are numbered by chapter.
+% \end{eng}
+% \begin{ger}
 % \paragraph{Sammlungsartige Berichte}
-% ^^A\oarg{trtype=\{collection\textbar proceedings\}}\quad 
 % Berichte, die sich aus mehreren Einzelbeiträgen zusammensetzen sind
 % \emph{sammlungsartig}. Dies kann unter anderem Tagungsbände,
 % Seminarzusammenfassungen oder Sonderbände beinhalten. Ihre höchste
-% Gliederungsebene sind \emph{Kapitel} (hier zwingend rechtsöffned). Es gibt
-% einige Befehle die die Verwaltung von diesen Sammlungen vereinfachen sollen.
+% Gliederungsebene sind \emph{Kapitel}. Es gibt einige Befehle die die
+% Verwaltung von diesen Sammlungen vereinfachen sollen.
+%
+% Tagungsbände zeichen sich durch eine besondere Formatierung der
+% Einzelbeiträge aus; jeder Beitrag beginnt im Gegensatz zu normalen Sammlungen
+% mit eigenem Titel, Autorennennung und Zusammenfassung. In normalen Sammlungen
+% ordnet sich die Abschnitsnummerierung der Kapitelnummerierung unter.%
 % \end{ger}
-
-
+% \end{paracol}
+%
+% \begin{paracol}{2}
 % \begin{eng}
 % \section{Microtypography}
-% \label{sec:intro}
+% \label{sec:micro}
 % test
 % \end{eng}
 % \begin{ger}
@@ -300,38 +393,67 @@
 % \end{ger}
 % \end{paracol}
 %
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-% ^^A =========================================================================
-% ^^A =========================================================================
-% ^^A =========================================================================
+% \section{T.B.A}
+% \begin{table}
+%   \makeatletter
+%   \let\sellang\select@language
+%   \makeatother
+%   \centering
+%   \begin{threeparttable}
+%     \caption{Supported bibliography entry types / \emph{Unterstützte Bibliographieeintragsarten}}
+%     \label{tbl:bibtytpes}
+%     \begin{tabular}{>{\relax}l>{\relax}l>{\sellang{english}\RaggedRight}p{.3\linewidth}>{\sellang{ngerman}\em\RaggedRight}p{.3\linewidth}}
+%     \toprule
+%     \BibTeX           & Biblatex                   &                      & \\
+%     \midrule
+%     article           & article                    & articles in journal, magazine \&c & Zeitschriften"~, Magazin"~ und andere Artikel \\
+%                       & \emph{suppperiodical}      & supplemental material in periodicals & Zusatzmaterialien in Periodika \\
+%                       & \emph{review}              & reviews of other works & Rezensionen anderer Arbeiten \\
+%     book              & book                       & books & Bücher\\
+%                       & \emph{mvbook}              & multi-volume --- & Mehrbändige --- \\
+%     booklet           & booklet                    & book-like work without publisher & Buchartiges nicht-verlegtes Werk \\
+%                       & collection                 & collection of multiple independent contributions &  Sammlung eigenständiger Werke \\
+%                       & \emph{mvcollection}        & multi-volume --- & Mehrbändige --- \\
+%                       & \emph{reference}           & references such as dictionaries & Nachschlagewerke wie Wörterbücher\\
+%                       & \emph{mvreference}         & multi-volume --- & Mehrbändige --- \\
+%     inbook            & inbook\tnote{a}            & independent part of a book & Eigenständiger Buchteil \\
+%                       & \emph{bookinbook}          & part of a book that originally was a book & Buchteil, der schon als eigenständiges Buch verlegt wurde \\
+%                       & \emph{suppbook}            & supplemental material in books & Zusatzmaterialien in Büchern \\
+%     incollection      & incollection               & independent contribution to a collection & Eigenständiges Werk, das einer Sammlung ist \\
+%                       & \emph{suppcollection}      & supplemental material in a collection & Zusatzmaterialien in Sammlungen \\
+%                       & \emph{inreference}         & articles in works of references & Artikel in Nachschlagewerken\\
+%     inproceedings     & inproceedings              & articles in conference proceedings & Tagungsbandartikel\\
+%     \emph{conference} & \emph{conference}          & --- ditto & --- dito \\
+%     manual            & manual                     & documentation works & Handbücher \\
+%     mastersthesis     & mastersthesis\tnote{b}     & Master’s theses & Master"~ oder Magisterarbeiten \\
+% \llap{☞} misc        & misc                        & anything (default) & sonstiges (Vorgabewert)\\
+%                       & online                     & online resource like web sites & Internetquellen wie Webseiten \\
+%                       & \emph{www}                 & --- ditto & --- dito \\
+%                       & \emph{electronic}          & --- ditto & --- dito \\
+%     phdthesis         & phdthesis\tnote{b}         & doctoral dissertation & Dissertation \\
+%                       & patent                     & patent entries & Patente \\
+%                       & periodical                 & complete preriodical issue & Ganze Zeitschriftenausgabe \\
+%     proceedings       & proceedings                & conference proceeding & Konferenz"~ und Tagungsbändge \\
+%                       & \emph{mvproceedings}       & multi-volume --- & Mehrbändige --- \\
+%                       & report                     & institutionally published report & Von Institutionen veröffentlichte Berichte\\
+%     techreport        & \emph{techreport}\tnote{c} & technical reports & Technische Berichte\\
+%                       & thesis                     & theses submitted to educational institutins & Abschlussarbeiten \\
+%                       & \emph{mastersthesis}       & (see above) & (siehe oben) \\
+%                       & \emph{phdthesis}           & (see above) & (siehe oben) \\
+%     unpublished       & unpublished                & works not formally published & Nicht offiziell veröffentlichte Werke \\
+%     \bottomrule
+%     \end{tabular}
+%     \begin{tablenotes}
+%     \item [a] Behaves differently than \BibTeX / \emph{Verhält sich anders
+%     als in \BibTeX}
+%     \item [b] Actually a subtype of thesis / \emph{Eigentlich eine thesis-Unterart}
+%     \item [c] Actually a subtype of report / \emph{Eigentlich eine report-Unterart}
+%     \end{tablenotes}
+%   \end{threeparttable}
+% \end{table}
+%^^A ==========================================================================
+%^^A ==========================================================================
+%^^A ==========================================================================
 % \StopEventually{
 %  \newpage
 %  \appendix
@@ -416,31 +538,31 @@ without this file.
     \Msg{* WARNING: \string\pdfshellescape\space not available!}
     \Msg{* WARNING: You should run this file with shell-escapes enabled.}
     \Msg{* WARNING: Otherwise you have to call}
-    \Msg{* WARNING: \space\space xelatex hpitr.ltx}
+    \Msg{* WARNING: \space\space lualatex hpitr.ltx}
     \Msg{* WARNING: to generate the manual and examples on your own!}
     \batchmode \errmessage{}\csname @@end\endcsname\csname end\endcsname
   \else\ifnum \pdfshellescape=1 \else
     \Msg{* WARNING: shell-escapes not activated!}
     \Msg{* WARNING: You should run this file with shell-escapes enabled.}
     \Msg{* WARNING: Otherwise you have to call}
-    \Msg{* WARNING: \space\space xelatex hpitr.ltx}
+    \Msg{* WARNING: \space\space lualatex hpitr.ltx}
     \Msg{* WARNING: to generate the manual and examples on your own!}
     \batchmode \errmessage{}\csname @@end\endcsname\csname end\endcsname
   \fi\fi
 }
 
 \immediate\write18{cp README.txt README || copy README.txt README}
-\immediate\write18{xelatex -interaction=nonstopmode hpitr.ltx}
+\immediate\write18{lualatex -interaction=nonstopmode hpitr.ltx}
 \immediate\write18{mkindex hpitr}
-\immediate\write18{xelatex -interaction=nonstopmode hpitr.ltx}
+\immediate\write18{lualatex -interaction=nonstopmode hpitr.ltx}
 \immediate\write18{mkindex hpitr}
-\immediate\write18{xelatex -interaction=nonstopmode hpitr.ltx}
+\immediate\write18{lualatex -interaction=nonstopmode hpitr.ltx}
 
-\immediate\write18{xelatex -interaction=nonstopmode hpitr-manual.ltx}
+\immediate\write18{lualatex -interaction=nonstopmode hpitr-manual.ltx}
 \immediate\write18{mkindex hpitr-manual}
-\immediate\write18{xelatex -interaction=nonstopmode hpitr-manual.ltx}
+\immediate\write18{lualatex -interaction=nonstopmode hpitr-manual.ltx}
 \immediate\write18{mkindex hpitr-manual}
-\immediate\write18{xelatex -interaction=nonstopmode hpitr-manual.ltx}
+\immediate\write18{lualatex -interaction=nonstopmode hpitr-manual.ltx}
 
 \immediate\write18{lualatex -interaction=nonstopmode example-single.tex}
 \immediate\write18{lualatex -interaction=nonstopmode example-singlea.tex}
@@ -461,48 +583,9 @@ without this file.
 % \iffalse meta-comment
 %</dtx|ins>
 % \fi^^A meta-comment
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+%^^A ==========================================================================
+%^^A ==========================================================================
+%^^A ==========================================================================
 % \iffalse meta-comment
 %<*class>
 % \fi^^A meta-comment
@@ -631,33 +714,69 @@ without this file.
 
 %% proceedings?
 \newbool{TR@proceedings}
+\newbool{TR@contribtools}
 \newbool{TR@chapters}
 \booltrue{TR@chapters}
-
+%    \end{macrocode}
+% \begin{option}{trtype}
+%    \begin{macrocode}
+\TRnewifStd{chapterbib}
+\TRStdOption{chapterbib}{chapterbib=true}
+%    \end{macrocode}
+% \end{option}
+%
+% \begin{option}{trtype}
+%    \begin{macrocode}
 \TRKey{trtype}{
   \TRsetnumc{trtype}{@tempa}{%
     {singlearticle}{0},{article}{0},%
     {singlereport}{1},{report}{1},%
-    {proceedings}{2},{collection}{2}%
+    {proceedings}{2},%
+    {collection}{3}%
   }{#1}
   \ifcase \@tempa\relax
     \renewcommand*\TR@BaseClass{scrartcl}
     \boolfalse{TR@proceedings}
     \boolfalse{TR@chapters}
+    \boolfalse{TR@contribtools}
   \or
     \renewcommand*\TR@BaseClass{scrreprt}
     \boolfalse{TR@proceedings}
     \booltrue{TR@chapters}
+    \boolfalse{TR@contribtools}
   \or
     \renewcommand*\TR@BaseClass{scrbook}
     \booltrue{TR@proceedings}
+    \booltrue{TR@contribtools}
+    \booltrue{TR@chapters}
+    \booltrue{TR@chapterbib}
+  \or
+    \renewcommand*\TR@BaseClass{scrbook}
+    \boolfalse{TR@proceedings}
+    \booltrue{TR@contribtools}
     \booltrue{TR@chapters}
   \fi
 }
+%    \end{macrocode}
+% \end{option}
+% \begin{option}{single}
+% \begin{option}{singlereport}
+% \begin{option}{singlearticle}
+% \begin{option}{proceedings}
+% \begin{option}{collection}
+%    \begin{macrocode}
 \TRStdOption{single}{trtype=singlereport}
 \TRStdOption{singlereport}{trtype=singlereport}
 \TRStdOption{singlearticle}{trtype=singlearticle}
 \TRStdOption{proceedings}{trtype=proceedings}
+\TRStdOption{collection}{trtype=collection}
+%    \end{macrocode}
+% \end{option}
+% \end{option}
+% \end{option}
+% \end{option}
+% \end{option}
+%    \begin{macrocode}
 
 % Deprecated
 \DeclareOption{inproceedings}{
@@ -700,25 +819,29 @@ without this file.
 }
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Special paper size (University Potsdam)
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\KOMAoption{paper}{17cm:24cm}
-\AtEndPreamble{\recalctypearea}
-
-\KOMAoptions{
-  twoside=true,
+%    \end{macrocode}
+%
+% Set basic paper and typearea options
+%    \begin{macrocode}
+\KOMAoptions{%
   pagesize=auto,
+  paper=a4,
+  DIV=calc,
+  twoside=semi,
+}
+\AtEndPreamble{\recalctypearea}
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\KOMAoptions{
   twocolumn=false,
-  fontsize=10pt,
+  fontsize=12pt,
   footinclude=false,
   headinclude=true,
-  DIV=calc,
 }
 \ifthenelse{\boolean{TR@proceedings}}{
   \KOMAoption{open}{right}
 }{}
-
 %
 % Fixes
 %
@@ -731,10 +854,13 @@ without this file.
 \RequirePackage{xparse}
 % https://tex.stackexchange.com/questions/185713/fontspec-2-4-and-scale-matchlowercase-causes-error
 \ExplSyntaxOn
-\cs_new_protected:Npn \fp_div:Nn #1 #2
-{
-  \fp_set:Nn #1 { #1/#2 }
-}
+\cs_if_free:NTF \fp_div:Nn
+  {
+    \cs_new_protected:Npn \fp_div:Nn #1 #2
+      {
+        \fp_set:Nn #1 { #1/#2 }
+      }
+  }{}
 \ExplSyntaxOff
 
 
@@ -751,7 +877,11 @@ without this file.
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %    \begin{macrocode}
-\KOMAoption{titlepage}{firstiscover}
+\@ifpackagelater{scrbase}{2013/12/19}{%
+  \KOMAoption{titlepage}{firstiscover}
+}{
+  \KOMAoption{titlepage}{yes}
+}
 
 \apptocmd{\title}{%
   \AfterPreamble{
@@ -773,12 +903,15 @@ without this file.
   \TR@warn{Cannot patch \string\author to set pdfauthor}}
 
 %    \end{macrocode}
-% \changes{v0.4}{2014/08/12}{Provide email command based on hyperref}
+%
+% \begin{macro}{\email}
+% \mbox{}
+%\changes{v0.4}{2014/08/12}{Provide email command based on hyperref}
 %    \begin{macrocode}
 \providecommand*\email[1]{\href{mailto:#1}{\nolinkurl{#1}}\xspace}
-
 %    \end{macrocode}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \end{macro}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 % Titlepage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % \changes{v0.4}{2014/08/12}{If draft-titlepage, set its numbering in Roman
@@ -799,7 +932,7 @@ without this file.
     \ifthenelse{\boolean{@mainmatter}}{\pagenumbering{Roman}}{}
     \let\center\flushright%
     \let\endcenter\endflushright%
-    \let\huge\normalsize
+    \let\huge\normalsize%
   }{}{%
     \TR@warn{Cannot patch \string\maketitle}}
   \apptocmd{\endtitlepage}{%
@@ -808,30 +941,33 @@ without this file.
       \pagenumbering{arabic}}{%
       \pagenumbering{roman}}
     \setcounter{page}{5}%
+    \relax%
   }{}{%
     \TR@warn{Cannot patch \string\maketitle}}
 }{%
-  \def\maketitle{\relax}
+  \def\maketitle{\setcounter{page}{5}\relax}
 }
 
 
-\ifthenelse{\boolean{TR@proceedings}}{
+\ifthenelse{\boolean{TR@proceedings}\OR\boolean{TR@contribtools}}{
 %    \end{macrocode}
 %
 %
 %  Proceedings stuff.
-%
+% \begin{macro}{\event}
 %% Title of the event
 % \changes{v0.4}{2014/08/12}{Delay to latest point for hyperref}
 %    \begin{macrocode}
   \newcommand*\event[1]{%
     \gdef\@eventtitle{#1}
-    \AfterPreamble{hypersetup{pdfsubject = {#1}}}
+    \AfterPreamble{\hypersetup{pdfsubject = {Technical Report: #1}}}
   }
   \def\@eventtitle{%
     \TR@warn{No \string\event\space given}
     \global\cslet{@eventtitle}\@empty}
 %    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\noevent}
 % No event: clear it cleanly
 % \changes{v0.4}{2014/08/12}{Provide \cs{noevent}}
 %    \begin{macrocode}
@@ -847,11 +983,13 @@ without this file.
   \let\@papernumber\@empty
 
 %    \end{macrocode}
+% \end{macro}
 % Collections
 % \changes{v0.4}{2014/08/12}{Add facilities to make collections.}
 %    \begin{macrocode}
   \RequirePackage{ragged2e}
-  \AtEndPreamble{\RequirePackage{biblatex}}
+  \AtEndPreamble{%
+    \RequirePackage{biblatex}}
 %    \end{macrocode}
 % Automatically pick up \texttt{preamble.tex} and \texttt{content.tex} for each
 % contribution.
@@ -893,104 +1031,116 @@ without this file.
     \gdef\include##1{\TR@saved@include{#1/##1}}
     \gdef\input##1{\TR@saved@input{#1/##1}}
     \graphicspath{{#1/}}
-    \begin{refsection}[#1/references.bib]
-       \cleardoubleemptypage%
-      \TR@saved@input{#1/content}%
-      \printbibliography[%
-         heading=subbibliography, %
-         title=\refname, %
-       ]%
-    \end{refsection}
+    \TR@includedir@{#1}
     \global\let\include\TR@saved@include%
     \global\let\input\TR@saved@input%
   }
+  \ifthenelse{\boolean{TR@chapterbib}}{%
+    \newcommand*{\TR@includedir@}[1]{%
+      \begin{refsection}[#1/references.bib]
+        \ifthenelse{\boolean{TR@proceedings}}{%
+          \cleardoubleemptypage}{\clearpage}%
+        \TR@saved@input{#1/content}%
+        \printbibliography[%
+          heading=subbibliography, %
+          title=\refname, %
+        ]%
+      \end{refsection}}
+  }{%
+    \newcommand*{\TR@includedir@}[1]{%
+      \ifthenelse{\boolean{TR@proceedings}}{\cleardoubleemptypage}{\clearpage}%
+      \TR@saved@input{#1/content}%
+    }
+  }
 
 %    \end{macrocode}
+%
 % Support for multiple seperate work titles, portions from llncs.cls
 %    \begin{macrocode}
-  \newcounter{@inst}
-  \newcounter{@auth}
-  \newcounter{auco}
-  \newbox\headrun
-  \newtoks\authorrunning
-  \newtoks\tocauthor
-  \newtoks\titlerunning
-  \newtoks\toctitle
-
   \def\clearheadinfo{\gdef\@author{No Author Given}%
     \gdef\@title{No Title Given}%
     \gdef\@subtitle{}%
     \gdef\@institute{No Institute Given}%
-    \gdef\@thanks{}}
-
-  \def\institute#1{\gdef\@institute{#1}}
-
-  \def\institutename{\par\begingroup
-    \parskip=\z@
-    \parindent=\z@
-    \setcounter{@inst}{1}%
-    \def\and{\par\stepcounter{@inst}%
-      \noindent$^{\the@inst}$\enspace\ignorespaces}%
-    \setbox0=\vbox{\def\thanks##1{}\@institute}%
-    \ifnum\c@@inst=1\relax
-      \gdef\fnnstart{0}%
-    \else
-      \xdef\fnnstart{\c@@inst}%
-      \setcounter{@inst}{1}%
-      \noindent$^{\the@inst}$\enspace
-    \fi
-    \ignorespaces
-    \@institute\par
-    \endgroup}
-
-  \def\inst#1{\unskip$^{#1}$}
-  \def\fnmsep{\unskip$^,$}
-
-  \AtBeginDocument{
-    \providecommand{\keywords}[1]{\par\addvspace\baselineskip
-      \noindent\keywordname\enspace\ignorespaces#1}%
+    \gdef\@thanks{}%
+    \global\let\@titlerunning\@empty% only non-proceedings
   }
+  \newkomafont{abstract}{\normalfont\small}
+
+  \ifthenelse{\boolean{TR@proceedings}}{%
+    \newcounter{@inst}
+    \newcounter{@auth}
+    \newcounter{auco}
+    \newbox\headrun
+    \newtoks\authorrunning
+    \newtoks\tocauthor
+    \newtoks\titlerunning
+    \newtoks\toctitle
+
+    \def\institute#1{\gdef\@institute{#1}}
+
+    \def\institutename{\par\begingroup
+      \parskip=\z@
+      \parindent=\z@
+      \setcounter{@inst}{1}%
+      \def\and{\par\stepcounter{@inst}%
+        \noindent$^{\the@inst}$\enspace\ignorespaces}%
+      \setbox0=\vbox{\def\thanks##1{}\@institute}%
+      \ifnum\c@@inst=1\relax
+        \gdef\fnnstart{0}%
+      \else
+        \xdef\fnnstart{\c@@inst}%
+        \setcounter{@inst}{1}%
+        \noindent$^{\the@inst}$\enspace
+      \fi
+      \ignorespaces
+      \@institute\par
+      \endgroup}
+
+    \def\inst#1{\unskip$^{#1}$}
+    \def\fnmsep{\unskip$^,$}
+
 %    \end{macrocode}
-% ToC-formatters for title and author, also llncs style
+% ToC-formatters for title and author, also llncs style (proceedings)
 %    \begin{macrocode}
-  \def\l@title#1#2{%
-   \addpenalty{-\@highpenalty}
-   \addvspace\baselineskip
-   \@tempdima \z@
-   \begingroup
-     \parindent \z@ \rightskip \@tocrmarg
-     \advance\rightskip by 0pt plus 2cm
-     \parfillskip -\rightskip \pretolerance=10000
-     \leavevmode \advance\leftskip\@tempdima \hskip -\leftskip
-     \begingroup%
-       \setlength{\RaggedRightRightskip}{0pt plus 1fil}%
-       \RaggedRight%
-       #1\nobreak
-       \leaders\hbox{$\m@th \mkern \@dotsep mu.\mkern
-         \@dotsep mu$}\hfill
-       \nobreak\hbox to\@pnumwidth{\hss #2}\par
-     \endgroup
-     % \penalty\@highpenalty \endgroup
-   \penalty10000\endgroup}
+    \def\l@title#1#2{%
+      \addpenalty{-\@highpenalty}
+      \addvspace\baselineskip
+      \@tempdima \z@
+      \begingroup
+        \parindent \z@ \rightskip \@tocrmarg
+        \advance\rightskip by 0pt plus 2cm
+        \parfillskip -\rightskip \pretolerance=10000
+        \leavevmode \advance\leftskip\@tempdima \hskip -\leftskip
+        \begingroup%
+          \setlength{\RaggedRightRightskip}{0pt plus 1fil}%
+          \RaggedRight%
+          #1\nobreak
+          \leaders\hbox{$\m@th \mkern \@dotsep mu.\mkern
+            \@dotsep mu$}\hfill
+          \nobreak\hbox to\@pnumwidth{\hss #2}\par
+        \endgroup
+        % \penalty\@highpenalty \endgroup
+        \penalty10000\endgroup}
 
- \def\l@author#1#2{%\addpenalty{\@highpenalty}
-   \addpenalty{10000}
-   \@tempdima=15\p@ %\z@
-   \begingroup%
-     \parindent \z@ \rightskip \@tocrmarg%
-     \advance\rightskip by 0pt plus 2cm%
-     \pretolerance=10000
-     \leavevmode \advance\leftskip\@tempdima %\hskip -\leftskip
-     {\itshape #1\par}
-     % \penalty\@highpenalty
-     \penalty0\relax
-     \endgroup}
+      \def\l@author#1#2{%\addpenalty{\@highpenalty}
+        \addpenalty{10000}
+        \@tempdima=15\p@ %\z@
+        \begingroup%
+          \parindent \z@ \rightskip \@tocrmarg%
+          \advance\rightskip by 0pt plus 2cm%
+          \pretolerance=10000
+          \leavevmode \advance\leftskip\@tempdima %\hskip -\leftskip
+          {\itshape #1\par}
+          % \penalty\@highpenalty
+          \penalty0\relax
+          \endgroup}
 
-  %%% to avoid hyperref warnings
-  \providecommand*{\toclevel@author}{999}
-  %%% to make title-entry parent of section-entries
-  \providecommand*{\toclevel@title}{1}
-
+    %%% to avoid hyperref warnings
+    \providecommand*{\toclevel@author}{999}
+    %%% to make title-entry parent of section-entries
+    \providecommand*{\toclevel@title}{0}
+%%% /if proceedings
+  }{}
 %    \end{macrocode}
 % Patch maketitle to allow one global and multiple local titles.
 %    \begin{macrocode}
@@ -1014,6 +1164,14 @@ without this file.
     \ifthenelse{\boolean{TR@firsttitleseen}}%
     {\TR@contrib@author}%
     {\TR@firsttitle@author}}
+
+  \AtEndOfClass{
+    \let\TR@firsttitle@keywords\keywords
+    \renewcommand*\keywords{%
+      \ifthenelse{\boolean{TR@firsttitleseen}}%
+      {\TR@contrib@keywords}%
+      {\TR@firsttitle@keywords}}
+  }
 
   \providecaptionname{english}{\andname}{and}
   \providecaptionname{english}{\lastandname}{\unskip, and}
@@ -1039,133 +1197,209 @@ without this file.
   }{}{%
     \TR@warn{Cannot patch \string\tableofcontents}}
 
-  \newcommand*\TR@contrib@maketitle{\newpage
-    \phantomsection
-    \refstepcounter{chapter}%
-    \stepcounter{section}%
-    \setcounter{section}{0}%
-    \setcounter{subsection}{0}%
-    \setcounter{figure}{0}
-    \setcounter{table}{0}
-    \setcounter{equation}{0}
-    \setcounter{footnote}{0}%
-    \begingroup
-    \parindent=\z@
-    \renewcommand\thefootnote{\@fnsymbol\c@footnote}%
-    \newpage
-    \global\@topnum\z@   % Prevents figures from going at top of page.
-    \TR@contrib@@maketitle
-    \thispagestyle{\chapterpagestyle}%
-    \@thanks
-%
-    \def\\{\unskip\ \ignorespaces}\def\inst##1{\unskip{}}%
-    \def\thanks##1{\unskip{}}\def\fnmsep{\unskip}%
-    \if!\the\toctitle!\addcontentsline{toc}{title}{\@title}\else
-      \addcontentsline{toc}{title}{\the\toctitle}\fi
-    \if!\the\titlerunning!\else
-      \edef\@title{\the\titlerunning}%
-    \fi
-%
-    \ifx\@author\empty\relax%
-      \xdef\@runninghead{\ignorespaces\@title}
-    \else
-      \if!\the\tocauthor!\relax
-        {\def\and{\noexpand\protect\noexpand\and}%
-          \protected@xdef\toc@uthor{\@author}}%
-      \else
-        \def\\{\noexpand\protect\noexpand\newline}%
-        \protected@xdef\scratch{\the\tocauthor}%
-        \protected@xdef\toc@uthor{\scratch}%
+  \ifthenelse{\boolean{TR@proceedings}}{%
+    \newcommand*\TR@contrib@maketitle{\newpage
+      \phantomsection
+      \refstepcounter{chapter}%
+      \stepcounter{section}%
+      \setcounter{section}{0}%
+      \setcounter{subsection}{0}%
+      \setcounter{figure}{0}
+      \setcounter{table}{0}
+      \setcounter{equation}{0}
+      \setcounter{footnote}{0}%
+      \begingroup
+      \parindent=\z@
+      \renewcommand\thefootnote{\@fnsymbol\c@footnote}%
+      \newpage
+      \global\@topnum\z@   % Prevents figures from going at top of page.
+      \TR@contrib@@maketitle
+      \thispagestyle{\chapterpagestyle}%
+      \@thanks
+      \def\\{\unskip\ \ignorespaces}\def\inst##1{\unskip{}}%
+      \def\thanks##1{\unskip{}}\def\fnmsep{\unskip}%
+      \if!\the\toctitle!\addcontentsline{toc}{title}{\@title}\else
+        \addcontentsline{toc}{title}{\the\toctitle}\fi
+      \if!\the\titlerunning!\else
+        \edef\@title{\the\titlerunning}%
       \fi
-      \addtocontents{toc}{\noexpand\protect\noexpand\authcount{\the\c@auco}}%
-      \addcontentsline{toc}{author}{\toc@uthor}%
-
-      \if!\the\authorrunning!
-        \value{@inst}=\value{@auth}%
-        \setcounter{@auth}{1}%
+      \ifx\@author\empty\relax%
+        \xdef\@runninghead{\ignorespaces\@title}
       \else
-        \edef\@author{\the\authorrunning}%
+        \if!\the\tocauthor!\relax
+          {\def\and{\noexpand\protect\noexpand\and}%
+            \protected@xdef\toc@uthor{\@author}}%
+        \else
+          \def\\{\noexpand\protect\noexpand\newline}%
+          \protected@xdef\scratch{\the\tocauthor}%
+          \protected@xdef\toc@uthor{\scratch}%
+        \fi
+        \addtocontents{toc}{\noexpand\protect\noexpand\authcount{\the\c@auco}}%
+        \addcontentsline{toc}{author}{\toc@uthor}%
+
+        \if!\the\authorrunning!
+          \value{@inst}=\value{@auth}%
+          \setcounter{@auth}{1}%
+        \else
+          \edef\@author{\the\authorrunning}%
+        \fi
+
+        \xdef\@runninghead{\unskip\ignorespaces\@author: \@title}
       \fi
 
-      \xdef\@runninghead{\unskip\ignorespaces\@author: \@title}
-    \fi
+      \global\setbox\headrun=\hbox{\usekomafont{pagehead}\@runninghead}%
+      \ifdim\wd\headrun>\hsize
+        \TR@warn{Title and author names too long for running head. Please supply
+          a shorter form with \string\titlerunning\space and
+          \string\authorrunning\space prior to \string\maketitle}%
+        \xdef\@runninghead{Authors/Title Suppressed Due to Excessive Length}%
+      \fi
+      \addchapmark{\@runninghead}%
+      \endgroup
+      \setcounter{footnote}{\fnnstart}%
+      \clearheadinfo%
+      \relax%
+      \ignorespaces}
 
-    \global\setbox\headrun=\hbox{\usekomafont{pagehead}\@runninghead}%
-    \ifdim\wd\headrun>\hsize
-      \TR@warn{Title and author names too long for running head. Please supply
-        a shorter form with \string\titlerunning\space and
-        \string\authorrunning\space prior to \string\maketitle}%
-      \xdef\@runninghead{Authors/Title Suppressed Due to Excessive Length}%
-    \fi
-    \addchapmark{\@runninghead}%
-  \endgroup
-  \setcounter{footnote}{\fnnstart}%
-  \clearheadinfo}
+    \newcommand*\TR@contrib@@maketitle{\newpage
+      \def\lastand{\ifnum\value{@inst}=2\relax
+          \unskip{} \andname\
+         \else
+           \unskip \lastandname\
+         \fi}%
+       \def\and{\stepcounter{@auth}\relax
+         \ifnum\value{@auth}=\value{@inst}%
+           \lastand
+         \else
+           \unskip,
+         \fi}%
+       \begin{center}%
+         \let\newline\\
+         {\Large \bfseries\boldmath
+           \pretolerance=10000
+           \@title \par}\vskip .8cm
+         \if!\@subtitle!\else {\large \bfseries\boldmath
+           \vskip -.65cm
+           \pretolerance=10000
+           \@subtitle \par}\vskip .8cm\fi
+         \setbox0=\vbox{\setcounter{@auth}{1}\def\and{\stepcounter{@auth}}%
+           \def\thanks##1{}\@author}%
+         \global\value{@inst}=\value{@auth}%
+         \global\value{auco}=\value{@auth}%
+         \setcounter{@auth}{1}%
+         {\lineskip .5em
+           \noindent\ignorespaces
+           \@author\vskip.35cm}
+         {\small\institutename}
+       \end{center}%
+     }
 
-   \newcommand*\TR@contrib@@maketitle{\newpage
-     \def\lastand{\ifnum\value{@inst}=2\relax
-         \unskip{} \andname\
-       \else
-         \unskip \lastandname\
-       \fi}%
-     \def\and{\stepcounter{@auth}\relax
-       \ifnum\value{@auth}=\value{@inst}%
-         \lastand
-       \else
-         \unskip,
-       \fi}%
-     \begin{center}%
-       \let\newline\\
-       {\Large \bfseries\boldmath
-         \pretolerance=10000
-         \@title \par}\vskip .8cm
-       \if!\@subtitle!\else {\large \bfseries\boldmath
-         \vskip -.65cm
-         \pretolerance=10000
-         \@subtitle \par}\vskip .8cm\fi
-       \setbox0=\vbox{\setcounter{@auth}{1}\def\and{\stepcounter{@auth}}%
-         \def\thanks##1{}\@author}%
-       \global\value{@inst}=\value{@auth}%
-       \global\value{auco}=\value{@auth}%
-       \setcounter{@auth}{1}%
-       {\lineskip .5em
-         \noindent\ignorespaces
-         \@author\vskip.35cm}
-       {\small\institutename}
-     \end{center}%
-   }
+     \newcommand*\TR@contrib@author[1]{\gdef\@author{#1}}
+     \newcommand*{\TR@contrib@keywords}[1]{%
+       \par\addvspace\baselineskip%
+       \noindent\keywordname\enspace\ignorespaces#1}%
 
-  \newcommand*\TR@contrib@author[1]{\gdef\@author{#1}}
+  \renewcommand*\thesection{\@arabic\c@section}
+  \renewcommand*\thefigure{\@arabic\c@figure}
+  \renewcommand*\thetable{\@arabic\c@table}
+  \renewcommand*\theequation{\@arabic\c@equation}
+  \@addtoreset{equation}{chapter}
+  \BeforePackage{hyperref}{%
+    \newcommand*\theHequation{\theHsection.\arabic{equation}}%
+    \newcommand*\theHchapter    {\arabic{chapter}}%
+    \newcommand*\theHfigure     {\theHchapter.\arabic{figure}}%
+    \newcommand*\theHtable      {\theHchapter.\arabic{table}}%
+    \newcommand*\theHsection    {\theHchapter.\arabic{section}}%
+    \newcommand*\theHsubsection   {\theHsection.\arabic{subsection}}
+    \newcommand*\theHsubsubsection{\theHsubsection.\arabic{subsubsection}}
+    \newcommand*\theHparagraph    {\theHsubsubsection.\arabic{paragraph}}
+    \newcommand*\theHsubparagraph {\theHparagraph.\arabic{subparagraph}}
+    \newcommand*\theHtheorem      {\theHsection.\arabic{theorem}}
+    \newcommand*\theHthm          {\theHsection.\arabic{thm}}
+  }
+
+
+  }{%%%% collection
+    \let\TR@contrib@author\@gobble
+    \let\TR@contrib@keywords\@gobble
+    \let\institute\@gobble
+    \let\authorrunning\@gobble
+    \let\toctitle\@gobble
+    \let\tocauthor\@gobble
+
+    \let\@titlerunning\@empty
+    \setkomafont{abstract}{\footnotesize\itshape}
+    \newcommand*\titlerunning[1]{\gdef\@titlerunning{#1}}
+    \newcommand*\TR@contrib@maketitle{%
+      \ifcsempty{@titlerunning}{%
+        \expandafter\chapter\expandafter{\@title}%
+      }{%
+        \expandafter\chapter\expandafter[\expandafter\@titlerunning\expandafter]\expandafter{\@title}%
+      }
+      \edef\@templ{lbl:chaper-\thechapter}%
+      \expandafter\label\expandafter{\@templ}%
+      \clearheadinfo%
+    }
+  }
+
+  \AfterPackage{listings}{
+    \lstset{numberbychapter=true}}
+  \ifthenelse{\boolean{TR@proceedings}}{%
+    \AfterPackage{listings}{
+      \AtBeginDocument{
+        \def\thelstlisting{\@arabic\c@lstlisting}%
+        \def\theHlstnumber{\ifx\lst@@caption\@empty \lst@neglisting
+                                                 \else \theHlstlisting \fi%
+                                                 .\thelstnumber}}}
+  }{}
 
 %    \end{macrocode}
 % as for title, as for abstract.
 %    \begin{macrocode}
-  \newenvironment{abstract}{%
-    \ifthenelse{\boolean{TR@firsttitleseen}}{
-      \list{}{\advance\topsep by0.35cm\relax\small
-        \leftmargin=1cm
-        \labelwidth=\z@
-        \listparindent=\z@
-        \itemindent\listparindent
-        \rightmargin\leftmargin}\item[]%
+    \newenvironment{abstract}{%
+      \ifthenelse{\boolean{TR@firsttitleseen}}{
+        \list{}{%\advance\topsep by0.35cm\relax
+          \setlength{\topsep}{0pt}%
+          \setlength{\leftmargin}{2em}%
+          \setlength{\rightmargin}{\leftmargin}%
+          \setlength{\listparindent}{\parindent}%
+          \setlength{\itemindent}{\parindent}%
+          \setlength{\parsep}{\parskip}%
+          \usekomafont{abstract}
+          }\item[]\noindent\ignorespaces%
       }{%
         \TR@error{Proceedings should not have \MessageBreak
           abstracts. Please remove it.}}
     }%
-  {\ifthenelse{\boolean{TR@firsttitleseen}}{\endlist}{}}
-
-  \AfterPackage{listings}{
-    \lstset{numberbychapter=true}}
+    {\ifthenelse{\boolean{TR@firsttitleseen}}{\endlist}{}}
 
   %for compat with swathesis
   \let\supervisors\@gobble
   \let\statements\relax
 }{}
 %    \end{macrocode}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \begin{macro}{\keywords}
+% \begin{macro}{\test}
+% \changes{v0.6}{2014/08/27}{Provide \cs{keywords} command.}
+% We provide a \cs{keyword} macro to record keywords for the printed PDF.
+% Should there already be one, we patch it like \cs{title} and \cs{author}
+%    \begin{macrocode}
+\newcommand*\keywords[1]{
+  \AfterPreamble{
+    \begingroup
+    \appto\pdfstringdefPreHook{\def\\{\space\ignorespaces}}
+    \hypersetup{pdfkeywords={#1}}
+    \endgroup}
+}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %% Language
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %    \begin{macrocode}
+\RequirePackage{hyphsubst}
+\HyphSubstLet{ngerman}{ngerman-x-latest}
 \RequirePackage{babel}
 \newcommand*\TR@lang{}\let\TR@lang\@empty
 
@@ -1229,13 +1463,20 @@ without this file.
 \ifthenelse{\@l{scottish}}{\@L{gd}}{}
 }
 %    \end{macrocode}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Fonts
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \subsubsection{Fonts}
+% Default font: Serif:  Palatino via \TeX Gyre Pagella\\
+% Code Font: Monospace: Source Code Pro (Adobe)\\
+% Other emphasis: Sans: Source Sans Pro (Adobe)\\
 %    \begin{macrocode}
-\RequirePackage[final,babel=true]{microtype}[2013/05/23]
+\ifthenelse{\boolean{luatex}}{%
+  \RequirePackage[final]{microtype}[2013/05/23]
+}{
+  \RequirePackage[final,babel=true]{microtype}[2013/05/23]
+}
 %
-% engine-dependent, eg, encoding, loading.
+%    \end{macrocode}
+%  engine-dependent, eg, encoding, loading.
+%    \begin{macrocode}
 %
 \RequirePackage[T1]{fontenc}
 \ifthenelse{\boolean{luatex} \or \boolean{xetex}}{%
@@ -1269,6 +1510,11 @@ without this file.
 }
 \linespread{1.05} % a bit more for Palatino
 
+
+%    \end{macrocode}
+% Akin to LNCS, let footnotes be a bit larger
+%    \begin{macrocode}
+\let\footnotesize\small
 
 %    \end{macrocode}
 % \changes{v0.4}{2014/08/12}{Disable tracking=smallcaps in luatex, also. Is broken.}
@@ -1344,12 +1590,15 @@ without this file.
 %    \end{macrocode}
 % \changes{v0.4}{2014/08/12}{Fix pagenumber}
 %    \begin{macrocode}
-\lefoot[\pagemark]{\pagemark}
-\rofoot[\pagemark]{\pagemark}
-\ifthenelse{\boolean{TR@proceedings}}{
-  \refoot[\@eventtitle]{\@eventtitle}
-  \lofoot[\@eventtitle]{\@eventtitle}
-}{}
+\lefoot[]{}\lofoot[]{}
+\refoot[]{}\rofoot[]{}
+\cefoot[\pagemark]{\pagemark}
+\cofoot[\pagemark]{\pagemark}
+
+%%  \ifthenelse{\boolean{TR@proceedings}\OR\boolean{TR@contribtools}}{
+%%   \lefoot[\@eventtitle]{\@eventtitle}
+%%   \lofoot[\@eventtitle]{\@eventtitle}
+%% }{}
 
  %\setkomafont{pagefoot}{}
 \setkomafont{pagehead}{\itshape}
@@ -1400,13 +1649,9 @@ without this file.
 \AtBeginDocument{%
   \hypersetup{%
     breaklinks=true,
-    colorlinks = true,
-    linkcolor=MidnightBlue,%
-    citecolor=MidnightBlue,%
-    urlcolor=MidnightBlue,%
     %pdfborder = 0 0 0,
-    bookmarksopenlevel = 1,
     bookmarksnumbered = true,
+    pdfsubject = {Technical Report},
     pdfkeywords = {},
     pdfcreator = {HPI},
     pdfcopyright = {Copyright (c) \the\year, HPI},
@@ -1417,24 +1662,6 @@ without this file.
     pdfpagemode = UseOutlines,
   }
 }
-
-
-%    \end{macrocode}
-% References
-
-% well formed numeric citations
-%    \begin{macrocode}
-
-%\RequirePackage{cite}
-
-%    \end{macrocode}
-% adds page references to 'normal' references
-%    \begin{macrocode}
-
-\PassOptionsToPackage{\languagename}{varioref}
-
-
-
 %%
 %%
 %% Table of contents
@@ -1459,7 +1686,7 @@ without this file.
 %% Abstract
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\ifthenelse{\boolean{TR@proceedings}}{}{
+\ifthenelse{\boolean{TR@proceedings}\OR\boolean{TR@contribtools}}{}{
   \renewenvironment{abstract}{%
     \thispagestyle{plain.scrheadings}
     \null\vfil\leavevmode%
@@ -1472,14 +1699,10 @@ without this file.
 }
 
 %    \end{macrocode}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Bibliography
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \subsubsection{Bibliography}
 % \changes{v0.4}{2014/08/12}{Provide common biblatex ground}
 %    \begin{macrocode}
-
-
-\PassOptionsToPackage{citestyle=numeric-comp}{biblatex}
+\PassOptionsToPackage{style=numeric-comp}{biblatex}
 \AfterPackage{biblatex}{
   \setcounter{biburllcpenalty}{7000}
   \setcounter{biburlucpenalty}{8000}
@@ -1660,6 +1883,12 @@ without this file.
     \endgroup
   }
   \AtBeginDocument{
+    \hypersetup{
+      colorlinks = true,
+      linkcolor=MidnightBlue,%
+      citecolor=MidnightBlue,%
+      urlcolor=MidnightBlue,%
+    }
     \def\TR@draftInfo{%
       {\usekomafont{draftline}
       Draft Draft Draft%
@@ -1756,7 +1985,7 @@ Instead, use a sloppypar, when necessary:\MessageBreak
 %%%%%%% Set counter to 5 (or v), respectively (See above)
 
 \setcounter{page}{5}
-\ifthenelse{\boolean{TR@proceedings}}{
+\ifcsdef{frontmatter}{
   \apptocmd{\frontmatter}{%
     \setcounter{page}{5}%
   }{}{\TR@warn{Cannot patch \string\frontmatter}}
@@ -1827,6 +2056,7 @@ Instead, use a sloppypar, when necessary:\MessageBreak
 \title{The importance of why and how to do work}
 \subtitle{An imaginary paper to showcase a document}
 \author{Anna Author\and Bert Betatester}
+\keywords{paper, showcase, lorem ipsum}
 % \institute{%
 %   Hasso-Plattner-Institut, Potsdam\\
 %   \email{\{firstname.lastname\}@student.hpi.uni-potsdam.de}
@@ -2269,9 +2499,11 @@ language.
 \KOMAoptions{%
   paper=a4,
   fontsize=9pt,
-  pagesize,twocolumn=true,DIV=calc}
+  pagesize,twocolumn=true,DIV=calc,mpinclude=true}
 \AtBeginDocument{\onecolumn}
-\usepackage{ifpdf,ifxetex}
+\usepackage{ifpdf,ifxetex,etoolbox,xspace}
+\usepackage{color}
+\usepackage[dvipsnames]{xcolor}
 %    \end{macrocode}
 % Customize the display of our code:
 % \begin{itemize}
@@ -2286,20 +2518,188 @@ language.
 \MacrocodeTopsep=3pt
 \setlength\MacroIndent{0pt}
 \setlength{\columnsep}{18pt}
-\makeatletter
-\def\theCodelineNo{\reset@font\sffamily\color{black!50}\scriptsize
+\providecommand*\theCodelineNo{%
+  \normalfont\sffamily\color{black!50}\scriptsize%
   \arabic{CodelineNo}\ }
+\def\dm#1{{\scriptsize\textrm{\textit{#1}}}\xspace}
+
+\providecommand*\MacroFont{\ttfamily\small}
+\providecommand*\AltMacroFont{\ttfamily\footnotesize}
+\providecommand*\EnvName{environment}
+\providecommand*\EnvsName{environments}
+\providecommand*\OptionName{option}
+\providecommand*\OptionsName{options}
+
+ % tob be overridden by hypdoc
+\providecommand*\PrintMacroName[1]{\strut\MacroFont\string #1}
+\providecommand*\PrintDescribeMacro[1]{\strut \dm{c} \MacroFont #1\ }
+\makeatletter
+\providecommand*\PrintEnvName[1]{%
+  \HD@target%
+  \strut \MacroFont #1\ }
+\providecommand*\PrintDescribeEnv[1]{%
+  \HD@target%
+  \strut \dm{e} \MacroFont #1\ }
+\providecommand*\PrintDescribeOption[1]{%
+  \HD@target%
+  \strut \dm{o} \MacroFont #1\ }
+\providecommand*\PrintOptionName[1]{%
+  \HD@target%
+  \strut \MacroFont #1\ }
 \makeatother
-\def\MacroFont{\ttfamily\small}
-\def\AltMacroFont{\ttfamily\footnotesize}
-\def\PrintMacroName#1{\strut\MacroFont\string #1\hskip15pt}
-\raggedbottom
+\providecommand*\PrintDescribeValue[2]{%
+  \strut \dm{v} \MacroFont {\scriptsize #1=}#2\ }
+
+
+\usepackage{hypdoc}
+
+\makeatletter
+\def\macro{\begingroup
+  \catcode`\\12
+  \MakePrivateLetters \m@cro@{0}}
+\def\environment{\begingroup
+  \catcode`\\12
+  \MakePrivateLetters \m@cro@{1}}
+\def\option{\begingroup
+  \catcode`\\12
+  \MakePrivateLetters \m@cro@{2}}
+
+%^^A \def\endmacro{}
+\long\def\m@cro@#1#2{\endgroup \topsep\MacroTopsep \trivlist
+  \edef\saved@macroname{\string#2}%
+  \def\makelabel##1{\llap{##1}}%
+  \if@inlabel
+    \let\@tempa\@empty \count@\macro@cnt
+    \loop \ifnum\count@>\z@
+      \edef\@tempa{\@tempa\hbox{\strut}}\advance\count@\m@ne 
+    \repeat
+    \edef\makelabel##1{\llap{\vtop to\baselineskip
+        {\@tempa\hbox{##1}\vss}}}%
+    % \def\makelabel##1{\\##1}
+    \advance \macro@cnt \@ne
+  \else \macro@cnt\@ne \fi
+  \edef\@tempa{\noexpand\item[%
+    \ifcase #1
+      \noexpand\PrintMacroName
+    \or
+      \noexpand\PrintEnvName
+    \or
+      \noexpand\PrintOptionName
+    \fi
+    {\string#2}]%
+  }%
+  \@tempa
+  \global\advance\c@CodelineNo\@ne
+  \ifcase #1
+    \SpecialMainIndex{#2}\nobreak
+    \DoNotIndex{#2}%
+  \or
+    \SpecialMainEnvIndex{#2}\nobreak
+  \or
+    \SpecialMainOptionIndex{#2}\nobreak
+  \fi
+  \global\advance\c@CodelineNo\m@ne
+  \ignorespaces}
+\let\endoption\endmacro
+
+% Defining new main index commands
+\newcommand*{\SpecialMainIndex@Type}[3]{%
+  \@bsphack\special@index{%
+    #1\actualchar
+    {\string\ttfamily\space#1}
+    (\string #2)%
+    \encapchar main}%
+  \special@index{%
+    #3:\levelchar{%
+      \string\ttfamily\space#1}\encapchar
+    main}\@esphack}
+\renewcommand*{\SpecialMainEnvIndex}[1]{%
+  \SpecialMainIndex@Type{#1}{\EnvName}{\EnvsName}}
+\newcommand*{\SpecialMainOptionIndex}[1]{%
+  \SpecialMainIndex@Type{#1}{\OptionName}{\OptionsName}}
+
+
+
+% Defining new usage index commands
+\newcommand*{\SpecialIndex@Type}[3]{%
+  \@bsphack
+  \begingroup
+    \HD@target
+    \let\HDorg@encapchar\encapchar
+    \edef\encapchar usage{%
+      \HDorg@encapchar hdclindex{\the\c@HD@hypercount}{usage}%
+    }%
+  \index{#1\actualchar{\protect\ttfamily#1}
+    (#2)\encapchar usage}%
+  \index{#3:\levelchar{\protect\ttfamily#1}\encapchar
+    usage}\endgroup\@esphack}
+\renewcommand{\SpecialEnvIndex}[1]{%
+  \SpecialIndex@Type{#1}{\EnvName}{\EnvsName}}
+\newcommand*{\SpecialOptionIndex}[1]{%
+  \SpecialMainIndex@Type{#1}{\OptionName}{\OptionsName}}
+
+\newbool{TR@indescribe}
+\def\TR@describe@table@begin{%
+  \ifvmode\else\par\fi\small\addvspace{2\baselineskip}%
+  \vspace{-\baselineskip}%
+  \vspace{\z@ plus \baselineskip}%
+  \noindent%
+  \hspace{-1em}
+  \tabular{|l|}\hline\ignorespaces}
+\def\TR@describe@table@end{%
+  \\%
+  \hline\endtabular\nobreak%\par\nobreak
+  % \vspace{1.5\baselineskip}\nobreak\vspace{-\baselineskip}\nobreak%
+  % \vspace{0pt minus .5\baselineskip}\nobreak
+}
+
+% Define new describe commands
+\newcommand*{\newDescribe}[1]{%
+  \csgdef{Describe#1}{%
+    \leavevmode\@bsphack\begingroup\MakePrivateLetters
+    \csuse{Describe@#1}}%
+  \csgdef{Describe@#1}##1{%
+    \endgroup
+    \ifthenelse{\boolean{TR@indescribe}}{}{\TR@describe@table@begin}
+    \noindent\mbox{\csuse{PrintDescribe#1}{##1}}%
+    \ifthenelse{\boolean{TR@indescribe}}{}{\TR@describe@table@end}
+    \csuse{Special#1Index}{##1}\@esphack\ignorespaces}%
+}
+\newDescribe{Env}
+\newDescribe{Option}
+\def\Describe@Macro#1{\endgroup
+  \ifthenelse{\boolean{TR@indescribe}}{}{\TR@describe@table@begin}
+  \noindent\mbox{\PrintDescribeMacro{#1}}%
+  \ifthenelse{\boolean{TR@indescribe}}{}{\TR@describe@table@end}
+  \SpecialUsageIndex{#1}\@esphack\ignorespaces}
+
+\def\DescribeValue{\leavevmode\@bsphack\begingroup
+  \MakePrivateLetters\Describe@Value}
+\def\Describe@Value#1#2{
+    \endgroup
+    \ifthenelse{\boolean{TR@indescribe}}{}{\TR@describe@table@begin}
+    \noindent\mbox{\csuse{PrintDescribeValue}{#1}{#2}}%
+    \ifthenelse{\boolean{TR@indescribe}}{}{\TR@describe@table@end}
+    \@esphack\ignorespaces}%
+
+\newenvironment{Describe}{%
+  \ifthenelse{\boolean{TR@indescribe}}{\error{Do not nest Describe}}{}%
+  \booltrue{TR@indescribe}%
+  \TR@describe@table@begin%
+}{%
+  \TR@describe@table@end%
+  \boolfalse{TR@indescribe}%
+  \nobreak%
+  \ignorespaces%
+}
+\makeatother
+
+
 %    \end{macrocode}
 % Packages we want for hyper-reference support, a tight table of contents,
 % fonts (EB~Garamond and the Adobe Source family), and finally a package for
 % parallel typesetting, among others.
 %    \begin{macrocode}
-\usepackage{hypdoc}
 \usepackage[tocflat,toctextentriesindented]{tocstyle}%
 \usetocstyle{nopagecolumn}
 \usepackage[toc]{multitoc}
@@ -2307,10 +2707,17 @@ language.
 \usepackage[scale=MatchLowercase]{ebgaramond}
 \usepackage[scale=MatchLowercase,semibold,osf]{sourcesanspro}
 \usepackage[scale=MatchLowercase,semibold]{sourcecodepro}
-\usepackage{polyglossia}
+\RequirePackage{hyphsubst}
+\HyphSubstLet{ngerman}{ngerman-x-latest}
+\usepackage[main=english,ngerman]{babel}
+\babeltags{german=ngerman,english=english}
 \usepackage{graphicx}
-\usepackage[dvipsnames]{xcolor}
+\usepackage{booktabs}
+\usepackage{ragged2e}
+\usepackage{array}
+\usepackage{threeparttable}
 \usepackage{paracol}
+\marginparthreshold{0}
 %    \end{macrocode}
 % We predominantly want to use the set serif font for all sectioning. We also
 % want a good text area.
@@ -2329,30 +2736,25 @@ language.
 \renewcommand*\labelitemii{\normalfont\textendash}
 \setfootnoterule{4cc}
 \hypersetup{%
-  colorlinks=true,   %% true for printout
-  linkcolor=MidnightBlue,%
-  citecolor=MidnightBlue,%
-  urlcolor=MidnightBlue,%
+    colorlinks=true,   %% true for printout
+    linkcolor=MidnightBlue,%
+    citecolor=MidnightBlue,%
+    urlcolor=MidnightBlue,%
 }
-
+\raggedbottom
 \recalctypearea
 %    \end{macrocode}
 % For debugging only
 %    \begin{macrocode}
-%\usepackage{showframe}
+% \usepackage{showframe}
 % \errorcontextlines=999
-%    \end{macrocode}
-% Configure languages
-%    \begin{macrocode}
-\setmainlanguage[variant=usmax,ordinalmonthday=true]{english}
-\setotherlanguage[spelling=new,latesthyphen=true]{german}
 %    \end{macrocode}
 % A semantic macro for files and paths. (\emph{Note:} cannot be a |\let|, or
 % else |hypdoc| is upset.)
 %    \begin{macrocode}
 \newcommand*{\File}{}\def\File{\texttt}
 
-\addcontentsonly{toc}{0} 
+\AtBeginDocument{\addcontentsonly{toc}{0}}
 \footnotelayout{m}
 \newenvironment{eng}[1][]%
   {\begin{leftcolumn*}[#1]\begin{english}%
@@ -2390,7 +2792,7 @@ language.
 }
 
 
-\CodelineIndex
+%<!manual>\CodelineIndex
 \RecordChanges
 \EnableCrossrefs
 %<manual>\OnlyDescription
@@ -2442,11 +2844,11 @@ Schriftwahl).
 -------------------------------------------------------------------------------
 Note: To generate all files, you should simply call
 
-      pdftex -shell-escape hpitr.dtx
+      luatex -shell-escape hpitr.dtx
 
 If you are using MiKTeX you have to use
 
-      pdftex --enable-write18 hpitr.dtx
+     luatex --enable-write18 hpitr.dtx
 
 to fully enable shell escapes which are also known as \write18 feature.
 
