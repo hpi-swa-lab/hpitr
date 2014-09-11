@@ -36,7 +36,7 @@
 %   Right bracket \]     Circumflex    \^     Underscore    \_
 %   Grave accent  \`     Left brace    \{     Vertical bar  \|
 %   Right brace   \}     Tilde         \~}
-% \CheckSum{2743}
+% \CheckSum{0}
 %
 % \iffalse meta-comment
 %<*dtx|ins>
@@ -212,9 +212,6 @@
 
 % TODO:
 
-% Einheitlichen Zitations-stil dokumentieren.
-
-
 
 
 
@@ -270,9 +267,6 @@
 % sonst. Ich habe sie dir mit amsthm nachgebaut.
 
 % \fi ^^A meta-comment
-
-
-
 %
 % \begin{paracol}{2}
 % \begin{eng}
@@ -393,16 +387,83 @@
 % \end{ger}
 % \end{paracol}
 %
-% \section{T.B.A}
+% \begin{paracol}{2}
+% \begin{eng}
+% \section{Bibliographic Style}
+% \label{sec:micro}
+% For citations and bibliographies, a \emph{numeric} citation style is used.
+% The numbers derive from the \emph{alphabetic} sorting of the list of
+% bibliographic entries at the end of the report (or the end of the individual
+% contributions in collection works, if applicable). Given names are
+% abbreviated.
+%
+% \vspace*{\baselineskip}
+% \parbox[t]{1.5em}{[1]}\parbox[t]{\dimexpr\linewidth - 2em}{%
+% I.~Nassi and B.~Shneiderman.
+% \newblock Flowchart techniques for structured programming.
+% \newblock {\em SIGPLAN Not.}, 8(8):12--26, 1973.}
+% \vspace*{\baselineskip}
+%
+% This corresponds to the \emph{plain} \BibTeX style, or the
+% \emph{numeric-comp} style with abbreviations for Biblatex. Either way, the
+% citation style is preselected.
+%
+% \remark{The citation and bibliographic style is not to
+% be changed.}
+%
+% While \BibTeX should work fine and is supported, the use of Biblatex,
+% especially with its \emph{biber} backend is encouraged to support proper use
+% of Unicode characters and fonts. ^^A TODO: ref biblatex
+% For a list of kinds of works to cite as supported by \BibTeX and Biblatex
+% refer to \autoref{tbl:bibtytpes}. Kinds of work not listed should use the
+% \emph{misc} type.
+% \end{eng}
+% \begin{ger}
+% \section{Zitier"~ und Literaturstil}
+% In Zitaten und Literaturlisten wird ein einfacher, \emph{numerischer} Stil
+% genutzt. Die Nummerierung folgt der \emph{alphabetischen} Sortierung der
+% Literatureinträge in der Literaturliste am Ende des Berichts (oder am Ende
+% der Einzelbeiträge in sammlungsartigen Berichten, sofern angebracht).
+% Vornamen werden abgekürzt.
+%
+% \vspace*{\baselineskip}
+% \parbox[t]{1.5em}{[1]}\parbox[t]{\dimexpr\linewidth - 2em}{%
+% I.~Nassi and B.~Shneiderman.
+% \newblock Flowchart techniques for structured programming.
+% \newblock {\em SIGPLAN Not.}, 8(8):12--26, 1973.}
+% \vspace*{\baselineskip}
+%
+% Dies entspricht dem \emph{plain}-Stil von \BibTeX, beziehungsweise dem
+% \emph{numeric-comp}-Stil mit Namensabkürzungen in Biblatex. In jedem Fall ist
+% der Stil schon vorausgewählt.
+%
+% \remark{Weder Zitier"~ noch Literaturstil dürfen verändert werden.}
+%
+% Obwohl \BibTeX gut funktionieren sollte und auch unterstützt wird, wird
+% Biblatex, insbesondere mit dem \emph{biber}-Backend empfohlen, da dies eine
+% vernünftige Verwendung von Unicodezeichen und "~schriften erlaubt. Eine Liste
+% aller von \BibTeX und Biblatex unterstützten zu zitierenden Werkarten findet
+% sich in \autoref{tbl:bibtytpes}. Nicht aufgeführte Werkarten erhalten den Typ
+% \emph{misc}.
+% \end{ger}
+% \end{paracol}
+%
 % \begin{table}
 %   \makeatletter
 %   \let\sellang\select@language
 %   \makeatother
 %   \centering
 %   \begin{threeparttable}
-%     \caption{Supported bibliography entry types / \emph{Unterstützte Bibliographieeintragsarten}}
+%     \caption{%
+%     \textenglish{Supported bibliography entry types} / %
+%     \textgerman{\em Unterstützte Bibliographieeintragsarten}
+%     \hspace{\textwidth}\relax D ^^A I am a sacrifice Oo
+%     \textenglish{Default entry type is indicated; alias entry types with emphasis} /
+%     \textgerman{\em Die Standardeintragsart ist markiert; Parallelbezeichnungen
+%     für Eintragsarten hervorgehoben}
+%     }
 %     \label{tbl:bibtytpes}
-%     \begin{tabular}{>{\relax}l>{\relax}l>{\sellang{english}\RaggedRight}p{.3\linewidth}>{\sellang{ngerman}\em\RaggedRight}p{.3\linewidth}}
+%     \begin{tabular}{>{\relax}l>{\relax}l>{\sellang{english}\RaggedRight}p{.34\linewidth}>{\sellang{ngerman}\em\RaggedRight}p{.34\linewidth}}
 %     \toprule
 %     \BibTeX           & Biblatex                   &                      & \\
 %     \midrule
@@ -1702,7 +1763,7 @@ without this file.
 % \subsubsection{Bibliography}
 % \changes{v0.4}{2014/08/12}{Provide common biblatex ground}
 %    \begin{macrocode}
-\PassOptionsToPackage{style=numeric-comp}{biblatex}
+\PassOptionsToPackage{style=numeric-comp,firstinits=true}{biblatex}
 \AfterPackage{biblatex}{
   \setcounter{biburllcpenalty}{7000}
   \setcounter{biburlucpenalty}{8000}
@@ -2772,6 +2833,14 @@ language.
 \renewcommand*\listoftocname{%
   \textenglish{Contents} / \emph{\textgerman{Inhalt}}}
 \let\contentsname\mycontentsname
+
+\newcommand\remark[1]{%
+  \unskip\par\vspace{\baselineskip}
+  \noindent\framebox[\linewidth]{%
+    #1%
+  }%
+  \vspace{\baselineskip}\par%
+}
 
 \GlossaryPrologue{%
   \section*{\textenglish{Change History} / \emph{\textgerman{Änderungsverlauf}} }}
