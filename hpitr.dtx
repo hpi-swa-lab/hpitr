@@ -279,6 +279,65 @@
 % test
 % \end{ger}
 % \end{paracol}
+%
+% \begin{paracol}{2}
+% \begin{eng}
+% \section{An Example}
+% \label{sec:example}
+% As jump-start, a very minimal but complete \File{hpitr} technical report follows:
+% \begin{lstlisting}[gobble=2]
+%%\documentclass[english,trtype=singlereport]{hpitr}
+%%% Use Biblatex
+%%\usepackage[backend=biber]{biblatex}
+%%\addbibresource{references.bib}
+%%
+%%\begin{document}
+%%\title{The importance of why and how to do work}
+%%\subtitle{An imaginary paper}
+%%\author{Anna Author\and Bert Betatester}
+%%\keywords{paper, showcase, lorem ipsum}
+%%\maketitle
+%%
+%%\begin{abstract}
+%%  `This “paper”…`
+%%\end{abstract}
+%%\chapter{Introduction}
+%%In computer science~\cite{myref}...
+%%\chapter{...}
+%%...
+%%\printbibliography
+%%\end{document}
+% \end{lstlisting}
+% \end{eng}
+% \begin{ger}
+% \section{Ein Beispiel}
+% Als Starthilfe folg ein minimaler, doch vollständiger Technischer Bericht mit
+% \File{hpitr}:
+% \begin{lstlisting}[gobble=2]
+%%\documentclass[german,trtype=singlereport]{hpitr}
+%%% Biblatex benutzen
+%%\usepackage[backend=biber]{biblatex}
+%%\addbibresource{references.bib}
+%%
+%%\begin{document}
+%%\title{Von der Wichtigkeit der Arbeit und sie zu tun}
+%%\subtitle{Eine imaginäre Abhandlung}
+%%\author{Anna Author\and Bert Betatester}
+%%\keywords{Arbeit, Beispiel, lorem ipsum}
+%%\maketitle
+%%
+%%\begin{abstract}
+%%  `Diese „Arbeit“...`
+%%\end{abstract}
+%%\chapter{Einführung}
+%%Die Informatik hat~\cite{myref}...
+%%\chapter{...}
+%%...
+%%\printbibliography
+%%\end{document}
+% \end{lstlisting}
+% \end{ger}
+% \end{paracol}
 % \DescribeOption{trtype}
 % \begin{paracol}{2}
 % \begin{eng}
@@ -375,6 +434,7 @@
 % \end{ger}
 % \end{paracol}
 %
+%
 % \begin{paracol}{2}
 % \begin{eng}
 % \section{Microtypography}
@@ -397,16 +457,19 @@
 % contributions in collection works, if applicable). Given names are
 % abbreviated.
 %
+% \begingroup\normalfont
 % \vspace*{\baselineskip}
 % \parbox[t]{1.5em}{[1]}\parbox[t]{\dimexpr\linewidth - 2em}{%
 % I.~Nassi and B.~Shneiderman.
 % \newblock Flowchart techniques for structured programming.
 % \newblock {\em SIGPLAN Not.}, 8(8):12--26, 1973.}
 % \vspace*{\baselineskip}
+% \endgroup
 %
 % This corresponds to the \emph{plain} \BibTeX style, or the
 % \emph{numeric-comp} style with abbreviations for Biblatex. Either way, the
-% citation style is preselected.
+% citation style is preselected. If in doubt, the Biblatex variant should be
+% used.
 %
 % \remark{The citation and bibliographic style is not to
 % be changed.}
@@ -414,9 +477,12 @@
 % While \BibTeX should work fine and is supported, the use of Biblatex,
 % especially with its \emph{biber} backend is encouraged to support proper use
 % of Unicode characters and fonts. ^^A TODO: ref biblatex
-% For a list of kinds of works to cite as supported by \BibTeX and Biblatex
-% refer to \autoref{tbl:bibtytpes}. Kinds of work not listed should use the
-% \emph{misc} type.
+% Collection works
+% \emph{must} use Biblatex. For a list of kinds of works to cite as supported
+% by \BibTeX and Biblatex refer to \autoref{tbl:bibtytpes}. Kinds of work not
+% listed should use the \emph{misc} type.
+%
+% 
 % \end{eng}
 % \begin{ger}
 % \section{Zitier"~ und Literaturstil}
@@ -426,24 +492,27 @@
 % der Einzelbeiträge in sammlungsartigen Berichten, sofern angebracht).
 % Vornamen werden abgekürzt.
 %
+% \begingroup\normalfont
 % \vspace*{\baselineskip}
 % \parbox[t]{1.5em}{[1]}\parbox[t]{\dimexpr\linewidth - 2em}{%
 % I.~Nassi and B.~Shneiderman.
 % \newblock Flowchart techniques for structured programming.
 % \newblock {\em SIGPLAN Not.}, 8(8):12--26, 1973.}
 % \vspace*{\baselineskip}
+% \endgroup
 %
 % Dies entspricht dem \emph{plain}-Stil von \BibTeX, beziehungsweise dem
 % \emph{numeric-comp}-Stil mit Namensabkürzungen in Biblatex. In jedem Fall ist
-% der Stil schon vorausgewählt.
+% der Stil schon vorausgewählt. Im Zweifel ist die Variante nach Biblatex maßgeblich.
 %
 % \remark{Weder Zitier"~ noch Literaturstil dürfen verändert werden.}
 %
 % Obwohl \BibTeX gut funktionieren sollte und auch unterstützt wird, wird
 % Biblatex, insbesondere mit dem \emph{biber}-Backend empfohlen, da dies eine
-% vernünftige Verwendung von Unicodezeichen und "~schriften erlaubt. Eine Liste
-% aller von \BibTeX und Biblatex unterstützten zu zitierenden Werkarten findet
-% sich in \autoref{tbl:bibtytpes}. Nicht aufgeführte Werkarten erhalten den Typ
+% vernünftige Verwendung von Unicodezeichen und "~schriften erlaubt.
+% Sammlungsartige Berichte \emph{müssen} Biblatex benutzen. Eine Liste aller
+% von \BibTeX und Biblatex unterstützten zu zitierenden Werkarten findet sich
+% in \autoref{tbl:bibtytpes}. Nicht aufgeführte Werkarten erhalten den Typ
 % \emph{misc}.
 % \end{ger}
 % \end{paracol}
@@ -2564,7 +2633,7 @@ language.
 \AtBeginDocument{\onecolumn}
 \usepackage{ifpdf,ifxetex,etoolbox,xspace}
 \usepackage{color}
-\usepackage[dvipsnames]{xcolor}
+\usepackage[x11names,dvipsnames,svgnames]{xcolor}
 %    \end{macrocode}
 % Customize the display of our code:
 % \begin{itemize}
@@ -2776,6 +2845,27 @@ language.
 \usepackage{booktabs}
 \usepackage{ragged2e}
 \usepackage{array}
+\usepackage{listings}
+%^^A\definecolor{Blue1}{rgb}{0,0,1}
+\lstdefinelanguage[hpitr]{TeX}[AlLaTeX]{TeX}{%
+  deletetexcs={title,author},
+  morekeywords={abstract},
+  moretexcs={chapter},
+  moretexcs=[2]{title,author,subtitle,keywords,maketitle},
+  moretexcs=[3]{addbibresource,printbibliography},
+}
+\lstset{%
+  basicstyle={\color{darkgray}\small\ttfamily},%
+  language={[hpitr]TeX},%
+  columns=fullflexible,%
+  stringstyle=\color{RosyBrown},%
+  texcsstyle=*{\color{Purple}\mdseries},%
+  texcsstyle=*[2]{\color{Blue1}},%
+  texcsstyle=*[3]{\color{ForestGreen}},%
+  % identifierstyle=\color{Blue1},%
+  commentstyle={\color{FireBrick}},%
+  escapechar=`,%
+}
 \usepackage{threeparttable}
 \usepackage{paracol}
 \marginparthreshold{0}
