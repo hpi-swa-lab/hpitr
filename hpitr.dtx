@@ -207,383 +207,6 @@
 %^^A ==========================================================================
 %^^A ==========================================================================
 %^^A ==========================================================================
-% \tableofcontents
-% \iffalse meta-comment
-
-% TODO:
-
-
-
-
-
-
-
-
-
-
-
-
-% 1. Benutze, wenn möglich, LuaLaTeX oder XeLaTeX (lieber lualatex). Die Uni möchte gerne 
-%   Unicode-Schriften und das ist mit reinem pdfLaTeX nicht zu machen. Außerdem können
-%   beide nativ UTF-8:
-% 2. Bitte nutze ausschließlich utf-8-codierte .tex dateien (nicht latin1 oder ansi-new)
-
-% - microtype, graphicx, amsmath, amssymb, url, booktabs, color, fixltx2e und hyperref
-%  Werden von hpitr schon geladen, man kann sie also aufführen, muss aber nicht.
-% - times, subfig
-%  Sind veraltet und times ist außerdem mit hpitr nicht zulässig
-% - ctable, wrapfix, algorithmic, algorithm2e
-%  Werden gar nicht verwendet, also habe ich sie entfernt sodass sie nicht stören.
-% - WICHTIG: inputenc
-%  Habe ich entfernt, da ich deinen TR mit lualatex gebaut habe. 
-%  Außerdem ist mit hpitr nur utf-8 zulässig:
-%    - Wenn man mit pdflatex baut, ruft hpitr automatisch \cs\usepackage[utf8]{inputenc} auf.
-
-%  Nebenbei: 
-% 	%\cs\usepackage[latin1]{inputenc} %Linux
-% 	\cs\usepackage[ansinew]{inputenc} %Windows
-% 	%\cs\usepackage[applemac]{inputenc} %Mac
-%  Sollte in deinen Dokumenten nicht auftauchen.
-%  Denn zumeist stimmt dass nicht mehr. Auf den meisten Linux'en ist
-%  nicht mehr latin-1, sondern utf-8 der standard. Bei windows kommt es aufs
-%  land an. Auf dem mach wird seit 14 jahren kein 'applemac' mehr verwendet.
-%  Auch hier wäre utf-8 besser.
-%  :)
-
-
-% Die Änderungen and labelitemi... verändern das Geseamtaussehen und
-% sind mit hpitr nicht zulässig.
-% %%%%%
-
-% title/author
-% Hier ist der Titel von oben. hpitr trägt diese werte automatisch in das pdf ein (und kann auch mit \\ im titel umgehen)
-
-
-
-% %%%%%
-% For conversions from llncs:
-
-% Du benutzt die Defintion-umgebung. Die gibts in lncs, aber nicht
-% sonst. Ich habe sie dir mit amsthm nachgebaut.
-
-% \fi ^^A meta-comment
-%
-% \begin{paracol}{2}
-% \begin{eng}
-% \section{Introduction}
-% \label{sec:intro}
-% test
-% \end{eng}
-% \begin{ger}
-% \section{Einführung}
-% test
-% \end{ger}
-% \end{paracol}
-%
-% \begin{paracol}{2}
-% \begin{eng}
-% \section{An Example}
-% \label{sec:example}
-% As jump-start, a very minimal but complete \File{hpitr} technical report follows:
-% \begin{lstlisting}[gobble=2]
-%%\documentclass[english,trtype=singlereport]{hpitr}
-%%% Use Biblatex
-%%\usepackage[backend=biber]{biblatex}
-%%\addbibresource{references.bib}
-%%
-%%\begin{document}
-%%\title{The importance of why and how to do work}
-%%\subtitle{An imaginary paper}
-%%\author{Anna Author\and Bert Betatester}
-%%\keywords{paper, showcase, lorem ipsum}
-%%\maketitle
-%%
-%%\begin{abstract}
-%%  `This “paper”…`
-%%\end{abstract}
-%%\chapter{Introduction}
-%%In computer science~\cite{myref}...
-%%\chapter{...}
-%%...
-%%\printbibliography
-%%\end{document}
-% \end{lstlisting}
-% \end{eng}
-% \begin{ger}
-% \section{Ein Beispiel}
-% Als Starthilfe folg ein minimaler, doch vollständiger Technischer Bericht mit
-% \File{hpitr}:
-% \begin{lstlisting}[gobble=2]
-%%\documentclass[german,trtype=singlereport]{hpitr}
-%%% Biblatex benutzen
-%%\usepackage[backend=biber]{biblatex}
-%%\addbibresource{references.bib}
-%%
-%%\begin{document}
-%%\title{Von der Wichtigkeit der Arbeit und sie zu tun}
-%%\subtitle{Eine imaginäre Abhandlung}
-%%\author{Anna Author\and Bert Betatester}
-%%\keywords{Arbeit, Beispiel, lorem ipsum}
-%%\maketitle
-%%
-%%\begin{abstract}
-%%  `Diese „Arbeit“...`
-%%\end{abstract}
-%%\chapter{Einführung}
-%%Die Informatik hat~\cite{myref}...
-%%\chapter{...}
-%%...
-%%\printbibliography
-%%\end{document}
-% \end{lstlisting}
-% \end{ger}
-% \end{paracol}
-% \DescribeOption{trtype}
-% \begin{paracol}{2}
-% \begin{eng}
-% \section{Types of Reports}
-% \label{sec:types}
-% This class support the types of technical reports that are common at the HPI.
-% In essence, there are three variants.
-% \end{eng}
-% \begin{ger}
-% \section{Berichtarten}
-% Die Klasse unterstütz die am HPI üblichen Arten von technischen Berichten.
-% Grob sind das drei Varianten.
-% \end{ger}
-% \end{paracol}
-%
-%
-% \begin{Describe}
-%   \DescribeValue{trtype}{singlearticle}\\
-%   \DescribeValue{trtype}{article}
-% \end{Describe}
-% \begin{paracol}{2}
-% \begin{eng}
-% \paragraph{Article-like reports}
-% \label{sec:art-like}
-% Reports that are basically similar to conference or journal articles or
-% extend such articles have an \emph{article-like} character. Their top-level
-% sectioning element is the \emph{sections}.
-% \end{eng}
-% \begin{ger}
-% \paragraph{Artikelartige Berichte} ^^A\oarg{trtype=singlearticle}\quad
-% Berichte, die im Kern ähnlich zu Tagungs-, Konferenz- oder
-% Zeitschriftenartikeln sind, oder erweiterte Varianten davon sind, haben
-% \emph{artikelartigen} Charakter. Ihre höchste Gliederungsebene sind
-% \emph{Abschnitte}.
-% \end{ger}
-% \end{paracol}
-%
-%
-% \begin{Describe}
-% \DescribeValue{trtype}{singlereport}\\
-% \DescribeValue{trtype}{report}
-% \end{Describe}
-% \begin{paracol}{2}
-% \begin{eng}
-% \paragraph{Original reports}
-% \label{sec:original-rprt}
-% Reports that are like monographs (such as theses) or inherently independent
-% reports are report in the strict sense.\footnote{Not implying that the other
-% types are inadequate as technical reports, to the contrary!} Their top-level
-% sectioning element is the \emph{chapter}.
-% \end{eng}
-% \begin{ger}
-% \paragraph{Eigentliche Berichte} ^^A\oarg{trtype=singlereport}\quad
-% Berichte, die ähnlich zu Monographien wie Abschlussarbeiten sind oder
-% grundsätzlich eigenständige Berichte sind im eigentlichen Sinne
-% \emph{berichtartig}.\footnote{Das bedeutet nicht, dass die anderen Arten sich
-% nicht als technische Berichte eignen.} Ihre höchste Gliederungsebene sind
-% \emph{Kapitel}.
-% \end{ger}
-% \end{paracol}
-%
-%
-% \begin{Describe}
-%   \DescribeValue{trtype}{collection}\\
-%   \DescribeValue{trtype}{proceedings}
-% \end{Describe}
-% \begin{paracol}{2}
-% \begin{eng}
-% \paragraph{Collection-like reports}
-% \label{sec:coll-like}
-% Reports comprising several individual contributions are
-% \emph{collection-like}. This may include conference proceedings, seminar
-% compilations, or special issues, among others. Their top-level sectioning
-% element is the \emph{chapter}. Some commands to
-% manage such collections are provided for convenience.
-%
-% Note that proceeding use a different formatting for the individual
-% contributions. They start with their own title, author information, and
-% abstract, while in normal collections, this information is absent. In normal
-% collections, all sections are numbered by chapter.
-% \end{eng}
-% \begin{ger}
-% \paragraph{Sammlungsartige Berichte}
-% Berichte, die sich aus mehreren Einzelbeiträgen zusammensetzen sind
-% \emph{sammlungsartig}. Dies kann unter anderem Tagungsbände,
-% Seminarzusammenfassungen oder Sonderbände beinhalten. Ihre höchste
-% Gliederungsebene sind \emph{Kapitel}. Es gibt einige Befehle die die
-% Verwaltung von diesen Sammlungen vereinfachen sollen.
-%
-% Tagungsbände zeichen sich durch eine besondere Formatierung der
-% Einzelbeiträge aus; jeder Beitrag beginnt im Gegensatz zu normalen Sammlungen
-% mit eigenem Titel, Autorennennung und Zusammenfassung. In normalen Sammlungen
-% ordnet sich die Abschnitsnummerierung der Kapitelnummerierung unter.%
-% \end{ger}
-% \end{paracol}
-%
-%
-% \begin{paracol}{2}
-% \begin{eng}
-% \section{Microtypography}
-% \label{sec:micro}
-% test
-% \end{eng}
-% \begin{ger}
-% \section{Detailtypographie}
-% test
-% \end{ger}
-% \end{paracol}
-%
-% \begin{paracol}{2}
-% \begin{eng}
-% \section{Bibliographic Style}
-% \label{sec:micro}
-% For citations and bibliographies, a \emph{numeric} citation style is used.
-% The numbers derive from the \emph{alphabetic} sorting of the list of
-% bibliographic entries at the end of the report (or the end of the individual
-% contributions in collection works, if applicable). Given names are
-% abbreviated.
-%
-% \begingroup\normalfont
-% \vspace*{\baselineskip}
-% \parbox[t]{1.5em}{[1]}\parbox[t]{\dimexpr\linewidth - 2em}{%
-% I.~Nassi and B.~Shneiderman.
-% \newblock Flowchart techniques for structured programming.
-% \newblock {\em SIGPLAN Not.}, 8(8):12--26, 1973.}
-% \vspace*{\baselineskip}
-% \endgroup
-%
-% This corresponds to the \emph{plain} \BibTeX style, or the
-% \emph{numeric-comp} style with abbreviations for Biblatex. Either way, the
-% citation style is preselected. If in doubt, the Biblatex variant should be
-% used.
-%
-% \remark{The citation and bibliographic style is not to
-% be changed.}
-%
-% While \BibTeX should work fine and is supported, the use of Biblatex,
-% especially with its \emph{biber} backend is encouraged to support proper use
-% of Unicode characters and fonts. ^^A TODO: ref biblatex
-% Collection works
-% \emph{must} use Biblatex. For a list of kinds of works to cite as supported
-% by \BibTeX and Biblatex refer to \autoref{tbl:bibtytpes}. Kinds of work not
-% listed should use the \emph{misc} type.
-%
-% 
-% \end{eng}
-% \begin{ger}
-% \section{Zitier"~ und Literaturstil}
-% In Zitaten und Literaturlisten wird ein einfacher, \emph{numerischer} Stil
-% genutzt. Die Nummerierung folgt der \emph{alphabetischen} Sortierung der
-% Literatureinträge in der Literaturliste am Ende des Berichts (oder am Ende
-% der Einzelbeiträge in sammlungsartigen Berichten, sofern angebracht).
-% Vornamen werden abgekürzt.
-%
-% \begingroup\normalfont
-% \vspace*{\baselineskip}
-% \parbox[t]{1.5em}{[1]}\parbox[t]{\dimexpr\linewidth - 2em}{%
-% I.~Nassi and B.~Shneiderman.
-% \newblock Flowchart techniques for structured programming.
-% \newblock {\em SIGPLAN Not.}, 8(8):12--26, 1973.}
-% \vspace*{\baselineskip}
-% \endgroup
-%
-% Dies entspricht dem \emph{plain}-Stil von \BibTeX, beziehungsweise dem
-% \emph{numeric-comp}-Stil mit Namensabkürzungen in Biblatex. In jedem Fall ist
-% der Stil schon vorausgewählt. Im Zweifel ist die Variante nach Biblatex maßgeblich.
-%
-% \remark{Weder Zitier"~ noch Literaturstil dürfen verändert werden.}
-%
-% Obwohl \BibTeX gut funktionieren sollte und auch unterstützt wird, wird
-% Biblatex, insbesondere mit dem \emph{biber}-Backend empfohlen, da dies eine
-% vernünftige Verwendung von Unicodezeichen und "~schriften erlaubt.
-% Sammlungsartige Berichte \emph{müssen} Biblatex benutzen. Eine Liste aller
-% von \BibTeX und Biblatex unterstützten zu zitierenden Werkarten findet sich
-% in \autoref{tbl:bibtytpes}. Nicht aufgeführte Werkarten erhalten den Typ
-% \emph{misc}.
-% \end{ger}
-% \end{paracol}
-%
-% \begin{table}
-%   \makeatletter
-%   \let\sellang\select@language
-%   \makeatother
-%   \centering
-%   \begin{threeparttable}
-%     \caption{%
-%     \textenglish{Supported bibliography entry types} / %
-%     \textgerman{\em Unterstützte Bibliographieeintragsarten}
-%     \hspace{\textwidth}\relax D ^^A I am a sacrifice Oo
-%     \textenglish{Default entry type is indicated; alias entry types with emphasis} /
-%     \textgerman{\em Die Standardeintragsart ist markiert; Parallelbezeichnungen
-%     für Eintragsarten hervorgehoben}
-%     }
-%     \label{tbl:bibtytpes}
-%     \begin{tabular}{>{\relax}l>{\relax}l>{\sellang{english}\RaggedRight}p{.34\linewidth}>{\sellang{ngerman}\em\RaggedRight}p{.34\linewidth}}
-%     \toprule
-%     \BibTeX           & Biblatex                   &                      & \\
-%     \midrule
-%     article           & article                    & articles in journal, magazine \&c & Zeitschriften"~, Magazin"~ und andere Artikel \\
-%                       & \emph{suppperiodical}      & supplemental material in periodicals & Zusatzmaterialien in Periodika \\
-%                       & \emph{review}              & reviews of other works & Rezensionen anderer Arbeiten \\
-%     book              & book                       & books & Bücher\\
-%                       & \emph{mvbook}              & multi-volume --- & Mehrbändige --- \\
-%     booklet           & booklet                    & book-like work without publisher & Buchartiges nicht-verlegtes Werk \\
-%                       & collection                 & collection of multiple independent contributions &  Sammlung eigenständiger Werke \\
-%                       & \emph{mvcollection}        & multi-volume --- & Mehrbändige --- \\
-%                       & \emph{reference}           & references such as dictionaries & Nachschlagewerke wie Wörterbücher\\
-%                       & \emph{mvreference}         & multi-volume --- & Mehrbändige --- \\
-%     inbook            & inbook\tnote{a}            & independent part of a book & Eigenständiger Buchteil \\
-%                       & \emph{bookinbook}          & part of a book that originally was a book & Buchteil, der schon als eigenständiges Buch verlegt wurde \\
-%                       & \emph{suppbook}            & supplemental material in books & Zusatzmaterialien in Büchern \\
-%     incollection      & incollection               & independent contribution to a collection & Eigenständiges Werk, das einer Sammlung ist \\
-%                       & \emph{suppcollection}      & supplemental material in a collection & Zusatzmaterialien in Sammlungen \\
-%                       & \emph{inreference}         & articles in works of references & Artikel in Nachschlagewerken\\
-%     inproceedings     & inproceedings              & articles in conference proceedings & Tagungsbandartikel\\
-%     \emph{conference} & \emph{conference}          & --- ditto & --- dito \\
-%     manual            & manual                     & documentation works & Handbücher \\
-%     mastersthesis     & mastersthesis\tnote{b}     & Master’s theses & Master"~ oder Magisterarbeiten \\
-% \llap{☞} misc        & misc                        & anything (default) & sonstiges (Vorgabewert)\\
-%                       & online                     & online resource like web sites & Internetquellen wie Webseiten \\
-%                       & \emph{www}                 & --- ditto & --- dito \\
-%                       & \emph{electronic}          & --- ditto & --- dito \\
-%     phdthesis         & phdthesis\tnote{b}         & doctoral dissertation & Dissertation \\
-%                       & patent                     & patent entries & Patente \\
-%                       & periodical                 & complete preriodical issue & Ganze Zeitschriftenausgabe \\
-%     proceedings       & proceedings                & conference proceeding & Konferenz"~ und Tagungsbändge \\
-%                       & \emph{mvproceedings}       & multi-volume --- & Mehrbändige --- \\
-%                       & report                     & institutionally published report & Von Institutionen veröffentlichte Berichte\\
-%     techreport        & \emph{techreport}\tnote{c} & technical reports & Technische Berichte\\
-%                       & thesis                     & theses submitted to educational institutins & Abschlussarbeiten \\
-%                       & \emph{mastersthesis}       & (see above) & (siehe oben) \\
-%                       & \emph{phdthesis}           & (see above) & (siehe oben) \\
-%     unpublished       & unpublished                & works not formally published & Nicht offiziell veröffentlichte Werke \\
-%     \bottomrule
-%     \end{tabular}
-%     \begin{tablenotes}
-%     \item [a] Behaves differently than \BibTeX / \emph{Verhält sich anders
-%     als in \BibTeX}
-%     \item [b] Actually a subtype of thesis / \emph{Eigentlich eine thesis-Unterart}
-%     \item [c] Actually a subtype of report / \emph{Eigentlich eine report-Unterart}
-%     \end{tablenotes}
-%   \end{threeparttable}
-% \end{table}
-%^^A ==========================================================================
-%^^A ==========================================================================
-%^^A ==========================================================================
 % \StopEventually{
 %  \newpage
 %  \appendix
@@ -2651,7 +2274,8 @@ language.
 \providecommand*\theCodelineNo{%
   \normalfont\sffamily\color{black!50}\scriptsize%
   \arabic{CodelineNo}\ }
-\def\dm#1{{\scriptsize\textrm{\textit{#1}}}\xspace}
+\let\dmsize\scriptsize
+\def\dm#1{{\dmsize\textrm{\textit{\textcolor{DarkBlue}{#1}}}}\xspace}
 
 \providecommand*\MacroFont{\ttfamily\small}
 \providecommand*\AltMacroFont{\ttfamily\footnotesize}
@@ -2661,24 +2285,24 @@ language.
 \providecommand*\OptionsName{options}
 
  % tob be overridden by hypdoc
-\providecommand*\PrintMacroName[1]{\strut\MacroFont\string #1}
-\providecommand*\PrintDescribeMacro[1]{\strut \dm{c} \MacroFont #1\ }
+\renewcommand*\PrintMacroName[1]{\strut\MacroFont\string #1}
+\renewcommand*\PrintDescribeMacro[1]{\strut \dm{c} \MacroFont #1\ }
 \makeatletter
-\providecommand*\PrintEnvName[1]{%
+\renewcommand*\PrintEnvName[1]{%
   \HD@target%
   \strut \MacroFont #1\ }
-\providecommand*\PrintDescribeEnv[1]{%
+\renewcommand*\PrintDescribeEnv[1]{%
   \HD@target%
   \strut \dm{e} \MacroFont #1\ }
-\providecommand*\PrintDescribeOption[1]{%
+\newcommand*\PrintDescribeOption[1]{%
   \HD@target%
   \strut \dm{o} \MacroFont #1\ }
-\providecommand*\PrintOptionName[1]{%
+\newcommand*\PrintOptionName[1]{%
   \HD@target%
   \strut \MacroFont #1\ }
 \makeatother
-\providecommand*\PrintDescribeValue[2]{%
-  \strut \dm{v} \MacroFont {\scriptsize #1=}#2\ }
+\newcommand*\PrintDescribeValue[2]{%
+  \strut \dm{v} \MacroFont{\scriptsize #1=}#2\ }
 
 
 \usepackage{hypdoc}
@@ -2771,45 +2395,45 @@ language.
 \newbool{TR@indescribe}
 \def\TR@describe@table@begin{%
   \ifvmode\else\par\fi\small\addvspace{2\baselineskip}%
-  \vspace{-\baselineskip}%
+  \vspace*{-\baselineskip}%
   \vspace{\z@ plus \baselineskip}%
   \noindent%
   \hspace{-1em}
   \tabular{|l|}\hline\ignorespaces}
 \def\TR@describe@table@end{%
   \\%
-  \hline\endtabular\nobreak%\par\nobreak
-  % \vspace{1.5\baselineskip}\nobreak\vspace{-\baselineskip}\nobreak%
-  % \vspace{0pt minus .5\baselineskip}\nobreak
+  \hline\endtabular\nobreak\par\nobreak
+  \vspace{1.5\baselineskip}\nobreak\vspace{-\baselineskip}\nobreak%
+  \vspace{0pt minus .5\baselineskip}\nobreak
 }
 
 % Define new describe commands
 \newcommand*{\newDescribe}[1]{%
   \csgdef{Describe#1}{%
-    \leavevmode\@bsphack\begingroup\MakePrivateLetters
+    \leavevmode\@bsphack\begingroup\MakePrivateLetters%
     \csuse{Describe@#1}}%
   \csgdef{Describe@#1}##1{%
-    \endgroup
-    \ifthenelse{\boolean{TR@indescribe}}{}{\TR@describe@table@begin}
+    \endgroup%
+    \ifthenelse{\boolean{TR@indescribe}}{}{\TR@describe@table@begin}%
     \noindent\mbox{\csuse{PrintDescribe#1}{##1}}%
-    \ifthenelse{\boolean{TR@indescribe}}{}{\TR@describe@table@end}
+    \ifthenelse{\boolean{TR@indescribe}}{}{\TR@describe@table@end}%
     \csuse{Special#1Index}{##1}\@esphack\ignorespaces}%
 }
 \newDescribe{Env}
 \newDescribe{Option}
-\def\Describe@Macro#1{\endgroup
-  \ifthenelse{\boolean{TR@indescribe}}{}{\TR@describe@table@begin}
+\def\Describe@Macro#1{\endgroup%
+  \ifthenelse{\boolean{TR@indescribe}}{}{\TR@describe@table@begin}%
   \noindent\mbox{\PrintDescribeMacro{#1}}%
-  \ifthenelse{\boolean{TR@indescribe}}{}{\TR@describe@table@end}
+  \ifthenelse{\boolean{TR@indescribe}}{}{\TR@describe@table@end}%
   \SpecialUsageIndex{#1}\@esphack\ignorespaces}
 
-\def\DescribeValue{\leavevmode\@bsphack\begingroup
+\def\DescribeValue{\leavevmode\@bsphack\begingroup%
   \MakePrivateLetters\Describe@Value}
-\def\Describe@Value#1#2{
-    \endgroup
-    \ifthenelse{\boolean{TR@indescribe}}{}{\TR@describe@table@begin}
-    \noindent\mbox{\csuse{PrintDescribeValue}{#1}{#2}}%
-    \ifthenelse{\boolean{TR@indescribe}}{}{\TR@describe@table@end}
+\def\Describe@Value#1#2{%
+    \endgroup%
+    \ifthenelse{\boolean{TR@indescribe}}{}{\TR@describe@table@begin}%
+    \noindent\mbox{\PrintDescribeValue{#1}{#2}}%
+    \ifthenelse{\boolean{TR@indescribe}}{}{\TR@describe@table@end}%
     \@esphack\ignorespaces}%
 
 \newenvironment{Describe}{%
@@ -2845,6 +2469,8 @@ language.
 \usepackage{booktabs}
 \usepackage{ragged2e}
 \usepackage{array}
+\usepackage[binary-units]{siunitx}
+\DeclareSIUnit[number-unit-product = {}] \pt{pt}
 \usepackage{listings}
 %^^A\definecolor{Blue1}{rgb}{0,0,1}
 \lstdefinelanguage[hpitr]{TeX}[AlLaTeX]{TeX}{%
@@ -2885,6 +2511,18 @@ language.
 \addtokomafont{descriptionlabel}{\mdseries}
 \addtokomafont{captionlabel}{\mdseries}
 \renewcommand*\labelitemii{\normalfont\textendash}
+
+
+\renewenvironment{abstract}%
+{\list{}{\listparindent 1em%
+    \advance\leftmargin 4em\relax
+    \itemindent    \listparindent
+    \rightmargin   \leftmargin
+    \parsep        0pt plus 1pt\relax
+  }%
+  \item\relax}
+{\endlist}
+
 \setfootnoterule{4cc}
 \hypersetup{%
     colorlinks=true,   %% true for printout
@@ -2916,6 +2554,8 @@ language.
 {\begin{rightcolumn}
  \begin{german}%
    \let\generalshape\em%
+   \let\origtheHsection\theHsection%
+   \def\theHsection{ignore.\origtheHsection}%
    \em}%
 {\end{german}%
  \end{rightcolumn}}
@@ -2927,11 +2567,17 @@ language.
 \newcommand\remark[1]{%
   \unskip\par\vspace{\baselineskip}
   \noindent\framebox[\linewidth]{%
+    \parbox{\linewidth}{\centering
     #1%
-  }%
+  }}%
   \vspace{\baselineskip}\par%
 }
-
+\usepackage{enumitem}
+\setlist{noitemsep,topsep=.5\baselineskip,leftmargin=0pt}
+\setdescription{noitemsep,font=\normalfont\scshape,leftmargin=\parindent}
+\DeclareRobustCommand\cf[1]{%
+cf.\,{#1}
+}
 \GlossaryPrologue{%
   \section*{\textenglish{Change History} / \emph{\textgerman{Änderungsverlauf}} }}
 \IndexPrologue{
@@ -3027,6 +2673,616 @@ typical, like non-standard paper size.
 %</manual>
 %<*!README>
 \end{abstract}
+%<*manual>
+%^^A ==========================================================================
+%^^A ==========================================================================
+%^^A ==========================================================================
+\tableofcontents
+\iffalse
+TODO:
+
+1. Benutze, wenn möglich, LuaLaTeX oder XeLaTeX (lieber lualatex). Die Uni möchte gerne 
+  Unicode-Schriften und das ist mit reinem pdfLaTeX nicht zu machen. Außerdem können
+  beide nativ UTF-8:
+2. Bitte nutze ausschließlich utf-8-codierte .tex dateien (nicht latin1 oder ansi-new)
+
+- microtype, graphicx, amsmath, amssymb, url, booktabs, color, fixltx2e und hyperref
+ Werden von hpitr schon geladen, man kann sie also aufführen, muss aber nicht.
+- times, subfig
+ Sind veraltet und times ist außerdem mit hpitr nicht zulässig
+- ctable, wrapfix, algorithmic, algorithm2e
+ Werden gar nicht verwendet, also habe ich sie entfernt sodass sie nicht stören.
+- WICHTIG: inputenc
+ Habe ich entfernt, da ich deinen TR mit lualatex gebaut habe. 
+ Außerdem ist mit hpitr nur utf-8 zulässig:
+   - Wenn man mit pdflatex baut, ruft hpitr automatisch \cs\usepackage[utf8]{inputenc} auf.
+
+ Nebenbei: 
+	%\cs\usepackage[latin1]{inputenc} %Linux
+	\cs\usepackage[ansinew]{inputenc} %Windows
+	%\cs\usepackage[applemac]{inputenc} %Mac
+ Sollte in deinen Dokumenten nicht auftauchen.
+ Denn zumeist stimmt dass nicht mehr. Auf den meisten Linux'en ist
+ nicht mehr latin-1, sondern utf-8 der standard. Bei windows kommt es aufs
+ land an. Auf dem mach wird seit 14 jahren kein 'applemac' mehr verwendet.
+ Auch hier wäre utf-8 besser.
+ :)
+
+
+Die Änderungen and labelitemi... verändern das Geseamtaussehen und
+sind mit hpitr nicht zulässig.
+%%%%%
+
+title/author
+Hier ist der Titel von oben. hpitr trägt diese werte automatisch in das pdf ein (und kann auch mit \\ im titel umgehen)
+
+
+
+%%%%%
+For conversions from llncs:
+
+Du benutzt die Defintion-umgebung. Die gibts in lncs, aber nicht
+sonst. Ich habe sie dir mit amsthm nachgebaut.
+
+\fi
+
+\begin{paracol}{2}
+\begin{eng}
+\section{Introduction}
+\label{sec:intro}
+All technical reports the Hasso-Plattner-Institut für Sofwaresystemtechnik (\textsc{hpi})
+issues should have a uniform appearance. The \LaTeX{} class \File{hpitr} exists
+for this very purpose. Its aim is to ease the work with and on technical
+reports of the \textsc{hpi} and ensure their uniformity.
+
+This manual illustrates the means this \LaTeX{} class provides and explains the
+necessary constraints.
+\end{eng}
+\begin{ger}
+\section{Einführung}
+Alle technischen Berichte, die das Hasso"-Plattner"-Institut für
+Sofwaresystemtechnik (\textsc{hpi}) herausgibt sollen ein einheitliches
+Erscheinungsbild haben. Zu diesem Zweck existiert diese \LaTeX"=Klasse names
+\File{hpitr}. Sie soll die Arbeit an und mit technischen Berichten des
+\textsc{hpi} vereinfachen und die Einheitlichkeit sicherstellen.
+
+Im diesem Handbuch werden die Möglichkeiten dieser \LaTeX"=Klasse erläutert
+und die notwendigen Einschränkungen erklärt.
+\end{ger}
+\end{paracol}
+
+\begin{paracol}{2}
+\begin{eng}
+\subsection{A note on \LaTeX{} elements}
+\end{eng}
+\begin{ger}
+\subsection{Eine Anmerkung zu \LaTeX"=Befehlen} 
+\end{ger}
+\end{paracol}
+\begin{Describe}
+  \DescribeMacro{command}\\
+  \DescribeEnv{environment}\\
+  \DescribeOption{option}\\
+  \DescribeValue{option}{value}
+\end{Describe}
+\begingroup \let\dmsize\normalsize
+\begin{paracol}{2}
+\begin{eng}
+To easily find documentation to specific \LaTeX{} elements this class
+provides, that location is highlighted by a box like above. Every \LaTeX{}
+element is prefixed by its type: command sequences \dm{c}, environments
+\dm{e}, class options \dm{o}, and values to class option keys \dm{v}. This
+should help navigating in the  manual.
+\end{eng}
+\begin{ger}
+  Zur schnellen Hilfe zu bestimmen \LaTeX"=Befehlen, die von dieser Klasse
+  angeboten werden, wird die zugehörige Erklärung befindet, mit einem Kasten
+  wie oben zusehen markiert. Die einzelnen Befehlsartenhaben dabei eigene
+  Präfixe: Befehle~\dm{o}, Umgebungen~\dm{e}, \mbox{Klassenoptionen~\dm{o}}
+  und Werte für Klassenoptionsschlüssel~\dm{v}. Damit soll das Zurechtfinden
+  im Handbuch erleichtert werden.
+\end{ger}
+\end{paracol}
+\endgroup
+
+\begin{paracol}{2}
+\begin{eng}
+\subsection{Manual Structure}
+A \hyperref[sec:example]{short example report} follows this section. How to
+compile a \File{hpitr} report is explained in \hyperref[sec:running]{the
+section after that}. After
+that, the different types of reports, necessary information about the report,
+general typesetting requirements, and specific microtypography are
+considered; followed by notes on the bibliographic style.
+\end{eng}
+\begin{ger}
+\subsection{Aufbau}
+Es folgt \hyperref[sec:example]{ein kurzer Beispielbericht}. Wie die Berichte
+erzeugt werden wird im \hyperref[sec:running]{darrauffolgenden Abschnitt}
+erklärt. Danach wird auf Berichtarten, notwendige Berichtinformationen,
+generelle Satzeigenschaften, und detailtypographische Besonderheiten
+eingegangen. Dann folgen Anmerkungen zum Zitierstil.
+\end{ger}
+\end{paracol}
+
+\begin{paracol}{2}
+\begin{eng}
+\section{An Example}
+\label{sec:example}
+As jump-start, a very minimal but complete \File{hpitr} technical report follows:
+\begin{lstlisting}
+\documentclass[english,trtype=singlereport]{hpitr}
+% Use Biblatex
+\usepackage[backend=biber]{biblatex}
+\addbibresource{references.bib}
+
+\begin{document}
+\title{The importance of why and how to do work}
+\subtitle{An imaginary paper}
+\author{Anna Author\and Bert Betatester}
+\keywords{paper, showcase, lorem ipsum}
+\maketitle
+
+\begin{abstract}
+  `This “paper”…`
+\end{abstract}
+\chapter{Introduction}
+In computer science~\cite{myref}...
+\chapter{...}
+...
+\printbibliography
+\end{document}
+\end{lstlisting}
+This example sets a \File{hpitr} report that
+ \begin{itemize}
+ \item is an original report (\lstinline|trtype=singlereport|),
+ \item uses Biblatex,
+ \item and gives all meta-information for title, author, and keywords.
+\end{itemize}
+Note that by intention, the typical selection of input encoding
+(\lstinline|\usepackage[...]{inputenc}|) is not present in this example. All
+\File{hpitr} reports are to be written using \textsc{utf-8} encoding. The class
+file takes care to select the right input encoding.
+
+\remark{All files of a \File{hpitr} report must be \textsc{utf-8}
+encoded.}
+
+\end{eng}
+\begin{ger}
+\section{Ein Beispiel}
+Als Starthilfe folg ein minimaler, doch vollständiger Technischer Bericht mit
+\File{hpitr}:
+\begin{lstlisting}
+\documentclass[german,trtype=singlereport]{hpitr}
+% Biblatex benutzen
+\usepackage[backend=biber]{biblatex}
+\addbibresource{references.bib}
+
+\begin{document}
+\title{Von der Wichtigkeit der Arbeit und sie zu tun}
+\subtitle{Eine imaginäre Abhandlung}
+\author{Anna Author\and Bert Betatester}
+\keywords{Arbeit, Beispiel, lorem ipsum}
+\maketitle
+
+\begin{abstract}
+  `Diese „Arbeit“...`
+\end{abstract}
+\chapter{Einführung}
+Die Informatik hat~\cite{myref}...
+\chapter{...}
+...
+\printbibliography
+\end{document}
+\end{lstlisting}
+Dieses Beispiel erzeugt einen \File{hpitr}"=Bericht, der
+\begin{itemize}
+\item ein eigentlicher bericht ist (\lstinline|trtype=singlereport|),
+\item Biblatex benutzt
+\item und alle Meta"=Informationen für Title, Autoren und Schlagwörter
+  bereitstellt.
+\end{itemize}
+Zu beachten ist, dass die eigentlich typische Auswahl der Eingabecodiereung
+(\lstinline|\usepackage[...]{inputenc}|) im Beispiel nicht vorhanden ist. Dies
+geschieht absichtilich, das alle Dateien eines \File{hpitr}"=Berichts in
+\textsc{utf-8}"=Codierung geschrieben werden sollen. Die Klasse sorgt dann für
+die korrerte Handhabung.
+
+\remark{Alle Dateien eines \File{hpitr}"=Berichts müssen
+  \textsc{utf-8}"=codiert sein.}
+\end{ger}
+\end{paracol}
+%^^A ----------------------------------------
+\begin{paracol}{2}
+\begin{eng}
+\section{Running \LaTeX}
+\label{sec:running}
+\File{hpitr} reports are handed to the Univerlag publisher as \textsc{pdf}
+files. 
+\end{eng}
+\begin{ger}
+\section{\LaTeX"=Läufe}
+test
+\end{ger}
+\end{paracol}
+%^^A----------------------------------------
+\begin{paracol}{2}
+\begin{eng}
+\section{Types of Reports}
+\label{sec:types}
+\end{eng}
+\begin{ger}
+\section{Berichtarten}
+\end{ger}
+\end{paracol}
+\DescribeOption{trtype=\meta{type}}
+\begin{paracol}{2}
+\begin{eng}
+This class support the types of technical reports that are common at the HPI.
+In essence, there are three variants.
+\end{eng}
+\begin{ger}
+Die Klasse unterstütz die am HPI üblichen Arten von technischen Berichten.
+Grob sind das drei Varianten.
+\end{ger}
+\end{paracol}
+
+
+\begin{Describe}
+  \DescribeValue{trtype}{singlearticle}\\
+  \DescribeValue{trtype}{article}
+\end{Describe}
+\begin{paracol}{2}
+\begin{eng}
+\paragraph{Article-like reports}
+\label{sec:art-like}
+Reports that are basically similar to conference or journal articles or
+extend such articles have an \emph{article-like} character. Their top-level
+sectioning element is the \emph{sections}.
+\end{eng}
+\begin{ger}
+\paragraph{Artikelartige Berichte}
+Berichte, die im Kern ähnlich zu Tagungs-, Konferenz- oder
+Zeitschriftenartikeln sind, oder erweiterte Varianten davon sind, haben
+\emph{artikelartigen} Charakter. Ihre höchste Gliederungsebene sind
+\emph{Abschnitte}.
+\end{ger}
+\end{paracol}
+
+
+\begin{Describe}
+\DescribeValue{trtype}{singlereport}\\
+\DescribeValue{trtype}{report}
+\end{Describe}
+\begin{paracol}{2}
+\begin{eng}
+\paragraph{Original reports}
+\label{sec:original-rprt}
+Reports that are like monographs (such as theses) or inherently independent
+reports are report in the strict sense.\footnote{Not implying that the other
+types are inadequate as technical reports, to the contrary!} Their top-level
+sectioning element is the \emph{chapter}.
+\end{eng}
+\begin{ger}
+\paragraph{Eigentliche Berichte}
+Berichte, die ähnlich zu Monographien wie Abschlussarbeiten sind oder
+grundsätzlich eigenständige Berichte sind im eigentlichen Sinne
+\emph{berichtartig}.\footnote{Das bedeutet nicht, dass die anderen Arten sich
+nicht als technische Berichte eignen.} Ihre höchste Gliederungsebene sind
+\emph{Kapitel}.
+\end{ger}
+\end{paracol}
+
+
+\begin{Describe}
+  \DescribeValue{trtype}{collection}\\
+  \DescribeValue{trtype}{proceedings}
+\end{Describe}
+\begin{paracol}{2}
+\begin{eng}
+\paragraph{Collection-like reports}
+\label{sec:coll-like}
+Reports comprising several individual contributions are
+\emph{collection-like}. This may include conference proceedings, seminar
+compilations, or special issues, among others. Their top-level sectioning
+element is the \emph{chapter}. Some commands to
+manage such collections are provided for convenience.
+
+Note that proceeding use a different formatting for the individual
+contributions. They start with their own title, author information, and
+abstract, while in normal collections, this information is absent. In normal
+collections, all sections are numbered by chapter.
+\end{eng}
+\begin{ger}
+\paragraph{Sammlungsartige Berichte}
+Berichte, die sich aus mehreren Einzelbeiträgen zusammensetzen sind
+\emph{sammlungsartig}. Dies kann unter anderem Tagungsbände,
+Seminarzusammenfassungen oder Sonderbände beinhalten. Ihre höchste
+Gliederungsebene sind \emph{Kapitel}. Es gibt einige Befehle die die
+Verwaltung von diesen Sammlungen vereinfachen sollen.
+
+Tagungsbände zeichen sich durch eine besondere Formatierung der
+Einzelbeiträge aus; jeder Beitrag beginnt im Gegensatz zu normalen Sammlungen
+mit eigenem Titel, Autorennennung und Zusammenfassung. In normalen Sammlungen
+ordnet sich die Abschnitsnummerierung der Kapitelnummerierung unter.%
+\end{ger}
+\end{paracol}
+
+\begin{paracol}{2}
+\begin{eng}
+\section{Report Information and Metadata}
+\label{sec:metadata}
+\begin{itemize}
+\item Title, name, etc. pp
+\item NO DOC TITLE
+\item Special considerations for collection work.
+\item --> authorship of individual contributions
+\item Examples
+\item LANGUAGE (+ oxford comma)
+\end{itemize}
+
+\end{eng}
+\begin{ger}
+\section{Informationen zum Bericht und Metadaten}
+\end{ger}
+\end{paracol}
+%^^A------------------------
+\begin{paracol}{2}
+\begin{eng}
+\section{General Layout}
+\label{sec:general}
+The technical reports of the \textsc{hpi} are published both in printed form
+and online. To retain a uniform appearance across those media \emph{and}
+across all supported report types, all report have to adhere to the same
+layout.
+
+\subsection{Page and type area}
+\begin{itemize}
+\item All text is set in a single column.
+\item The paper size is \SI{210}{\mm}\(\times\)\SI{297}{\mm}
+  (\textsc{iso}\,216 (\textsc{din}) A4).
+\item There should be typically not more than 80 characters per line.
+\item The margins fulfill the following equations: {\let\V\mathit
+  \[ \V{top} < \V{left} \leq \V{right} < \V{bottom} \text{ and } \V{top} : \V{bottom} = 1 : 2 \]
+  }
+\end{itemize}
+To ensure this layout, the class chooses (approximately) the side margins as
+\SI{31.5}{\mm}, the top margin \SI{29.5}{\mm} and the bottom margin as
+\SI{54}{\mm}. Note that the top margin is slightly larger than half the
+bottom margin to optically respect the quite filled page header. The actual
+computation of the type area is described in TODO:
+REF.\footnote{\lstset{basicstyle=\scriptsize\ttfamily}The relevant options to
+\File{typearea} are \lstinline|paper=a4,DIV=calc,twoside=semi| and
+\lstinline|footinclude=false,headinclue=true,fontsize=12pt|}.
+
+Page numbers are set centered on the page foot.
+
+\remark{The page dimensions, margins, and type area must not be changed.}
+
+\end{eng}
+\begin{ger}
+\section{Allgemeine Satzeigenschaften}
+Technische Berichte des \textsc{hpi} werden sowohl gedruckt als auch
+elektronisch verlegt. Um ein einheitliches Erscheinungsbild über alle Medien
+und Berichtarten hinweg zu gewährleisten, müssen alle Berichte den gleichen
+Satzeigenschaften genügen.
+
+subsection{Seite und Satzspiegel}
+\begin{itemize}
+\item Der Satz erfolgt ausschließlich einspaltig.
+\item Die Papiergröße ist \SI{210}{\mm}\(\times\)\SI{297}{\mm}
+(\textsc{iso}\,216 (\textsc{din}) A4).
+\item Die Zeilenlänge sollte 80 Zeichen nicht überschreiten.
+\item Die Stege (Ränder) sollten folgenden Gleichungen genügen:{\let\V\mathit
+  \[ \V{oben} < \V{links} \leq \V{rechts} < \V{unten} \text{ und } \V{oben} : \V{unten} = 1 : 2 \]
+  }
+\end{itemize}
+Um diesen Satzspiegel zu gewährleisten, wählt die Klasse (ungefähr) die
+Seitenstege mit \SI{31.5}{\mm}, den Kopfsteg mit \SI{29.5}{\mm} und den
+Fußsteg mit \SI{54}{\mm}. Das genaue \(1:2\)"=Verhältnis zwischen Kopf"~ und
+Fußsteg wird absichtlich leicht verletzt, um der recht vollen Kopfzeile
+optisch Rechnung zu tragen. Die eigentliche Satzspiegelkonstruktion ist in
+TODO:REF beschrieben.\footnote{\lstset{basicstyle=\scriptsize\ttfamily} Die
+relevanten Werte für \File{typearea} sind
+\lstinline|paper=a4,DIV=calc,twoside=semi| und
+\lstinline|footinclude=false,headinclue=true,fontsize=12pt|}
+
+Die Paginierung (Seitenzahlen) erfolgt zentriert im Seitenfuß.
+
+\remark{Seitengröße, Stege (Ränder) und Satzspiegel dürfen nicht verändert
+werden.}
+
+\end{ger}
+\end{paracol}
+\begin{paracol}{2}
+\begin{eng}
+\subsection{Titles, Document Parts, and Page Numbering}
+\label{sec:title}
+\begin{itemize}
+\item There is no title
+\item Starts at 5 (or v with frontmatter stuff)
+\end{itemize}
+\end{eng}
+\begin{ger}
+\subsection{Titelei, Dokumentteile und Seitennummerierung}
+\end{ger}
+\end{paracol}
+\begin{paracol}{2}
+\begin{eng}
+\subsection{Floats}
+\label{sec:floats}
+\end{eng}
+\begin{ger}
+\subsection{Fließumgebungen}
+\end{ger}
+\end{paracol}
+
+\begin{paracol}{2}
+\begin{eng}
+\section{Microtypography}
+\label{sec:micro}
+\begin{itemize}
+\item Font, font size, line spread,
+\item avoid bold, use italics and small caps.
+\item Abbreviations (ie ...)
+\item 
+\end{itemize}
+\end{eng}
+\begin{ger}
+\section{Detailtypographie}
+test
+\end{ger}
+\end{paracol}
+
+\begin{paracol}{2}
+\begin{eng}
+\section{Bibliographic Style}
+\label{sec:biblio}
+For citations and bibliographies, a \emph{numeric} citation style is used.
+The numbers derive from the \emph{alphabetic} sorting of the list of
+bibliographic entries at the end of the report (or the end of the individual
+contributions in collection works, if applicable). Given names are
+abbreviated.
+
+\begingroup\normalfont
+\vspace*{\baselineskip}
+\parbox[t]{1.5em}{[1]}\parbox[t]{\dimexpr\linewidth - 2em}{%
+I.~Nassi and B.~Shneiderman.
+\newblock Flowchart techniques for structured programming.
+\newblock {\em SIGPLAN Not.}, 8(8):12--26, 1973.}
+\vspace*{\baselineskip}
+\endgroup
+
+This corresponds to the \emph{plain} \BibTeX style, or the
+\emph{numeric-comp} style with abbreviations for Biblatex. Either way, the
+citation style is preselected. If in doubt, the Biblatex variant should be
+used.
+
+\remark{The citation and bibliographic style is not to
+be changed.}
+
+While \BibTeX should work fine and is supported, the use of Biblatex,
+especially with its \emph{biber} backend is encouraged to support proper use of
+Unicode characters and fonts. %^^A TODO: ref biblatex
+Collection works \emph{must} use Biblatex. For a list of kinds of works to cite
+as supported by \BibTeX and Biblatex refer to \autoref{tbl:bibtytpes}. Kinds of
+work not listed should use the \emph{misc} type.
+
+
+\end{eng}
+\begin{ger}
+\section{Zitier"~ und Literaturstil}
+In Zitaten und Literaturlisten wird ein einfacher, \emph{numerischer} Stil
+genutzt. Die Nummerierung folgt der \emph{alphabetischen} Sortierung der
+Literatureinträge in der Literaturliste am Ende des Berichts (oder am Ende
+der Einzelbeiträge in sammlungsartigen Berichten, sofern angebracht).
+Vornamen werden abgekürzt.
+
+\begingroup\normalfont
+\vspace*{\baselineskip}
+\parbox[t]{1.5em}{[1]}\parbox[t]{\dimexpr\linewidth - 2em}{%
+I.~Nassi and B.~Shneiderman.
+\newblock Flowchart techniques for structured programming.
+\newblock {\em SIGPLAN Not.}, 8(8):12--26, 1973.}
+\vspace*{\baselineskip}
+\endgroup
+
+Dies entspricht dem \emph{plain}-Stil von \BibTeX, beziehungsweise dem
+\emph{numeric-comp}-Stil mit Namensabkürzungen in Biblatex. In jedem Fall ist
+der Stil schon vorausgewählt. Im Zweifel ist die Variante nach Biblatex
+maßgeblich.
+
+\remark{Weder Zitier"~ noch Literaturstil dürfen verändert werden.}
+
+Obwohl \BibTeX gut funktionieren sollte und auch unterstützt wird, wird
+Biblatex, insbesondere mit dem \emph{biber}-Backend empfohlen, da dies eine
+vernünftige Verwendung von Unicodezeichen und "~schriften erlaubt.
+Sammlungsartige Berichte \emph{müssen} Biblatex benutzen. Eine Liste aller
+von \BibTeX und Biblatex unterstützten zu zitierenden Werkarten findet sich
+in \autoref{tbl:bibtytpes}. Nicht aufgeführte Werkarten erhalten den Typ
+\emph{misc}.
+\end{ger}
+\end{paracol}
+
+\begin{table}
+  \makeatletter
+  \let\sellang\select@language
+  \makeatother
+  \centering
+  \begin{threeparttable}
+    \caption{%
+    \textenglish{Supported bibliography entry types} / %
+    \textgerman{\em Unterstützte Bibliographieeintragsarten}
+    \hspace{\textwidth}\relax D %^^A I am a sacrifice Oo
+    \textenglish{Default entry type is indicated; alias entry types with emphasis} /
+    \textgerman{\em Die Standardeintragsart ist markiert; Parallelbezeichnungen
+    für Eintragsarten hervorgehoben}
+    }
+    \label{tbl:bibtytpes}
+    \begin{tabular}{>{\relax}l>{\relax}l>{\sellang{english}\RaggedRight}p{.34\linewidth}>{\sellang{ngerman}\em\RaggedRight}p{.34\linewidth}}
+    \toprule
+    \BibTeX           & Biblatex                   &                      & \\
+    \midrule
+    article           & article                    & articles in journal, magazine \&c & Zeitschriften"~, Magazin"~ und andere Artikel \\
+                      & \emph{suppperiodical}      & supplemental material in periodicals & Zusatzmaterialien in Periodika \\
+                      & \emph{review}              & reviews of other works & Rezensionen anderer Arbeiten \\
+    book              & book                       & books & Bücher\\
+                      & \emph{mvbook}              & multi-volume --- & Mehrbändige --- \\
+    booklet           & booklet                    & book-like work without publisher & Buchartiges nicht-verlegtes Werk \\
+                      & collection                 & collection of multiple independent contributions &  Sammlung eigenständiger Werke \\
+                      & \emph{mvcollection}        & multi-volume --- & Mehrbändige --- \\
+                      & \emph{reference}           & references such as dictionaries & Nachschlagewerke wie Wörterbücher\\
+                      & \emph{mvreference}         & multi-volume --- & Mehrbändige --- \\
+    inbook            & inbook\tnote{a}            & independent part of a book & Eigenständiger Buchteil \\
+                      & \emph{bookinbook}          & part of a book that originally was a book & Buchteil, der schon als eigenständiges Buch verlegt wurde \\
+                      & \emph{suppbook}            & supplemental material in books & Zusatzmaterialien in Büchern \\
+    incollection      & incollection               & independent contribution to a collection & Eigenständiges Werk, das einer Sammlung ist \\
+                      & \emph{suppcollection}      & supplemental material in a collection & Zusatzmaterialien in Sammlungen \\
+                      & \emph{inreference}         & articles in works of references & Artikel in Nachschlagewerken\\
+    inproceedings     & inproceedings              & articles in conference proceedings & Tagungsbandartikel\\
+    \emph{conference} & \emph{conference}          & --- ditto & --- dito \\
+    manual            & manual                     & documentation works & Handbücher \\
+    mastersthesis     & mastersthesis\tnote{b}     & Master’s theses & Master"~ oder Magisterarbeiten \\
+\llap{☞} misc        & misc                        & anything (default) & sonstiges (Vorgabewert)\\
+                      & online                     & online resource like web sites & Internetquellen wie Webseiten \\
+                      & \emph{www}                 & --- ditto & --- dito \\
+                      & \emph{electronic}          & --- ditto & --- dito \\
+    phdthesis         & phdthesis\tnote{b}         & doctoral dissertation & Dissertation \\
+                      & patent                     & patent entries & Patente \\
+                      & periodical                 & complete preriodical issue & Ganze Zeitschriftenausgabe \\
+    proceedings       & proceedings                & conference proceeding & Konferenz"~ und Tagungsbändge \\
+                      & \emph{mvproceedings}       & multi-volume --- & Mehrbändige --- \\
+                      & report                     & institutionally published report & Von Institutionen veröffentlichte Berichte\\
+    techreport        & \emph{techreport}\tnote{c} & technical reports & Technische Berichte\\
+                      & thesis                     & theses submitted to educational institutins & Abschlussarbeiten \\
+                      & \emph{mastersthesis}       & (see above) & (siehe oben) \\
+                      & \emph{phdthesis}           & (see above) & (siehe oben) \\
+    unpublished       & unpublished                & works not formally published & Nicht offiziell veröffentlichte Werke \\
+    \bottomrule
+    \end{tabular}
+    \begin{tablenotes}
+    \item [a] Behaves differently than \BibTeX / \emph{Verhält sich anders
+    als in \BibTeX}
+    \item [b] Actually a subtype of thesis / \emph{Eigentlich eine thesis-Unterart}
+    \item [c] Actually a subtype of report / \emph{Eigentlich eine report-Unterart}
+    \end{tablenotes}
+  \end{threeparttable}
+\end{table}
+\begin{paracol}{2}
+\begin{eng}
+\section{Further reading}
+\label{sec:reading}
+\begin{itemize}
+\item Abbreviations (ie ...)
+\item 
+\end{itemize}
+\end{eng}
+\begin{ger}
+\section{Lesehinweise}
+test
+\end{ger}
+\end{paracol}
+%</manual>
 \DocInput{hpitr.dtx}
 \end{document}
 %</!README>
