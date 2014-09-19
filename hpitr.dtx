@@ -2468,6 +2468,7 @@ language.
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{ragged2e}
+\usepackage{hologo}
 \usepackage{array}
 \usepackage[binary-units]{siunitx}
 \DeclareSIUnit[number-unit-product = {}] \pt{pt}
@@ -2543,6 +2544,9 @@ language.
 %    \begin{macrocode}
 \newcommand*{\File}{}\def\File{\texttt}
 
+\providecommand*\LuaTeX{\hologo{LuaTeX}}
+\providecommand*\pdfTeX{\hologo{pdfTeX}}
+\providecommand*\XeTeX{\hologo{XeTeX}}
 \AtBeginDocument{\addcontentsonly{toc}{0}}
 \footnotelayout{m}
 \newenvironment{eng}[1][]%
@@ -2836,7 +2840,7 @@ In computer science~\cite{myref}...
 This example sets a \File{hpitr} report that
  \begin{itemize}
  \item is an original report (\lstinline|trtype=singlereport|),
- \item uses Biblatex,
+ \item uses Biblatex with \hologo{biber},
  \item and gives all meta-information for title, author, and keywords.
 \end{itemize}
 Note that by intention, the typical selection of input encoding
@@ -2878,7 +2882,7 @@ Die Informatik hat~\cite{myref}...
 Dieses Beispiel erzeugt einen \File{hpitr}"=Bericht, der
 \begin{itemize}
 \item ein eigentlicher bericht ist (\lstinline|trtype=singlereport|),
-\item Biblatex benutzt
+\item Biblatex mit \hologo{biber} benutzt,
 \item und alle Meta"=Informationen für Title, Autoren und Schlagwörter
   bereitstellt.
 \end{itemize}
@@ -2897,12 +2901,51 @@ die korrerte Handhabung.
 \begin{eng}
 \section{Running \LaTeX}
 \label{sec:running}
-\File{hpitr} reports are handed to the Univerlag publisher as \textsc{pdf}
-files. 
+\File{hpitr} reports are handed to the publisher \emph{Universitätsverlag
+  Potsdam} as \textsc{pdf} files. The \File{hpitr} class support the three
+major \TeX{} engines that directly produce \textsc{pdf} files:
+\begin{itemize}
+\item \pdfTeX{} (exectuable \lstinline[language=bash]|pdflatex|),
+\item \LuaTeX{} (exectuable \lstinline[language=bash]|lualatex|), and
+\item \XeTeX{} (exectuable \lstinline[language=bash]|lualatex|).
+\end{itemize}
+For best results, and for best Unicode and \textsc{utf-8} support, the \LuaTeX
+engine is recommended. For the same reason, it is recomended to use Biblatex
+with the \hologo{biber} engine instead of plain \BibTeX.
+
+A typical \LaTeX{} run for a \File{hpitr} report should look like this:
+\begin{lstlisting}[language=bash]
+lualatex report
+biber report
+lualatex report
+lualatex report
+\end{lstlisting}
+This should build the \textsc{pdf} file with all bibliographic information.
 \end{eng}
 \begin{ger}
 \section{\LaTeX"=Läufe}
-test
+Alle \File{hpitr}"=Berichte werden als \textsc{pdf}"=Dateien an den
+Universitätsverlag Potsdam übermittelt. Die Klasse unterstützt daher die drei
+verbreiteten \TeX"=Systeme mit direkter \textsc{pdf}"=Ausgabe:
+\begin{itemize}
+\item \pdfTeX{} (Programmdatei \lstinline[language=bash]|pdflatex|),
+\item \LuaTeX{} (Programmdatei \lstinline[language=bash]|lualatex|) und
+\item \XeTeX{} (Programmdatei \lstinline[language=bash]|lualatex|).
+\end{itemize}
+Für beste Ergebnisse und beste Unicode/\textsc{utf-8}"=Untersützung wird das
+\LuaTeX"=System empfohlen. Aus gleichen Gründen empfiehlt es sich, Biblatex mit
+dem \hologo{biber}"=System statt einfachem \BibTeX zu verwenden.
+
+Ein typischer \LaTeX"=Lauf für einen \File{hpitr}"=Bericht sollte daher wie
+folgt aussehen:
+\begin{lstlisting}[language=bash]
+lualatex report
+biber report
+lualatex report
+lualatex report
+\end{lstlisting}
+Dies sollte die \textsc{pdf}"=Datei mit allen Bibliographieinformaitonen
+erzeugen.
 \end{ger}
 \end{paracol}
 %^^A----------------------------------------
