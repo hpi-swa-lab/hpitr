@@ -3055,23 +3055,89 @@ ordnet sich die Abschnitsnummerierung der Kapitelnummerierung unter.%
 \begin{eng}
 \section{Report Information and Metadata}
 \label{sec:metadata}
-\begin{itemize}
-\item Title, name, etc. pp
-\item NO DOC TITLE
-\item Special considerations for collection work.
-\item --> authorship of individual contributions
-\item Examples
-\item LANGUAGE (+ oxford comma)
-\end{itemize}
-
 \end{eng}
 \begin{ger}
 \section{Informationen zum Bericht und Metadaten}
 \end{ger}
 \end{paracol}
-%^^A------------------------
+\begin{Describe}
+\DescribeMacro{title}\\
+\DescribeMacro{subtitle}\\
+\DescribeMacro{author}\\
+\DescribeMacro{keywords}\\
+\DescribeMacro{maketitle}\\
+\DescribeMacro{tableofcontents}\\
+\DescribeEnv{abstract}
+\end{Describe}
 \begin{paracol}{2}
 \begin{eng}
+All reports have to provide a set of information and metadata. Specifically,
+these are
+\begin{itemize}
+\item the title in English and German,
+\item all authors' names,
+\item keywords in English and German, and
+\item abstracts in English and German
+\end{itemize}
+which have to be provided \emph{in addtition} to the \textsc{pdf} file.
+
+
+All but the abstracts have to be also present in the \textsc{pdf} metadata. The
+\File{hpitr} class takes care of that as long as the common \LaTeX{} commands
+are used, i.\,e.\\
+\cs{title}\marg{work title}\\
+\cs{subtitle}\marg{optional subtitle}\\
+\cs{author}\marg{list of authors seperated by \cs{and}}\\
+\cs{keywords}\marg{list of comma separated keywords}, and \cs{maketitle} is
+used to make them persistent.
+
+Note that \cs{maketitle}, contrary to normal practice, does \emph{not} create a
+title page nor will it create a noticeable title on the first page. This is
+intentional, as the \emph{actual} title page for \File{hpitr} reports is
+provided by the publisher.
+
+However, the abstract, given in the |abstract| environment, is printed. It is
+typically the first page for article-like and original reports. Collection-like
+reports do not have an abstract but should rather have a dedicated preface.
+
+Contributions in collection-like reports are treated specially.
+\end{eng}
+\begin{ger}
+Für alle technischen Berichte müssen bestimmte Informationen und Metadaten
+bereitgestellt werden; und zwar
+\begin{itemize}
+\item der Titel auf Deutsch und Englisch,
+\item die Namen aller Autoren,
+\item Schlagworte auf Deutsch und Englisch,
+\item Kurzfassungen auf Deutsch und Englisch.
+\end{itemize}
+Diese Informationen müssen \emph{zusätzlich} zur \textsc{pdf}"=Datei
+bereitgestellt werden.
+
+Abgesehen von den Kurzfassungen müssen alle Informationen auch als
+\textsc{pdf}"=Metadaten zur Verfügung stehen. Die \File{hpitr}"=Klasse sorgt
+dafür, solange die typischen \LaTeX"=Befehle dafür genutzt werden:
+\cs{title}\marg{Berichttitel}\\
+\cs{subtitle}\marg{optionaler Untertitel}\\
+\cs{author}\marg{Liste der Autorennamen, mit \cs{and} getrennt}\\
+\cs{keywords}\marg{kommagetrennte Schlagworte}\\
+und \cs{maketitle} um diese Informationen ins \textsc{pdf} zu übernehmen.
+
+Im Gegensatz zur üblichen Praxis setzt \cs{maketitle} absichtilch \emph{weder}
+Titelseite \emph{noch} Titelkopf auf der ersten Seite, da die
+\emph{eigentliche} Titelei durch den Universitätsverlag angefügt wird.
+
+Die Berichtskurzfassung, die in der |abstract|"=Umgebung angegeben wird, wird
+jedoch auf jeden Fall mit ausgegeben. Für artikelartige und eigentliche
+Berichtie ist dies typischerweise die erste Seite. Sammlungsartige Berichte
+sollten keine Kurzfassung sondern eher ein Vorwort haben.
+
+Beiträge in Sammlungsartigen Berichten werden gesondert behandelt.
+\end{ger}
+\end{paracol}
+\begin{paracol}{2}
+\begin{eng}
+
 \section{General Layout}
 \label{sec:general}
 The technical reports of the \textsc{hpi} are published both in printed form
@@ -3110,7 +3176,7 @@ elektronisch verlegt. Um ein einheitliches Erscheinungsbild über alle Medien
 und Berichtarten hinweg zu gewährleisten, müssen alle Berichte den gleichen
 Satzeigenschaften genügen.
 
-subsection{Seite und Satzspiegel}
+\subsection{Seite und Satzspiegel}
 \begin{itemize}
 \item Der Satz erfolgt ausschließlich einspaltig.
 \item Die Papiergröße ist \SI{210}{\mm}\(\times\)\SI{297}{\mm}
@@ -3141,13 +3207,37 @@ werden.}
 \begin{eng}
 \subsection{Titles, Document Parts, and Page Numbering}
 \label{sec:title}
-\begin{itemize}
-\item There is no title
-\item Starts at 5 (or v with frontmatter stuff)
-\end{itemize}
+
+As pointed our earlier, there is no actual title for \File{hpitr} reports, it
+is provided by the publisher. Hence, the page number for the first page is
+actually 5.
+
+The page numbering defaults to arabic numbers.
+
+\begin{Describe}
+  \DescribeMacro{frontmatter}\\
+  \DescribeMacro{mainmatter}\\
+  \DescribeMacro{backmatter}
+\end{Describe}
+Only in collection-like reports, a distinction between frontmatter, mainmatter,
+and backmatter is possible. The page numbering should be roman lowercase in the
+frontmatter and arabic in the main and backmatter. The first page number of the
+frontmatter should be v.
 \end{eng}
 \begin{ger}
 \subsection{Titelei, Dokumentteile und Seitennummerierung}
+
+Wie schon beschrieben haben \File{hpitr}"=Berichte keinen eigentlichen Titel;
+dieser wird durch den Verlag erstellt. Die erste Seite hat daher die
+Seitenzahl~5.
+
+Die Seitennummerierung erfolgt in arabischen Zahlen.
+
+\vspace{4.5\baselineskip}
+Nur in sammlungsartigen Berichten ist eine unterscheidung Zwischen Vorder"~,
+Haupt"~ und Hinterteil möglich. Im Vorderteil sollte die Seitennummerierung in
+römischen Zahlen (Kleinbuchstaben) erfolgen, sonst mit arabischen. Die erste
+Seite hat die Seitenzahl v.
 \end{ger}
 \end{paracol}
 \begin{paracol}{2}
@@ -3168,7 +3258,7 @@ werden.}
 \item Font, font size, line spread,
 \item avoid bold, use italics and small caps.
 \item Abbreviations (ie ...)
-\item 
+\item Forbidden commands (\cs{sloppy})
 \end{itemize}
 \end{eng}
 \begin{ger}
@@ -3313,15 +3403,16 @@ in \autoref{tbl:bibtytpes}. Nicht aufgeführte Werkarten erhalten den Typ
 \end{table}
 \begin{paracol}{2}
 \begin{eng}
-\section{Further reading}
+\section{Miscellanea and Further reading}
 \label{sec:reading}
 \begin{itemize}
-\item Abbreviations (ie ...)
+\item loaded packages
+\item forbidden packages
 \item 
 \end{itemize}
 \end{eng}
 \begin{ger}
-\section{Lesehinweise}
+\section{Verschiedenes und Lesehinweise}
 test
 \end{ger}
 \end{paracol}
@@ -3341,3 +3432,12 @@ test
 %% Local Variables:
 %% TeX-master: t
 %% End:
+
+\begin{paracol}{2}
+\begin{eng}
+..
+\end{eng}
+\begin{ger}
+..
+\end{ger}
+\end{paracol}
