@@ -2458,7 +2458,14 @@ language.
 \usetocstyle{nopagecolumn}
 \usepackage[toc]{multitoc}
 \usepackage{fontspec}
-\usepackage[scale=MatchLowercase]{ebgaramond}
+\usepackage{microtype}
+\newfontfeature{Microtype}{protrusion=default;expansion=default;}
+%^^A\usepackage[scale=MatchLowercase]{ebgaramond}
+\setmainfont{EB Garamond}[%
+Scale=MatchLowercase,%
+Numbers=OldStyle,%
+Ligatures=TeX%
+]
 \usepackage[scale=MatchLowercase,semibold,osf]{sourcesanspro}
 \usepackage[scale=MatchLowercase,semibold]{sourcecodepro}
 \RequirePackage{hyphsubst}
@@ -2577,8 +2584,15 @@ language.
   \vspace{\baselineskip}\par%
 }
 \usepackage{enumitem}
-\setlist{noitemsep,topsep=.5\baselineskip,leftmargin=0pt}
-\setdescription{noitemsep,font=\normalfont\scshape,leftmargin=\parindent}
+\setlist{%
+  noitemsep,%
+  partopsep=0pt,%
+  topsep=\baselineskip,%
+  leftmargin=\parindent}
+\setlist[1]{%
+  leftmargin=0pt%
+}
+\setdescription{noitemsep,topsep=\baselineskip,font=\normalfont\scshape,leftmargin=\parindent}
 \DeclareRobustCommand\cf[1]{%
 cf.\,{#1}
 }
@@ -2760,7 +2774,7 @@ und die notwendigen Einschränkungen erklärt.
 \subsection{A note on \LaTeX{} elements}
 \end{eng}
 \begin{ger}
-\subsection{Eine Anmerkung zu \LaTeX"=Befehlen} 
+\subsection{Eine Anmerkung zu \LaTeX"=Befehlen}
 \end{ger}
 \end{paracol}
 \begin{Describe}
@@ -2769,7 +2783,7 @@ und die notwendigen Einschränkungen erklärt.
   \DescribeOption{option}\\
   \DescribeValue{option}{value}
 \end{Describe}
-\begingroup \let\dmsize\normalsize
+\begingroup \let\dmsize\large
 \begin{paracol}{2}
 \begin{eng}
 To easily find documentation to specific \LaTeX{} elements this class
@@ -2788,7 +2802,10 @@ should help navigating in the  manual.
 \end{ger}
 \end{paracol}
 \endgroup
+\vspace*{2\baselineskip}
 
+
+\iffalse
 \begin{paracol}{2}
 \begin{eng}
 \subsection{Manual Structure}
@@ -2808,10 +2825,11 @@ generelle Satzeigenschaften, und detailtypographische Besonderheiten
 eingegangen. Dann folgen Anmerkungen zum Zitierstil.
 \end{ger}
 \end{paracol}
+\fi
 
 \begin{paracol}{2}
 \begin{eng}
-\section{An Example}
+\subsection{An Example}
 \label{sec:example}
 As jump-start, a very minimal but complete \File{hpitr} technical report follows:
 \begin{lstlisting}
@@ -2843,9 +2861,10 @@ This example sets a \File{hpitr} report that
  \item uses Biblatex with \hologo{biber},
  \item and gives all meta-information for title, author, and keywords.
 \end{itemize}
-Note that by intention, the typical selection of input encoding
-(\lstinline|\usepackage[...]{inputenc}|) is not present in this example. All
-\File{hpitr} reports are to be written using \textsc{utf-8} encoding. The class
+
+Note that by intention, the typical selection of the input encoding
+\hbox{(\kern0pt\lstinline|\usepackage[...]{inputenc}|)} is not present in this example. All
+files of \File{hpitr} reports are to be written using \textsc{utf-8} encoding. The class
 file takes care to select the right input encoding.
 
 \remark{All files of a \File{hpitr} report must be \textsc{utf-8}
@@ -2853,11 +2872,11 @@ encoded.}
 
 \end{eng}
 \begin{ger}
-\section{Ein Beispiel}
+\subsection{Ein Beispiel}
 Als Starthilfe folg ein minimaler, doch vollständiger Technischer Bericht mit
 \File{hpitr}:
 \begin{lstlisting}
-\documentclass[german,trtype=singlereport]{hpitr}
+\documentclass[ngerman,trtype=singlereport]{hpitr}
 % Biblatex benutzen
 \usepackage[backend=biber]{biblatex}
 \addbibresource{references.bib}
@@ -2883,9 +2902,10 @@ Dieses Beispiel erzeugt einen \File{hpitr}"=Bericht, der
 \begin{itemize}
 \item ein eigentlicher bericht ist (\lstinline|trtype=singlereport|),
 \item Biblatex mit \hologo{biber} benutzt,
-\item und alle Meta"=Informationen für Title, Autoren und Schlagwörter
+\item und Metadaten für Titel, Autoren und Schlagwörter
   bereitstellt.
 \end{itemize}
+
 Zu beachten ist, dass die eigentlich typische Auswahl der Eingabecodiereung
 (\lstinline|\usepackage[...]{inputenc}|) im Beispiel nicht vorhanden ist. Dies
 geschieht absichtilich, das alle Dateien eines \File{hpitr}"=Berichts in
@@ -2899,7 +2919,7 @@ die korrerte Handhabung.
 %^^A ----------------------------------------
 \begin{paracol}{2}
 \begin{eng}
-\section{Running \LaTeX}
+\subsection{Running \LaTeX}
 \label{sec:running}
 \File{hpitr} reports are handed to the publisher \emph{Universitätsverlag
   Potsdam} as \textsc{pdf} files. The \File{hpitr} class support the three
@@ -2907,7 +2927,7 @@ major \TeX{} engines that directly produce \textsc{pdf} files:
 \begin{itemize}
 \item \pdfTeX{} (exectuable \lstinline[language=bash]|pdflatex|),
 \item \LuaTeX{} (exectuable \lstinline[language=bash]|lualatex|), and
-\item \XeTeX{} (exectuable \lstinline[language=bash]|lualatex|).
+\item \XeTeX{} (exectuable \lstinline[language=bash]|xelatex|).
 \end{itemize}
 For best results, and for best Unicode and \textsc{utf-8} support, the \LuaTeX
 engine is recommended. For the same reason, it is recomended to use Biblatex
@@ -2923,18 +2943,18 @@ lualatex report
 This should build the \textsc{pdf} file with all bibliographic information.
 \end{eng}
 \begin{ger}
-\section{\LaTeX"=Läufe}
+\subsection{\LaTeX"=Läufe}
 Alle \File{hpitr}"=Berichte werden als \textsc{pdf}"=Dateien an den
 Universitätsverlag Potsdam übermittelt. Die Klasse unterstützt daher die drei
 verbreiteten \TeX"=Systeme mit direkter \textsc{pdf}"=Ausgabe:
 \begin{itemize}
 \item \pdfTeX{} (Programmdatei \lstinline[language=bash]|pdflatex|),
 \item \LuaTeX{} (Programmdatei \lstinline[language=bash]|lualatex|) und
-\item \XeTeX{} (Programmdatei \lstinline[language=bash]|lualatex|).
+\item \XeTeX{} (Programmdatei \lstinline[language=bash]|xelatex|).
 \end{itemize}
 Für beste Ergebnisse und beste Unicode/\textsc{utf-8}"=Untersützung wird das
 \LuaTeX"=System empfohlen. Aus gleichen Gründen empfiehlt es sich, Biblatex mit
-dem \hologo{biber}"=System statt einfachem \BibTeX zu verwenden.
+dem \hologo{biber}"=System statt einfachem \BibTeX\ zu verwenden.
 
 Ein typischer \LaTeX"=Lauf für einen \File{hpitr}"=Bericht sollte daher wie
 folgt aussehen:
@@ -2951,11 +2971,22 @@ erzeugen.
 %^^A----------------------------------------
 \begin{paracol}{2}
 \begin{eng}
-\section{Types of Reports}
+\section{Report Structure}
+....TBD
+\end{eng}
+\begin{ger}
+\section{Berichtstruktur}
+....TBD
+\end{ger}
+\end{paracol}
+
+\begin{paracol}{2}
+\begin{eng}
+\subsection{Types of Reports}
 \label{sec:types}
 \end{eng}
 \begin{ger}
-\section{Berichtarten}
+\subsection{Berichtarten}
 \end{ger}
 \end{paracol}
 \DescribeOption{trtype=\meta{type}}
@@ -2973,7 +3004,8 @@ Grob sind das drei Varianten.
 
 \begin{Describe}
   \DescribeValue{trtype}{singlearticle}\\
-  \DescribeValue{trtype}{article}
+  \DescribeValue{trtype}{article}\\
+  {\color{gray} \DescribeOption{singlearticle}}
 \end{Describe}
 \begin{paracol}{2}
 \begin{eng}
@@ -2995,7 +3027,9 @@ Zeitschriftenartikeln sind, oder erweiterte Varianten davon sind, haben
 
 \begin{Describe}
 \DescribeValue{trtype}{singlereport}\\
-\DescribeValue{trtype}{report}
+\DescribeValue{trtype}{report}\\
+{\color{gray} \DescribeOption{single}}\\
+{\color{gray} \DescribeOption{singlereport}}
 \end{Describe}
 \begin{paracol}{2}
 \begin{eng}
@@ -3005,21 +3039,27 @@ Reports that are like monographs (such as theses) or inherently independent
 reports are report in the strict sense.\footnote{Not implying that the other
 types are inadequate as technical reports, to the contrary!} Their top-level
 sectioning element is the \emph{chapter}.
+
+This is the default type if none is given explicitly.
 \end{eng}
 \begin{ger}
 \paragraph{Eigentliche Berichte}
-Berichte, die ähnlich zu Monographien wie Abschlussarbeiten sind oder
-grundsätzlich eigenständige Berichte sind im eigentlichen Sinne
+Berichte, die ähnlich zu Monographien (wie Abschlussarbeiten) oder
+grundsätzlich eigenständig sind, sind im eigentlichen Sinne
 \emph{berichtartig}.\footnote{Das bedeutet nicht, dass die anderen Arten sich
 nicht als technische Berichte eignen.} Ihre höchste Gliederungsebene sind
 \emph{Kapitel}.
+
+Wird keine Berichtart explizit ausgewählt, ist diese hier Standard.
 \end{ger}
 \end{paracol}
 
 
 \begin{Describe}
   \DescribeValue{trtype}{collection}\\
-  \DescribeValue{trtype}{proceedings}
+  {\color{gray} \DescribeOption{collection}}\\
+  \DescribeValue{trtype}{proceedings}\\
+  {\color{gray} \DescribeOption{proceedings}}
 \end{Describe}
 \begin{paracol}{2}
 \begin{eng}
@@ -3053,11 +3093,11 @@ ordnet sich die Abschnitsnummerierung der Kapitelnummerierung unter.%
 
 \begin{paracol}{2}
 \begin{eng}
-\section{Report Information and Metadata}
+\subsection{Report Information and Metadata}
 \label{sec:metadata}
 \end{eng}
 \begin{ger}
-\section{Informationen zum Bericht und Metadaten}
+\subsection{Informationen zum Bericht und Metadaten}
 \end{ger}
 \end{paracol}
 \begin{Describe}
@@ -3066,13 +3106,12 @@ ordnet sich die Abschnitsnummerierung der Kapitelnummerierung unter.%
 \DescribeMacro{author}\\
 \DescribeMacro{keywords}\\
 \DescribeMacro{maketitle}\\
-\DescribeMacro{tableofcontents}\\
 \DescribeEnv{abstract}
 \end{Describe}
 \begin{paracol}{2}
 \begin{eng}
-All reports have to provide a set of information and metadata. Specifically,
-these are
+A set of specific information and metadata has to be provided for all reports.
+This comprises
 \begin{itemize}
 \item the title in English and German,
 \item all authors' names,
@@ -3098,7 +3137,7 @@ provided by the publisher.
 
 However, the abstract, given in the |abstract| environment, is printed. It is
 typically the first page for article-like and original reports. Collection-like
-reports do not have an abstract but should rather have a dedicated preface.
+reports do not have an abstract but should rather have a dedicated preface or foreword.
 
 Contributions in collection-like reports are treated specially.
 \end{eng}
@@ -3116,7 +3155,7 @@ bereitgestellt werden.
 
 Abgesehen von den Kurzfassungen müssen alle Informationen auch als
 \textsc{pdf}"=Metadaten zur Verfügung stehen. Die \File{hpitr}"=Klasse sorgt
-dafür, solange die typischen \LaTeX"=Befehle dafür genutzt werden:
+dafür, solange die typischen \LaTeX"=Befehle dafür genutzt werden:\\
 \cs{title}\marg{Berichttitel}\\
 \cs{subtitle}\marg{optionaler Untertitel}\\
 \cs{author}\marg{Liste der Autorennamen, mit \cs{and} getrennt}\\
@@ -3135,10 +3174,107 @@ sollten keine Kurzfassung sondern eher ein Vorwort haben.
 Beiträge in Sammlungsartigen Berichten werden gesondert behandelt.
 \end{ger}
 \end{paracol}
+
+\begin{Describe}
+  {\color{gray}\DescribeMacro{part}}\\
+  \DescribeMacro{chapter}\\
+  \DescribeMacro{section}\\
+  \DescribeMacro{subsection}\\
+  \DescribeMacro{subsubsection}\\
+  \DescribeMacro{paragraph}\\
+  \DescribeMacro{minisec}
+\end{Describe}
 \begin{paracol}{2}
 \begin{eng}
+\subsection{Structuring Elements}
 
-\section{General Layout}
+The typical \LaTeX\ commands to structure documents are available to
+\File{hpitr} reports with only few restrictions.
+
+The command \cs{chapter} is only available to original reports and
+colloection-like reports. All kind of reports can use the commands \cs{section}
+to \cs{subsubsection} to structure documents, they created numbered sections.
+All of these commands exists in starred variants (e.\,g. \cs{section*}) to
+create un-numbered structure elements.
+
+The command \cs{paragraph} will always create an unnumbered structure element.
+The body text continues right after its title with no line in between.
+Ad-hoc sections can be created with the \cs{minisec} command, it will always
+create an unnumbered section.
+
+The \cs{part} command should be used only sparingly, in rather long documents.
+Longer original reports or proceeding may justify the use of parts.
+
+\cs{subparagraph} should not be used.
+
+\subsubsection{Proceedings-like Reports}
+
+In proceedings-like reports, chapters should only be used outside the
+individual contributions as each contribution acts like an article-like report.
+Hence \emph{in} individual contributions, only sections and possibly paragraphs
+should be used. Chapter should be used for general document parts such as a
+preface or foreword, closing remarks, or a general introduction.
+
+\end{eng}
+\begin{ger}
+\subsection{Strukturelemente}
+
+Die in \LaTeX\ üblichen Strukturierungsbefehle sind auch in
+\File{hpitr}"=Berichten mit nur wenigen Einschränkungen nutzbar.
+
+Der \cs{chapter}"=Befehl ist auf eigentliche und sammlunsartige Berichte
+beschränkt. Alle Berichtarten stehen die Befehle \cs{section} bis
+\cs{subsubsection} zur Verfügung, sie markieren nummerierte Dokumentabschnitte.
+Alle diese Befehle existieren in Stern"=Varianten (wie \cs{section*}) um
+nicht-nummerierte Dokumentabschnitte zu markieren.
+
+Der Befehl \cs{paragraph} markiert immer einen nicht-nummerierten
+Dokumentabschnitt, typischerweise einen Absatz. Der Absatztext beginnt sofort
+nach dem Abschnittstitel ohne Leerzeile.
+Nicht-nummerierte ad-hoc"=Abschnitte können mittels \cs{minisec} markiert werden.
+
+Der \cs{part}"=Befehl sollte nur selten zum Einsatz kommen. Eigentliche oder
+tagungsbandartige längere Berichte könnten die unterteilung in Teile
+rechtfertigen.
+
+\cs{subparagraph} sollte nicht benutzt werden.
+
+\subsubsection{Tagungsbandartige Berichte}
+
+In Tagungsbänden und ähnlichen Berichten sollten Kapitel nur außerhalb der
+eigentlichen, eigenständigen Beiträge Verwendung finden, da jeder Beitrag
+einzeln wie ein artikelartiger Bericht wirkt. Daher sollten \emph{in} den
+Beiträgen nur Abschnitte und ggf. markierte Absätze genutzt werden. Kapitel
+hingegen sollten für allgemeine Dokumentteile wie Vorworte, Nachworte oder
+allgemeine Einführungen genutzt werden.
+
+\end{ger}
+\end{paracol}
+\begin{Describe}
+  \DescribeMacro{tableofcontents}\\
+  \DescribeMacro{listoffigures}\\
+  \DescribeMacro{listoftables}\\
+  {\color{gray} \DescribeMacro{listoflistings}\unskip\ldots}
+\end{Describe}
+
+\begin{paracol}{2}
+\begin{eng}
+\subsubsection{The Table of Contents}
+After abstract, foreword/preface.
+followed by lof, lot, lol,..., Lists NOT part of toc.
+
+Not for article like.
+Not for individual contributions in collection/proceedings-like.
+\end{eng}
+\begin{ger}
+..
+\end{ger}
+\end{paracol}
+
+
+\begin{paracol}{2}
+\begin{eng}
+\section{Layout}
 \label{sec:general}
 The technical reports of the \textsc{hpi} are published both in printed form
 and online. To retain a uniform appearance across those media \emph{and}
@@ -3170,7 +3306,7 @@ Page numbers are set centered on the page foot.
 
 \end{eng}
 \begin{ger}
-\section{Allgemeine Satzeigenschaften}
+\section{Satzeigenschaften}
 Technische Berichte des \textsc{hpi} werden sowohl gedruckt als auch
 elektronisch verlegt. Um ein einheitliches Erscheinungsbild über alle Medien
 und Berichtarten hinweg zu gewährleisten, müssen alle Berichte den gleichen
@@ -3244,6 +3380,24 @@ Seite hat die Seitenzahl v.
 \begin{eng}
 \subsection{Floats}
 \label{sec:floats}
+
+\begin{itemize}
+\item may be placed at point given, top/bottom of page, own page
+\item Captions
+  \begin{itemize}
+  \item Figures, graphs, charts: read from bottom left or treated as a whole =>
+    caption bottom
+  \item Tables, Listings, Algorithms: read from top to bottom, may span pages
+    => caption at top.
+  \item Numbered by section (article, indiviual contrib in proc)
+  \item Numbered by chapter (report, collection)
+  \item Formatting: micortypo
+  \end{itemize}
+\end{itemize}
+
+Note: floats that rely on being placed \emph{exactly} at the point inserted
+aren't floats and should not need a caption.
+
 \end{eng}
 \begin{ger}
 \subsection{Fließumgebungen}
@@ -3254,11 +3408,20 @@ Seite hat die Seitenzahl v.
 \begin{eng}
 \section{Microtypography}
 \label{sec:micro}
+Most stuff here is preset, just given for reference.
 \begin{itemize}
-\item Font, font size, line spread,
+\item Font, font size, line spread, 
 \item avoid bold, use italics and small caps.
 \item Abbreviations (ie ...)
 \item Forbidden commands (\cs{sloppy})
+\item Skips (sectioning etc.pp.)
+\item Captions
+  \begin{itemize}
+    \item Float-type-name (Figrue/Table), number, and semi-colon in bold, caption
+    in normal font.
+  \item One line: all centerd
+  \item Multi-line: Flush left, all but first line indented by an em.
+  \end{itemize}
 \end{itemize}
 \end{eng}
 \begin{ger}
@@ -3269,7 +3432,36 @@ test
 
 \begin{paracol}{2}
 \begin{eng}
-\section{Bibliographic Style}
+\section{Cross-References}
+\label{sec:refs}
+\end{eng}
+\begin{ger}
+\section{Verweise}
+\end{ger}
+\end{paracol}
+
+\begin{paracol}{2}
+\begin{eng}
+\subsection{Intra-document References}
+\begin{itemize}
+\item chapters: chapter \(n\)
+\item section: section \(n\)
+\item subsection:  section \(n.m\) (NOT subsection ...)
+\item subsubsection: section \(n.m.k\) (NOT subsubsection ...)
+\item paragraphs: no ref
+\item proceedings: NO CROSS-REFERENCES.
+\item \cs{autoref}
+\end{itemize}
+\end{eng}
+\begin{ger}
+\subsection{Interne Verweise}
+\end{ger}
+\end{paracol}
+
+
+\begin{paracol}{2}
+\begin{eng}
+\subsection{Bibliographic References}
 \label{sec:biblio}
 For citations and bibliographies, a \emph{numeric} citation style is used.
 The numbers derive from the \emph{alphabetic} sorting of the list of
@@ -3304,7 +3496,7 @@ work not listed should use the \emph{misc} type.
 
 \end{eng}
 \begin{ger}
-\section{Zitier"~ und Literaturstil}
+\subsection{Zitier"~ und Literaturstil}
 In Zitaten und Literaturlisten wird ein einfacher, \emph{numerischer} Stil
 genutzt. Die Nummerierung folgt der \emph{alphabetischen} Sortierung der
 Literatureinträge in der Literaturliste am Ende des Berichts (oder am Ende
@@ -3406,9 +3598,9 @@ in \autoref{tbl:bibtytpes}. Nicht aufgeführte Werkarten erhalten den Typ
 \section{Miscellanea and Further reading}
 \label{sec:reading}
 \begin{itemize}
+\item draft tools
 \item loaded packages
 \item forbidden packages
-\item 
 \end{itemize}
 \end{eng}
 \begin{ger}
