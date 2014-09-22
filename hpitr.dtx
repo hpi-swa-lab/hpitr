@@ -3404,6 +3404,7 @@ Seite hat die Seitenzahl v.
 \subsection{Floats}
 \label{sec:floats}
 
+
 \begin{itemize}
 \item may be placed at point given, top/bottom of page, own page
 \item Captions
@@ -3562,9 +3563,8 @@ in \autoref{tbl:bibtytpes}. Nicht aufgeführte Werkarten erhalten den Typ
     \textenglish{Supported bibliography entry types} / %
     \textgerman{\em Unterstützte Bibliographieeintragsarten}
     \hspace{\textwidth}\relax D %^^A I am a sacrifice Oo
-    \textenglish{Default entry type is indicated; alias entry types with emphasis} /
-    \textgerman{\em Die Standardeintragsart ist markiert; Parallelbezeichnungen
-    für Eintragsarten hervorgehoben}
+    \textenglish{Default type is indicated; alias entry types in italic} /
+    \textgerman{\em Standardeintragsart ist markiert; Parallelbezeichnungen kursiv}
     }
     \label{tbl:bibtytpes}
     \begin{tabular}{>{\relax}l>{\relax}l>{\sellang{english}\RaggedRight}p{.34\linewidth}>{\sellang{ngerman}\em\RaggedRight}p{.34\linewidth}}
@@ -3572,39 +3572,39 @@ in \autoref{tbl:bibtytpes}. Nicht aufgeführte Werkarten erhalten den Typ
     \BibTeX           & Biblatex                   &                      & \\
     \midrule
     article           & article                    & articles in journal, magazine \&c & Zeitschriften"~, Magazin"~ und andere Artikel \\
-                      & \emph{suppperiodical}      & supplemental material in periodicals & Zusatzmaterialien in Periodika \\
-                      & \emph{review}              & reviews of other works & Rezensionen anderer Arbeiten \\
+                      & \textit{suppperiodical}      & supplemental material in periodicals & Zusatzmaterialien in Periodika \\
+                      & \textit{review}              & reviews of other works & Rezensionen anderer Arbeiten \\
     book              & book                       & books & Bücher\\
-                      & \emph{mvbook}              & multi-volume --- & Mehrbändige --- \\
+                      & \textit{mvbook}              & multi-volume --- & Mehrbändige --- \\
     booklet           & booklet                    & book-like work without publisher & Buchartiges nicht-verlegtes Werk \\
                       & collection                 & collection of multiple independent contributions &  Sammlung eigenständiger Werke \\
-                      & \emph{mvcollection}        & multi-volume --- & Mehrbändige --- \\
-                      & \emph{reference}           & references such as dictionaries & Nachschlagewerke wie Wörterbücher\\
-                      & \emph{mvreference}         & multi-volume --- & Mehrbändige --- \\
+                      & \textit{mvcollection}        & multi-volume --- & Mehrbändige --- \\
+                      & \textit{reference}           & references such as dictionaries & Nachschlagewerke wie Wörterbücher\\
+                      & \textit{mvreference}         & multi-volume --- & Mehrbändige --- \\
     inbook            & inbook\tnote{a}            & independent part of a book & Eigenständiger Buchteil \\
-                      & \emph{bookinbook}          & part of a book that originally was a book & Buchteil, der schon als eigenständiges Buch verlegt wurde \\
-                      & \emph{suppbook}            & supplemental material in books & Zusatzmaterialien in Büchern \\
+                      & \textit{bookinbook}          & part of a book that originally was a book & Buchteil, der schon als eigenständiges Buch verlegt wurde \\
+                      & \textit{suppbook}            & supplemental material in books & Zusatzmaterialien in Büchern \\
     incollection      & incollection               & independent contribution to a collection & Eigenständiges Werk, das einer Sammlung ist \\
-                      & \emph{suppcollection}      & supplemental material in a collection & Zusatzmaterialien in Sammlungen \\
-                      & \emph{inreference}         & articles in works of references & Artikel in Nachschlagewerken\\
+                      & \textit{suppcollection}      & supplemental material in a collection & Zusatzmaterialien in Sammlungen \\
+                      & \textit{inreference}         & articles in works of references & Artikel in Nachschlagewerken\\
     inproceedings     & inproceedings              & articles in conference proceedings & Tagungsbandartikel\\
-    \emph{conference} & \emph{conference}          & --- ditto & --- dito \\
+    \textit{conference} & \textit{conference}          & --- ditto & --- dito \\
     manual            & manual                     & documentation works & Handbücher \\
     mastersthesis     & mastersthesis\tnote{b}     & Master’s theses & Master"~ oder Magisterarbeiten \\
 \llap{☞} misc        & misc                        & anything (default) & sonstiges (Vorgabewert)\\
                       & online                     & online resource like web sites & Internetquellen wie Webseiten \\
-                      & \emph{www}                 & --- ditto & --- dito \\
-                      & \emph{electronic}          & --- ditto & --- dito \\
+                      & \textit{www}                 & --- ditto & --- dito \\
+                      & \textit{electronic}          & --- ditto & --- dito \\
     phdthesis         & phdthesis\tnote{b}         & doctoral dissertation & Dissertation \\
                       & patent                     & patent entries & Patente \\
                       & periodical                 & complete preriodical issue & Ganze Zeitschriftenausgabe \\
     proceedings       & proceedings                & conference proceeding & Konferenz"~ und Tagungsbändge \\
-                      & \emph{mvproceedings}       & multi-volume --- & Mehrbändige --- \\
+                      & \textit{mvproceedings}       & multi-volume --- & Mehrbändige --- \\
                       & report                     & institutionally published report & Von Institutionen veröffentlichte Berichte\\
-    techreport        & \emph{techreport}\tnote{c} & technical reports & Technische Berichte\\
+    techreport        & \textit{techreport}\tnote{c} & technical reports & Technische Berichte\\
                       & thesis                     & theses submitted to educational institutins & Abschlussarbeiten \\
-                      & \emph{mastersthesis}       & (see above) & (siehe oben) \\
-                      & \emph{phdthesis}           & (see above) & (siehe oben) \\
+                      & \textit{mastersthesis}       & (see above) & (siehe oben) \\
+                      & \textit{phdthesis}           & (see above) & (siehe oben) \\
     unpublished       & unpublished                & works not formally published & Nicht offiziell veröffentlichte Werke \\
     \bottomrule
     \end{tabular}
