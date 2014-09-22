@@ -2626,8 +2626,8 @@ cf.\,{#1}
     file \File{\filename}.}}
 \subtitle{Die Klasse \File{hpitr} zur Erstellung technischer Berichte am
   Hasso-Plattner-Institut}
-\author{Tobias Pape\footnote{Tobias Pape
-    \textless\protect\url{tobias.pape@hpi.de}\textgreater}}
+\author{Tobias Pape %
+  \textless\protect\url{tobias.pape@hpi.de}\textgreater}
 \date{\fileversion{} \filedate}
 \maketitle
 \begin{abstract}
@@ -2699,11 +2699,6 @@ typical, like non-standard paper size.
 \iffalse
 TODO:
 
-1. Benutze, wenn möglich, LuaLaTeX oder XeLaTeX (lieber lualatex). Die Uni möchte gerne 
-  Unicode-Schriften und das ist mit reinem pdfLaTeX nicht zu machen. Außerdem können
-  beide nativ UTF-8:
-2. Bitte nutze ausschließlich utf-8-codierte .tex dateien (nicht latin1 oder ansi-new)
-
 - microtype, graphicx, amsmath, amssymb, url, booktabs, color, fixltx2e und hyperref
  Werden von hpitr schon geladen, man kann sie also aufführen, muss aber nicht.
 - times, subfig
@@ -2712,33 +2707,9 @@ TODO:
  Werden gar nicht verwendet, also habe ich sie entfernt sodass sie nicht stören.
 - WICHTIG: inputenc
  Habe ich entfernt, da ich deinen TR mit lualatex gebaut habe. 
- Außerdem ist mit hpitr nur utf-8 zulässig:
-   - Wenn man mit pdflatex baut, ruft hpitr automatisch \cs\usepackage[utf8]{inputenc} auf.
-
- Nebenbei: 
-	%\cs\usepackage[latin1]{inputenc} %Linux
-	\cs\usepackage[ansinew]{inputenc} %Windows
-	%\cs\usepackage[applemac]{inputenc} %Mac
- Sollte in deinen Dokumenten nicht auftauchen.
- Denn zumeist stimmt dass nicht mehr. Auf den meisten Linux'en ist
- nicht mehr latin-1, sondern utf-8 der standard. Bei windows kommt es aufs
- land an. Auf dem mach wird seit 14 jahren kein 'applemac' mehr verwendet.
- Auch hier wäre utf-8 besser.
- :)
-
-
-Die Änderungen and labelitemi... verändern das Geseamtaussehen und
-sind mit hpitr nicht zulässig.
-%%%%%
-
-title/author
-Hier ist der Titel von oben. hpitr trägt diese werte automatisch in das pdf ein (und kann auch mit \\ im titel umgehen)
-
-
 
 %%%%%
 For conversions from llncs:
-
 Du benutzt die Defintion-umgebung. Die gibts in lncs, aber nicht
 sonst. Ich habe sie dir mit amsthm nachgebaut.
 
@@ -2900,7 +2871,7 @@ Die Informatik hat~\cite{myref}...
 \end{lstlisting}
 Dieses Beispiel erzeugt einen \File{hpitr}"=Bericht, der
 \begin{itemize}
-\item ein eigentlicher bericht ist (\lstinline|trtype=singlereport|),
+\item ein eigentlicher Bericht ist (\lstinline|trtype=singlereport|),
 \item Biblatex mit \hologo{biber} benutzt,
 \item und Metadaten für Titel, Autoren und Schlagwörter
   bereitstellt.
@@ -2956,15 +2927,14 @@ Für beste Ergebnisse und beste Unicode/\textsc{utf-8}"=Untersützung wird das
 \LuaTeX"=System empfohlen. Aus gleichen Gründen empfiehlt es sich, Biblatex mit
 dem \hologo{biber}"=System statt einfachem \BibTeX\ zu verwenden.
 
-Ein typischer \LaTeX"=Lauf für einen \File{hpitr}"=Bericht sollte daher wie
-folgt aussehen:
+Ein typischer \LaTeX"=Lauf eines \File{hpitr}"=Berichts sollte so aussehen:
 \begin{lstlisting}[language=bash]
 lualatex report
 biber report
 lualatex report
 lualatex report
 \end{lstlisting}
-Dies sollte die \textsc{pdf}"=Datei mit allen Bibliographieinformaitonen
+Dies sollte die \textsc{pdf}"=Datei mit Bibliographieinformationen
 erzeugen.
 \end{ger}
 \end{paracol}
@@ -3203,7 +3173,7 @@ Ad-hoc sections can be created with the \cs{minisec} command, it will always
 create an unnumbered section.
 
 The \cs{part} command should be used only sparingly, in rather long documents.
-Longer original reports or proceeding may justify the use of parts.
+Longer original or proceedings-like reports may justify the use of parts.
 
 \cs{subparagraph} should not be used.
 
@@ -3234,7 +3204,7 @@ nach dem Abschnittstitel ohne Leerzeile.
 Nicht-nummerierte ad-hoc"=Abschnitte können mittels \cs{minisec} markiert werden.
 
 Der \cs{part}"=Befehl sollte nur selten zum Einsatz kommen. Eigentliche oder
-tagungsbandartige längere Berichte könnten die unterteilung in Teile
+tagungsbandartige längere Berichte können jedoch die Unterteilung in Teile
 rechtfertigen.
 
 \cs{subparagraph} sollte nicht benutzt werden.
@@ -3308,7 +3278,7 @@ layout.
 \begin{itemize}
 \item All text is set in a single column.
 \item The paper size is \SI{210}{\mm}\(\times\)\SI{297}{\mm}
-  (\textsc{iso}\,216 (\textsc{din}) A4).
+  (\textsc{iso}\,216 A4 \emph{aka} \textsc{din}\,A4).
 \item There should be typically not more than 80 characters per line.
 \item The margins fulfill the following equations: {\let\V\mathit
   \[ \V{top} < \V{left} \leq \V{right} < \V{bottom} \text{ and } \V{top} : \V{bottom} = 1 : 2 \]
@@ -3339,9 +3309,9 @@ Satzeigenschaften genügen.
 \begin{itemize}
 \item Der Satz erfolgt ausschließlich einspaltig.
 \item Die Papiergröße ist \SI{210}{\mm}\(\times\)\SI{297}{\mm}
-(\textsc{iso}\,216 (\textsc{din}) A4).
+(\textsc{iso}\,216 A4 alias \textsc{din}\,A4).
 \item Die Zeilenlänge sollte 80 Zeichen nicht überschreiten.
-\item Die Stege (Ränder) sollten folgenden Gleichungen genügen:{\let\V\mathit
+\item Die Stege (Ränder) sollten folgenden Gleichungen genügen:{\let\V\mathrm
   \[ \V{oben} < \V{links} \leq \V{rechts} < \V{unten} \text{ und } \V{oben} : \V{unten} = 1 : 2 \]
   }
 \end{itemize}
@@ -3404,27 +3374,56 @@ Seite hat die Seitenzahl v.
 \subsection{Floats}
 \label{sec:floats}
 
+All non-text content that warrants its own space and is referenced in the
+document is treated as floating content. This includes figures, tables, and
+listings to name a few.
 
-\begin{itemize}
-\item may be placed at point given, top/bottom of page, own page
-\item Captions
-  \begin{itemize}
-  \item Figures, graphs, charts: read from bottom left or treated as a whole =>
-    caption bottom
-  \item Tables, Listings, Algorithms: read from top to bottom, may span pages
-    => caption at top.
-  \item Numbered by section (article, indiviual contrib in proc)
-  \item Numbered by chapter (report, collection)
-  \item Formatting: micortypo
-  \end{itemize}
-\end{itemize}
+Floats may be placed at the point it is given in the source, but may be moved
+by \LaTeX\ to the bottom or the top of a page, or to a page of its own. This
+moving around is intentional.\\
+\emph{Note:} Floats that rely on being placed \emph{exactly} at the point
+inserted aren't floats proper and also should not need a caption.\footnote{For
+  that reason, the \lstinline|H| specifier of the \File{float} package is not
+  available}.
 
-Note: floats that rely on being placed \emph{exactly} at the point inserted
-aren't floats and should not need a caption.
+Every float should have a caption, that is placed at the top or the bottom of a
+float. Figures---typically graphics, graphs, or charts---are treated as a whole
+or read from the bottom left. Their captions therefore are placed \emph{below}
+the float. Tables, code listings, algorithm, and similar are read from top to
+bottom and might span several pages. Hence, their captions are placed
+\emph{above} the float.
 
+Floats are named by their type numbered within a chapter (original or
+collection-like reports) or with a section (article-like reports or
+contributions to a proceedings-like report).
 \end{eng}
 \begin{ger}
 \subsection{Fließumgebungen}
+
+Aller nicht-textueller Inhalt, der Platz benötigt und auf den im Dokument
+verwiesen wird, wird als "`fließender Inhalt"' behandelt. Dazu zählen z.\,B.
+Abbildungen, Tabellen (auch Tafeln) oder Quelltextwiedergaben.
+
+Fließumgebungen können an der Stelle platziert werden, an der sie im Quelltext
+auftreten, könen von \LaTeX\ aber auch an den Seitenanfang oder
+"~ende oder eine eigene Seite verschoben werden. Dies ist beabsichtigt.\\
+\emph{Bemerkung:} Fließumgebungen, die zwingend \emph{exakt} an der Stelle
+erscheinen müssen an der sie im Quelltext gegeben sind, sind im eigentlichen
+Sinne keine Fließumgebungen und benötigen daher auch keine
+Beschriftung.\footnote{Daher ist der \lstinline|H|"=Schalter des
+  \File{float}"=Paketes auch nicht verfügbar.}
+
+Jede Fließumgebung sollte an ihrem Anfang oder Ende beschriftet sein.
+Abbildungen -- typischerweise Grafiken, Graphen oder Diagramme -- werden als
+Ganzes wahrgenommen oder von unten-links gelesen. Sie sollten daher
+Bild\emph{unter}schriften erhalten. Tabellen, Quelltextwiedergaben, Algorithmen
+oder Ähnliches werden von oben nach unten gelesen und können über mehrere
+Seiten gehen. Sie sollten daher \emph{Über}schriften erhalten.
+
+Fließumgebungen werden mit ihrem Typ benamt und innerhalb einens Kapitels (bei
+eigentlichen und sammlungsartigen Berichten) oder eines Abschnitts (bei
+Artikel-artigen Berichten oder Beiträgen zu einem tagungsbandartigen Bericht)
+nummeriert.
 \end{ger}
 \end{paracol}
 
