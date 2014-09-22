@@ -3260,14 +3260,37 @@ allgemeine Einführungen genutzt werden.
 \begin{paracol}{2}
 \begin{eng}
 \subsubsection{The Table of Contents}
-After abstract, foreword/preface.
-followed by lof, lot, lol,..., Lists NOT part of toc.
 
-Not for article like.
-Not for individual contributions in collection/proceedings-like.
+Reports should contain a table of contents (\cs{tableofcontents}) if they are
+not article-like. If present, it should be placed \emph{after} the abstract,
+foreword, or preface. Hence, those do not show up in the table of contents.
+
+The table of contents may optionally be followed by a list of all figures
+(\cs{listoffigures}) or tables (\cs{listoftables}) in the document. Some
+packages provide individual lists that may also be used here, e.\,g. the
+\File{listings} package provides a \cs{listoflistings}. All those lists should
+\emph{not} be listed in the table of contents.
+
+Individual contributions of proceedings-like reports should not have a table of
+contents on their own.
 \end{eng}
 \begin{ger}
-..
+
+\subsubsection{Das Inhaltsverzeichnis}
+
+Berichte sollten ein Inhaltsverzeichnis (\cs{tableofcontents}) enthalten, ausgenommen
+Artikel-artige Berichte. In diesem Fall folgt es auf die Kurzfassung oder das Vorwort.
+Diese werden deshalb nicht im Inhaltsverzeichnis aufgeführt.
+
+Dem Inhaltsverzeichnis können wahlweise ein Abbildungsverzeichnis
+(\cs{listoffigures}) oder Tabellenverzeichnis (\cs{listoftables})
+folgen. Einige Pakete stellen eigene Verzeichnisse bereit, die an dieser Stelle
+stehen können, so zum Beispiel das \File{listings}"=Paket mit
+\cs{listoflistings}. All diese Verzeichnisse sollten selbst \emph{nicht} im
+Inhaltsverzeichnis aufgeführt werden.
+
+Die einzelnen Beiträge von tagungsbandartigen Berichten sollten selbst kein
+eigenes Inhaltsverzeichnis haben.
 \end{ger}
 \end{paracol}
 
