@@ -63,7 +63,7 @@
 %<*!README>
 [%
 %</!README>
-  2014/09/04 v0.7
+  2014/09/26 v0.8
 %<!README>^^J
   A unified class for Technical Reports at the HPI
 %<*!README>
@@ -548,6 +548,7 @@ without this file.
 }
 
 \TRnewifStd{todotools}
+\TRnewifStd{egiecomma}
 
 %% execute the standard options
 \TRExecuteOptions{
@@ -663,6 +664,49 @@ without this file.
 %    \begin{macrocode}
 \providecommand*\email[1]{\href{mailto:#1}{\nolinkurl{#1}}\xspace}
 %    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\hairspace}
+% \mbox{}
+%\changes{v0.8}{2014/09/26}{Provide hairspace commando}
+%    \begin{macrocode}
+\providecommand*\hairspace{\ifmmode\mskip1mu\else\kern0.08em\fi}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\eg}
+% \begin{macro}{\Eg}
+% \begin{macro}{\ie}
+% \begin{macro}{\Ie}
+% \begin{macro}{\zB}
+% \begin{macro}{\ZB}
+% \begin{macro}{\dh}
+% \begin{macro}{\Dh}
+% \mbox{}
+%\changes{v0.8}{2014/09/26}{Provide convenient abbreviations}
+%    \begin{macrocode}
+\ifthenelse{\boolean{TR@egiecomma}}{
+  \providecommand*\eg{e.\hairspace{}g.,\xspace}
+  \providecommand*\Eg{E.\hairspace{}g.,\xspace}
+  \providecommand*\Ie{I.\hairspace{}e.,\xspace}
+  \providecommand*\ie{i.\hairspace{}e.,\xspace}
+}{
+  \providecommand*\eg{e.\hairspace{}g.\xspace}
+  \providecommand*\Eg{E.\hairspace{}g.\xspace}
+  \providecommand*\Ie{I.\hairspace{}e.\xspace}
+  \providecommand*\ie{i.\hairspace{}e.\xspace}
+}
+\providecommand*\zB{z.\hairspace{}B.\xspace}
+\providecommand*\ZB{Z.\hairspace{}B.\xspace}
+\providecommand*\dh{d.\hairspace{}h.\xspace}
+\providecommand*\Dh{D.\hairspace{}h.\xspace}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
 % \end{macro}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 % Titlepage
@@ -814,7 +858,10 @@ without this file.
     \gdef\@title{No Title Given}%
     \gdef\@subtitle{}%
     \gdef\@institute{No Institute Given}%
+    \gdef\@group{}%
+    \gdef\@organization{}%
     \gdef\@thanks{}%
+    \gdef\@email{}%
     \global\let\@titlerunning\@empty% only non-proceedings
   }
   \newkomafont{abstract}{\normalfont\small}
@@ -830,6 +877,12 @@ without this file.
     \newtoks\toctitle
 
     \def\institute#1{\gdef\@institute{#1}}
+    \def\organisation#1{\gdef\@organization{#1}}
+    \def\group#1{\gdef\@group{#1}}
+    \AtBeginDocument{%
+      \let\TR@email\email
+      \def\email#1{\gdef\@email{#1}}
+    }
 
     \def\institutename{\par\begingroup
       \parskip=\z@
@@ -846,7 +899,12 @@ without this file.
         \noindent$^{\the@inst}$\enspace
       \fi
       \ignorespaces
-      \@institute\par
+      \ifx\@organization\@empty\relax%
+        \@institute%
+      \else%
+        \@group \\ \@organization \\ \href{mailto:\@email}{\@email}%
+       \fi%
+       \par
       \endgroup}
 
     \def\inst#1{\unskip$^{#1}$}
@@ -1069,6 +1127,9 @@ without this file.
     \newcommand*\theHsubparagraph {\theHparagraph.\arabic{subparagraph}}
     \newcommand*\theHtheorem      {\theHsection.\arabic{theorem}}
     \newcommand*\theHthm          {\theHsection.\arabic{thm}}
+  }
+  \AtBeginDocument{%
+    \setcounter{tocdepth}{0}
   }
 
 
@@ -1465,7 +1526,11 @@ without this file.
     abbreviate=false,%
     maxnames=20,%
   }
-}
+  \PreventPackageFromLoading[%
+  \message{%
+    ^^J^^JERROR: You tried to load  the cite package that is not compatible with biblatex.^^J^^J}]{%
+cite}
+
 \AtEndPreamble{
   \@ifpackageloaded{biblatex}{}{
 % normal bibtex
@@ -1695,7 +1760,7 @@ without this file.
 % Fonts
   mathptmx,helvet,courier,newtxtext,newtxmath,fourier,%
 %
-  fancyhdr
+  fancyhdr,%
 %
 % Not to use.
 %
@@ -2254,9 +2319,22 @@ language.
   fontsize=9pt,
   pagesize,twocolumn=true,DIV=calc,mpinclude=true}
 \AtBeginDocument{\onecolumn}
+
+
 \usepackage{ifpdf,ifxetex,etoolbox,xspace}
 \usepackage{color}
 \usepackage[x11names,dvipsnames,svgnames]{xcolor}
+
+\patchcmd{\section}{-3.5ex \@plus -1ex \@minus -.2ex}{-2\baselineskip}{}{}
+\patchcmd{\section}{2.3ex \@plus.2ex}{\baselineskip}{}{}
+\patchcmd{\subsection}{-3.25ex\@plus -1ex \@minus -.2ex}{-\baselineskip}{}{}
+\patchcmd{\subsection}{1.5ex \@plus .2ex}{\baselineskip}{}{}
+\patchcmd{\subsubsection}{-3.25ex\@plus -1ex \@minus -.2ex}{-\baselineskip}{}{}
+\patchcmd{\subsubsection}{1.5ex \@plus .2ex}{1sp \@plus 1sp \@minus 1sp}{}{}
+\patchcmd{\paragraph}{3.25ex \@plus1ex \@minus .2ex}{\baselineskip}{}{}
+\patchcmd{\subparagraph}{3.25ex \@plus1ex \@minus .2ex}{\baselineskip}{}{}
+
+
 %    \end{macrocode}
 % Customize the display of our code:
 % \begin{itemize}
@@ -2457,6 +2535,8 @@ language.
 \usepackage[tocflat,toctextentriesindented]{tocstyle}%
 \usetocstyle{nopagecolumn}
 \usepackage[toc]{multitoc}
+\usepackage{fixltx2e}
+\usepackage{relsize}
 \usepackage{fontspec}
 \usepackage{microtype}
 \newfontfeature{Microtype}{protrusion=default;expansion=default;}
@@ -2466,6 +2546,8 @@ Scale=MatchLowercase,%
 Numbers=OldStyle,%
 Ligatures=TeX%
 ]
+\usepackage{unicode-math}
+\setmathfont{EB Garamond}
 \usepackage[scale=MatchLowercase,semibold,osf]{sourcesanspro}
 \usepackage[scale=MatchLowercase,semibold]{sourcecodepro}
 \RequirePackage{hyphsubst}
@@ -2538,6 +2620,9 @@ Ligatures=TeX%
     citecolor=MidnightBlue,%
     urlcolor=MidnightBlue,%
 }
+
+
+
 \raggedbottom
 \recalctypearea
 %    \end{macrocode}
@@ -2556,6 +2641,7 @@ Ligatures=TeX%
 \providecommand*\XeTeX{\hologo{XeTeX}}
 \AtBeginDocument{\addcontentsonly{toc}{0}}
 \footnotelayout{m}
+
 \newenvironment{eng}[1][]%
   {\begin{leftcolumn*}[#1]\begin{english}%
         \let\generalshape\upshape%
@@ -2567,6 +2653,10 @@ Ligatures=TeX%
    \let\generalshape\em%
    \let\origtheHsection\theHsection%
    \def\theHsection{ignore.\origtheHsection}%
+   % \let\section\origSect%
+   % \let\subsection\origSubSect%
+   % \let\subsubsection\origSubSubSect%
+   % \let\paragraph\origPar%
    \em}%
 {\end{german}%
  \end{rightcolumn}}
@@ -2764,39 +2854,15 @@ element is prefixed by its type: command sequences \dm{c}, environments
 should help navigating in the  manual.
 \end{eng}
 \begin{ger}
-  Zur schnellen Hilfe zu bestimmen \LaTeX"=Befehlen, die von dieser Klasse
-  angeboten werden, wird die zugehörige Erklärung befindet, mit einem Kasten
-  wie oben zusehen markiert. Die einzelnen Befehlsartenhaben dabei eigene
-  Präfixe: Befehle~\dm{o}, Umgebungen~\dm{e}, \mbox{Klassenoptionen~\dm{o}}
-  und Werte für Klassenoptionsschlüssel~\dm{v}. Damit soll das Zurechtfinden
-  im Handbuch erleichtert werden.
+  Zur schnellen Hilfe zu bestimmen \LaTeX"=Befehlen dieser Klasse wird die
+  zugehörige Erklärung mit einem Kasten wie oben zusehen markiert. Befehlsarten
+  haben dabei eigene Präfixe: Befehle~\dm{o}, Umgebungen~\dm{e},
+  \mbox{Klassenoptionen~\dm{o}} und Werte für Klassenoptionen~\dm{v}.
+  Das soll die Orientierung im Handbuch erleichtern.
 \end{ger}
 \end{paracol}
 \endgroup
-\vspace*{2\baselineskip}
 
-
-\iffalse
-\begin{paracol}{2}
-\begin{eng}
-\subsection{Manual Structure}
-A \hyperref[sec:example]{short example report} follows this section. How to
-compile a \File{hpitr} report is explained in \hyperref[sec:running]{the
-section after that}. After
-that, the different types of reports, necessary information about the report,
-general typesetting requirements, and specific microtypography are
-considered; followed by notes on the bibliographic style.
-\end{eng}
-\begin{ger}
-\subsection{Aufbau}
-Es folgt \hyperref[sec:example]{ein kurzer Beispielbericht}. Wie die Berichte
-erzeugt werden wird im \hyperref[sec:running]{darrauffolgenden Abschnitt}
-erklärt. Danach wird auf Berichtarten, notwendige Berichtinformationen,
-generelle Satzeigenschaften, und detailtypographische Besonderheiten
-eingegangen. Dann folgen Anmerkungen zum Zitierstil.
-\end{ger}
-\end{paracol}
-\fi
 
 \begin{paracol}{2}
 \begin{eng}
@@ -2942,11 +3008,9 @@ erzeugen.
 \begin{paracol}{2}
 \begin{eng}
 \section{Report Structure}
-....TBD
 \end{eng}
 \begin{ger}
 \section{Berichtstruktur}
-....TBD
 \end{ger}
 \end{paracol}
 
@@ -3177,7 +3241,7 @@ Longer original or proceedings-like reports may justify the use of parts.
 
 \cs{subparagraph} should not be used.
 
-\subsubsection{Proceedings-like Reports}
+\subsubsection*{Proceedings-like Reports}
 
 In proceedings-like reports, chapters should only be used outside the
 individual contributions as each contribution acts like an article-like report.
@@ -3209,7 +3273,7 @@ rechtfertigen.
 
 \cs{subparagraph} sollte nicht benutzt werden.
 
-\subsubsection{Tagungsbandartige Berichte}
+\subsubsection*{Tagungsbandartige Berichte}
 
 In Tagungsbänden und ähnlichen Berichten sollten Kapitel nur außerhalb der
 eigentlichen, eigenständigen Beiträge Verwendung finden, da jeder Beitrag
@@ -3229,7 +3293,7 @@ allgemeine Einführungen genutzt werden.
 
 \begin{paracol}{2}
 \begin{eng}
-\subsubsection{The Table of Contents}
+\subsubsection*{The Table of Contents}
 
 Reports should contain a table of contents (\cs{tableofcontents}) if they are
 not article-like. If present, it should be placed \emph{after} the abstract,
@@ -3246,11 +3310,12 @@ contents on their own.
 \end{eng}
 \begin{ger}
 
-\subsubsection{Das Inhaltsverzeichnis}
+\subsubsection*{Das Inhaltsverzeichnis}
 
-Berichte sollten ein Inhaltsverzeichnis (\cs{tableofcontents}) enthalten, ausgenommen
-Artikel-artige Berichte. In diesem Fall folgt es auf die Kurzfassung oder das Vorwort.
-Diese werden deshalb nicht im Inhaltsverzeichnis aufgeführt.
+Berichte sollten ein Inhaltsverzeichnis (\cs{tableofcontents}) enthalten,
+ausgenommen Artikel-artige Berichte. In diesem Fall folgt es auf die
+Kurzfassung oder das Vorwort. Diese werden deshalb nicht im Inhaltsverzeichnis
+aufgeführt.
 
 Dem Inhaltsverzeichnis können wahlweise ein Abbildungsverzeichnis
 (\cs{listoffigures}) oder Tabellenverzeichnis (\cs{listoftables})
@@ -3286,12 +3351,12 @@ layout.
 \end{itemize}
 To ensure this layout, the class chooses (approximately) the side margins as
 \SI{31.5}{\mm}, the top margin \SI{29.5}{\mm} and the bottom margin as
-\SI{54}{\mm}. Note that the top margin is slightly larger than half the
-bottom margin to optically respect the quite filled page header. The actual
-computation of the type area is described in TODO:
-REF.\footnote{\lstset{basicstyle=\scriptsize\ttfamily}The relevant options to
-\File{typearea} are \lstinline|paper=a4,DIV=calc,twoside=semi| and
-\lstinline|footinclude=false,headinclue=true,fontsize=12pt|}.
+\SI{54}{\mm}. Note that the top margin is slightly larger than half the bottom
+margin to optically respect the quite filled page header. The actual
+computation of the type area is described in the \textsf{KOMA-Script}
+reference.\footnote{\lstset{basicstyle=\scriptsize\ttfamily}The relevant
+  options to \File{typearea} are \lstinline|paper=a4,DIV=calc,twoside=semi| and
+  \lstinline|footinclude=false,headinclue=true,fontsize=12pt|}.
 
 Page numbers are set centered on the page foot.
 
@@ -3316,14 +3381,14 @@ Satzeigenschaften genügen.
   }
 \end{itemize}
 Um diesen Satzspiegel zu gewährleisten, wählt die Klasse (ungefähr) die
-Seitenstege mit \SI{31.5}{\mm}, den Kopfsteg mit \SI{29.5}{\mm} und den
-Fußsteg mit \SI{54}{\mm}. Das genaue \(1:2\)"=Verhältnis zwischen Kopf"~ und
-Fußsteg wird absichtlich leicht verletzt, um der recht vollen Kopfzeile
-optisch Rechnung zu tragen. Die eigentliche Satzspiegelkonstruktion ist in
-TODO:REF beschrieben.\footnote{\lstset{basicstyle=\scriptsize\ttfamily} Die
-relevanten Werte für \File{typearea} sind
-\lstinline|paper=a4,DIV=calc,twoside=semi| und
-\lstinline|footinclude=false,headinclue=true,fontsize=12pt|}
+Seitenstege mit \SI{31.5}{\mm}, den Kopfsteg mit \SI{29.5}{\mm} und den Fußsteg
+mit \SI{54}{\mm}. Das genaue \(1:2\)"=Verhältnis zwischen Kopf"~ und Fußsteg
+wird absichtlich leicht verletzt, um der recht vollen Kopfzeile optisch
+Rechnung zu tragen. Die eigentliche Satzspiegelkonstruktion ist in der
+\textsf{KOMA-Script}"=Referenz
+beschrieben.\footnote{\lstset{basicstyle=\scriptsize\ttfamily} Die relevanten
+  Werte für \File{typearea} sind \lstinline|paper=a4,DIV=calc,twoside=semi| und
+  \lstinline|footinclude=false,headinclue=true,fontsize=12pt|}
 
 Die Paginierung (Seitenzahlen) erfolgt zentriert im Seitenfuß.
 
@@ -3369,6 +3434,105 @@ römischen Zahlen (Kleinbuchstaben) erfolgen, sonst mit arabischen. Die erste
 Seite hat die Seitenzahl v.
 \end{ger}
 \end{paracol}
+
+\begin{figure*}[tbp]
+  \centering
+  %\setlength{unitlength}
+  \vbox{\hbox to \linewidth{
+      \begin{picture}(120,140)
+        \makebox(120,140){
+        \shortstack{
+        \framebox(75,96){{\fontsize{72}{86}\selectfont❦}}\\
+        \makebox(96,15)[b]{%
+          \color{MidnightBlue}\linethickness{7pt}\line(1,0){96}%
+        }}}
+      \end{picture}
+      \hss
+      \begin{picture}(120,140)
+        \makebox(120,140){
+          \shortstack{
+            \makebox(120,96)[lb]{
+              \put(10,10){\vector(1,0){100}}
+              \put(15,5){\vector(0,1){75}}
+              \put(13,50){\line(1,0){6}}
+              \put(10,50){\makebox(0,0){\small $1$}}
+              \linethickness{12pt}
+              \put(30,10){\line(0,1){50}}
+              \put(50,10){\line(0,1){22}}
+              \put(70,10){\line(0,1){35}}
+              \put(90,10){\line(0,1){28}}
+            }\\
+            \makebox(96,15)[b]{%
+              \color{MidnightBlue}\linethickness{7pt}\line(1,0){96}%
+            }}}
+      \end{picture}
+      \hss
+      \begin{picture}(120,140)
+        \makebox(120,140){
+          \shortstack{
+            \makebox(96,15)[t]{%
+              \color{MidnightBlue}\linethickness{7pt}\line(1,0){96}%
+            }\\
+            \makebox(110,96)[lt]{
+              {\thicklines \put(0,96){\line(1,0){110}}}
+              {\thicklines \put(0,0){\line(1,0){110}}}
+              \let\mysize\footnotesize
+              \put(0,86){\mysize aaaaaa}
+              \put(36,86){\mysize zzzzzzzzzzzzzz}
+              \put(0,84){\line(1,0){110}}
+              \put(0,74){\mysize bbbb}
+              \put(36,74){\mysize yyyyyyyyyyyyyyy}
+              \put(0,62){\mysize cccc}
+              \put(36,62){\mysize xxxxxxxxxxxxxxx}
+              \put(36,50){\mysize wwwwwww}
+              \put(0,38){\mysize dddddd}
+              \put(36,38){\mysize vvvvv}
+              \put(36,26){\mysize uuu}
+              \put(36,14){\mysize ttttttttttttt}
+              \put(0,2){\mysize fff}
+              \put(36,2){\mysize sssssssssssssssssssss}
+            }}}
+      \end{picture}
+      \hss
+      \begin{picture}(100,140)
+        \makebox(100,140){
+          \shortstack{
+            \makebox(96,15)[t]{%
+              \color{MidnightBlue}\linethickness{7pt}\line(1,0){96}%
+            }\\
+            \makebox(90,100)[lb]{
+              \let\mysize\tiny
+              \def\lt{\linethickness{5pt}}
+              \put(5,96){\linethickness{3pt}\line(1,0){30}}
+              \put(0,84){\mysize 1}{
+                \put(5,86){\lt\line(1,0){10}}\put(20,86){\lt\line(1,0){25}}
+              }
+              \put(0,72){\mysize 2}{
+                \put(15,74){\lt \line(1,0){15}} \put(35,74){\lt \line(1,0){30}}
+                \put(70,74){\lt \line(1,0){20}}
+              }
+              \put(0,60){\mysize 3}{
+                \put(15,60){\lt \line(1,0){10}} \put(30,60){\lt \line(1,0){10}}
+                \put(45,60){\lt \line(1,0){30}}
+              }
+              \put(0,48){\mysize 4}{
+                \put(30,50){\lt \line(1,0){30}}}
+              \put(0,36){\mysize 5}{
+                \put(15,36){\lt \line(1,0){15}}
+              }
+              \put(0,24){\mysize 6}{
+                \put(30,26){\lt \line(1,0){45}}}
+              \put(0,12){\mysize 7}{
+                \put(15,14){\lt \line (1,0){25}}}
+              \put(0, 0){\mysize 8}{
+                \put(5,2){\lt \line(1,0){18}}}
+            }}}
+      \end{picture}
+    }}
+  \caption{\textenglish{Positions for float captions} / \textgerman{\em Positionen
+      für Fließumgebungsbeschriftungen}}
+  \label{fig:floats}
+\end{figure*}
 \begin{paracol}{2}
 \begin{eng}
 \subsection{Floats}
@@ -3391,7 +3555,7 @@ float. Figures---typically graphics, graphs, or charts---are treated as a whole
 or read from the bottom left. Their captions therefore are placed \emph{below}
 the float. Tables, code listings, algorithm, and similar are read from top to
 bottom and might span several pages. Hence, their captions are placed
-\emph{above} the float.
+\emph{above} the float (see \autoref{fig:floats}).
 
 Floats are named by their type numbered within a chapter (original or
 collection-like reports) or with a section (article-like reports or
@@ -3418,7 +3582,7 @@ Abbildungen -- typischerweise Grafiken, Graphen oder Diagramme -- werden als
 Ganzes wahrgenommen oder von unten-links gelesen. Sie sollten daher
 Bild\emph{unter}schriften erhalten. Tabellen, Quelltextwiedergaben, Algorithmen
 oder Ähnliches werden von oben nach unten gelesen und können über mehrere
-Seiten gehen. Sie sollten daher \emph{Über}schriften erhalten.
+Seiten gehen. Sie sollten daher \emph{Über}schriften erhalten (siehe \autoref{fig:floats}).
 
 Fließumgebungen werden mit ihrem Typ benamt und innerhalb einens Kapitels (bei
 eigentlichen und sammlungsartigen Berichten) oder eines Abschnitts (bei
@@ -3431,25 +3595,220 @@ nummeriert.
 \begin{eng}
 \section{Microtypography}
 \label{sec:micro}
-Most stuff here is preset, just given for reference.
+
+For a consistent appearance, font choice and spacing has to stay stable. The
+\File{hpitr} class therefore selects the following fonts, space amounts, and
+dimensions.
+
+\subsection{Fonts}
+\label{sec:fonts}
+
+The body font family for \File{hpitr} reports is the%
+\begin{quotation}{\fontspec{TeX Gyre Pagella}%
+  \TeX\ Gyre Pagella%
+}\end{quotation}%
+family from the GUST
+e-foundry\footnote{\url{http://www.gust.org.pl/projects/e-foundry}}, a
+digitization of ``{\fontspec{Palatino Linotype} Palatino}'' by Hermann Zapf. It is
+set at \SI{12}{\pt} with a line spread of \SI{15.12}{\pt}. For typesetting
+source-code--like material, the mono-spaced%
+\begin{quotation}{\fontspec{Source Code Pro}[Scale=MatchLowercase]%
+    Source Code Pro%
+ }\end{quotation}%
+family by Adobe can be used. It is automatically scaled to match the body font.
+In the same way the sans serif%
+\begin{quotation}{\fontspec{Source Sans Pro}[Scale=MatchLowercase]%
+    Source Sans Pro%
+  }\end{quotation}%
+family by Adobe can be used for special emphasis.
+
+Generally, when emphasis is necessary, it is recommended to use \emph{italic}
+or \emph{small caps} shapes, and only sparingly resort to a bold font or a sans
+serif font, for that matter.
+
+\subsection{Spacing}
+\label{sec:spacing}
+
+All spacing is typically handled by the \File{hpitr} class. For reference,
+these are the spacings chosen:
+
 \begin{itemize}
-\item Font, font size, line spread, 
-\item avoid bold, use italics and small caps.
-\item Abbreviations (ie ...)
-\item Forbidden commands (\cs{sloppy})
-\item Skips (sectioning etc.pp.)
-\item Captions
-  \begin{itemize}
-    \item Float-type-name (Figrue/Table), number, and semi-colon in bold, caption
-    in normal font.
-  \item One line: all centerd
-  \item Multi-line: Flush left, all but first line indented by an em.
-  \end{itemize}
+\item Paragraphs are set without vertical space but indented by one \emph{em},
+ i.\,e. \SI{12}{\pt}. The first paragraph of a chapter or section is not indented.
+\item The space before a chapter heading is three empty lines, the space after
+  it, two empty lines.
+\item The space before a section heading is two empty lines, the space after
+  it, one empty line.
+\item The space before and after a sub-section heading is one empty line.
+\item The space before a sub-sub-section heading is one empty line, no vertical
+  space follows.
+\item The space before a paragraph heading is one empty line, no vertical or
+  horizontal spaces follow.
+\item Floats are separated from the body text by two empty lines above and
+  below the float.
+\item Floats are separated from another by one empty line.
 \end{itemize}
+
+\subsection{Float captions}
+\label{sec:float-captions}
+
+
+Captions of floats should be preceded by the un-abbreviated float type, e.\,g.
+Figure or Table, the float number and a semi-colon, all in bold font. The
+caption that follows should be in normal font.
+
+If the caption is only one line, it should be centered, if it spans multiple
+lines, it should be set flush left and all but the first line should be
+indented by one \emph{em}, i.\,e. \SI{12}{\pt}.
 \end{eng}
 \begin{ger}
 \section{Detailtypographie}
-test
+
+Für eine konsistente Darstellung, müssen die Wahl von Schrift und Abständen
+stabil bleiben. Die \File{hpitr}"=Klasse wählt daher folgende Schriften und
+Abstände.
+
+\subsection{Schriften}
+
+Die Hauptschriftart (Brotschrift) für \File{hpitr}"=Berichte ist die%
+\begin{quotation}{\fontspec{TeX Gyre Pagella}%
+\upshape
+  \TeX\ Gyre Pagella%
+}\end{quotation}%
+der GUST e-foundry, eine Digitalisierung Hermann Zapfs ``{\fontspec{Palatino
+    Linotype} Palatino}''. Sie wird mit \SI{12}{\pt} auf einem Zeilenabstand
+von \SI{15.12}{\pt} gesetzt. Quelltext"=artige Textteile können in der
+dicktengleichen ("`mono-spaced"')%
+\begin{quotation}{\fontspec{Source Code Pro}[Scale=MatchLowercase]%
+\upshape
+    Source Code Pro%
+ }\end{quotation}%
+von Adobe gesetzt werden. Sie wird automatisch auf die richtige Größe skaliert.
+Für spezielle Hervorhebungen kann die serifenlose ("`sans-serif"')
+\begin{quotation}{\fontspec{Source Sans Pro}[Scale=MatchLowercase]%
+\upshape
+    Source Sans Pro%
+  }\end{quotation}%
+von Adobe in gleicher Weise benutzt werden.
+
+Hervorhebungen sollten generell durch \emph{Kursive} oder \emph{Kapitälchen}
+erfolgen; auf serifenlose oder fette Schriften sollte nur sparsam
+zurückgegriffen werden.
+
+\subsection{Abstände}
+
+Alle Abstände sind voreingestellt und werden hier nur zur Referenz
+wiedergegeben.
+
+\begin{itemize}
+\item Absätze werden ohne vertikalen Abstand gesetzt und mit einem Geviert
+  (hier \SI{12}{\pt}) eingezogen, es sei denn er folgt einer Überschrift.
+\item Kapitelüberschriften werden mit drei Zeilen davor und zwei danach
+  abgetrennt.
+\item Abschnittsüberschriften werden mit zwei Zeilen davor und einer danach
+  abgetrennt.
+\item Unterabschnittsüberschriften werden mit je einer Zeile davor und danach
+  abgetrennt.
+\item Unter"=Unterabschnittsüberschriften werden mit einer Zeile davor
+  abgetrennt. Danach folg kein vertikaler Weißraum.
+\item Überschriften benamter Absätze werden mit einer Zeile davor abgetrennt.
+  Der Text fängt direkt rechts der Überschrift an.
+\item Fließumgebungen werden vom Text mit zwei Zeilen abgetrennt.
+\item Fließumgebungen werden voneinander mit einer Zeiler abgetrennt.
+\end{itemize}
+
+\subsection{Beschriftungen}
+
+Der Beschriftung von Fließumgebungen wir der unverkürzte Name (z.\,B. Abbildung
+oder Tabelle), die laufende Fließumgebungsnummer und ein Semikolon
+vorangestellt, alles in fetter Schrift. Die eigentliche Beschriftung folgt, in
+normaler, nicht"=fetter Schrift.
+
+Ist die gesamte Beschriftung nicht länger als eine Zeile, wird diese zentriert
+gesetzt. Mehrzeilige Beschriftungen werden linksbündig gesetzt und bis auf die
+erste Zeile mit einem Geviert (hier \SI{12}{\pt}) eingezogen.
+
+\end{ger}
+\end{paracol}
+\begin{Describe}
+  \DescribeMacro{hairspace}\\
+  \DescribeMacro{eg}, %
+  \DescribeMacro{Eg}\\
+  \DescribeMacro{ie}, %
+  \DescribeMacro{Ie}\\
+  \DescribeMacro{zB}, %
+  \DescribeMacro{ZB}\\
+  \DescribeMacro{dh}, %
+  \DescribeMacro{Dh}\\
+  \DescribeOption{egiecomma}
+\end{Describe}
+\begin{paracol}{2}
+\begin{eng}
+
+\subsection*{Additional considerations}
+\begingroup
+\def\hairspace{\ifmmode\mskip1mu\else\kern0.08em\fi}
+
+Note that in abbreviations with periods in either English or German, a
+\emph{hairspace} or \emph{half} space follow the period. Thus, the following
+should be avoided:
+\begin{quotation}
+  z.B.\hspace{1em}e.~g.\hspace{1em}i.\hspace{1em}e.
+\end{quotation}
+but rather be
+\begin{quotation}
+  z.\hairspace{}B.\hspace{1em}e.\hairspace{}g.\hspace{1em}i.\hairspace{}e.
+\end{quotation}
+
+For convenience, commands for i.\hairspace{}e., e.\hairspace{}g.,
+d.\hairspace{}h., and z.\hairspace{}B. are provided in initial uppercase and
+lowercase form (\cs{ie}, \cs{Ie}, \cs{eg}, \cs{Eg}, \textit{\&c}.). The command
+\cs{hairspace} can be used to construct similar commands.
+
+Considering i.\hairspace{}e. and e.\hairspace{}g., practice differs in regard
+to whether they should be followed by a comma. The option |egiecomma=true| can
+be used to automatically add a comma to their commands. \bigskip
+
+The command \cs{sloppy} is overused and should be refrained from. Rather,
+enclose a problematic paragraph by a |sloppypar| environment. 
+
+\remark{The \cs{sloppy} command should not be used}
+
+\endgroup
+
+\end{eng}
+\begin{ger}
+\subsection*{Anderes}
+\begingroup
+\def\hairspace{\ifmmode\mskip1mu\else\kern0.08em\fi}
+
+Im Englischen wie im Deutschen folgt in Abkürzungen auf einen Punkt eine
+\emph{halbes} (oder kleineres) Leerzeichen. Daher sollte folgendes vermieden
+\begin{quotation}
+  z.B.\hspace{1em}e.~g.\hspace{1em}i.\hspace{1em}e.
+\end{quotation}
+und eher so gesetzt werden.
+\begin{quotation}
+  z.\hairspace{}B.\hspace{1em}e.\hairspace{}g.\hspace{1em}i.\hairspace{}e.
+\end{quotation}
+
+Der Einfachheit halber sind daher die Befehle für i.\hairspace{}e.,
+e.\hairspace{}g., d.\hairspace{}h. und z.\hairspace{}B. sowohl mit initialen
+Groß"~ als auch Kleinbuchstaben vorhanden (\cs{dh}, \cs{Dh}, \cs{zB}, \cs{ZB},
+\textit{\&c}.). Der \cs{hairspace}"=Befehl kann für ähnliche Befehle genutzt
+werden.
+
+Die Praxis bezüglich einem Komma nach i.\hairspace{}e. und e.\hairspace{}g. ist
+uneinheitlich. Die Klassenoption |egiecomma=true| kann daher benutzt werden, um
+den entsprechenden Befehlen automatisch ein Komma anzufügen.\bigskip
+
+Der Befehl \cs{sloppy} sollte vermieden werden. Problematische
+Stellen können mit der |sloppypar|"=Umgebung besser behandelt werden.
+
+\remark{Der \cs{sloppy}"=Befehl sollte nicht benutzt werden.}
+
+\endgroup
+
 \end{ger}
 \end{paracol}
 
@@ -3457,31 +3816,111 @@ test
 \begin{eng}
 \section{Cross-References}
 \label{sec:refs}
+
+The \File{hpitr} class supports a certain style of inter- and intra-document references.
 \end{eng}
 \begin{ger}
 \section{Verweise}
+Die \File{hpitr}"=Klasse unterstützt einen bestimmten Stil auf andere Quellen
+oder innerhalb eines Dokuments zu verweisen.
 \end{ger}
 \end{paracol}
 
+\DescribeMacro{autoref}
 \begin{paracol}{2}
 \begin{eng}
 \subsection{Intra-document References}
+
+To ease references in-between parts of a document, the \cs{autoref} command can
+be used, which produces the following reference texts:
+
+\subsubsection{Reports with chapters}
+
+For reports with chapters (but \emph{not} for proceedings-like reports), the
+following reference schema is produced:
+
 \begin{itemize}
-\item chapters: chapter \(n\)
-\item section: section \(n\)
-\item subsection:  section \(n.m\) (NOT subsection ...)
-\item subsubsection: section \(n.m.k\) (NOT subsubsection ...)
-\item paragraphs: no ref
-\item proceedings: NO CROSS-REFERENCES.
-\item \cs{autoref}
+\item For chapters: “chapter \(n\)”
+\item For section: “section \(n.m\)” where \(n\) is the number of the chapter
+\item For sub-section: “section \(n.m.k\)” where \(m\) is the number of the
+  section and \(n\) is the number of the chapter. The word subection is not
+  used.
+\item For sub-sub-section: “section \(n.m.k.l\)” where \(k\) is the number of
+  the subsection, \(m\) is the number of the section, and \(n\) is the number
+  of the chapter. The word subsubection is not used.
+\item For paragraphs: references to paragraphs should be avoided.
 \end{itemize}
+
+\subsubsection{Reports without chapters}
+
+For reports without chapters and contributions to proceedings-like reports, the
+following reference schema is produced:
+
+\begin{itemize}
+\item For section: “section \(n\)”
+\item For sub-section: “section \(n.m\)” where \(n\) is the number of the
+  section. The word subection is not used.
+\item For sub-sub-section: “section \(n.m.k\)” where \(m\) is the number of
+  the subsection and \(n\) is the number of the section.
+\item For paragraphs: references to paragraphs should be avoided.
+\end{itemize}
+\bigskip
+
+If possible, the contributions of a proceedings-like report should not
+inter-reference each other.
+
+The \cs{autoref} command can also be used to reference to floats.
 \end{eng}
 \begin{ger}
 \subsection{Interne Verweise}
+
+Um Verweise zwischen Dokumentteilen zu erleichtern kann der
+\cs{autoref}"=Befehl genutzt werden, der folgende Verweisbeschriftungen
+erzeugt:
+
+\subsubsection{Berichte mit Kapiteln}
+
+Für Berichte mit Kapiteln (ausgenommen tagungsbandartige Berichte) wird
+folgendes Namensschema verwendet:
+
+\begin{itemize}
+\item Für Kapitel: „Kapitel \(n\)“
+\item Für Abschnitte: „Abschnitt \(n.m\)“, wobei \(n\) die Kapitelnummer ist.
+\item Für Unterabschnitte: „Abschnitt \(n.m.k\)“, wobei \(m\) die
+  Abschnittsnummer und \(n\) die Kapitelnummer ist. Das Wort Unterabschnitt
+  wird nicht verwendet.
+\item Für Unterunterabschnitte: „Abschnitt \(n.m.k.l\)“, wobei \(k\) die
+  Unterabschnittsnummer, \(m\) die Abschnittsnummer und \(n\) die Kapitelnummer
+  ist. Das Wort Unterunterabschnitt wird nicht verwendet.
+\item Benamte Absätze: Verweise auf benamte Absätze sollten vermieden werden.
+\end{itemize}
+\subsubsection{Berichte ohne Kapitel}
+
+Für Berichte ohne Kapitel und Beiträge zu tagungsbandartigen Berichten  wird
+folgendes Namensschema verwendet:
+
+\begin{itemize}
+\item Für Abschnitte: „Abschnitt \(n\)“
+\item Für Unterabschnitte: „Abschnitt \(n.m\)“, wobei \(n\) die
+  Abschnittsnummer ist. Das Wort Unterabschnitt wird nicht verwendet.
+\item Für Unterunterabschnitte: „Abschnitt \(n.m.k\)“, wobei \(m\) die
+  Unterabschnittsnummer und \(n\) die Abschnittsnummer ist. Das Wort
+  Unterunterabschnitt wird nicht verwendet.
+\item Benamte Absätze: Verweise auf benamte Absätze sollten vermieden werden.
+\end{itemize}
+\bigskip
+
+Die Beiträge zu tagungsbandartigen Berichten sollten nicht gegenseitig
+aufeinander verwisen, soweit möglich.
+
+Der \cs{autoref}"=Befehl kann auch verwendet werden um auf Fließumgebungen wie
+Abbildungen zu verweisen.
+
+
 \end{ger}
 \end{paracol}
 
-
+\DescribeMacro{cite}
 \begin{paracol}{2}
 \begin{eng}
 \subsection{Bibliographic References}
@@ -3542,11 +3981,11 @@ maßgeblich.
 
 \remark{Weder Zitier"~ noch Literaturstil dürfen verändert werden.}
 
-Obwohl \BibTeX gut funktionieren sollte und auch unterstützt wird, wird
+Obwohl \BibTeX\ gut funktionieren sollte und auch unterstützt wird, wird
 Biblatex, insbesondere mit dem \emph{biber}-Backend empfohlen, da dies eine
 vernünftige Verwendung von Unicodezeichen und "~schriften erlaubt.
 Sammlungsartige Berichte \emph{müssen} Biblatex benutzen. Eine Liste aller
-von \BibTeX und Biblatex unterstützten zu zitierenden Werkarten findet sich
+von \BibTeX\ und Biblatex unterstützten zu zitierenden Werkarten findet sich
 in \autoref{tbl:bibtytpes}. Nicht aufgeführte Werkarten erhalten den Typ
 \emph{misc}.
 \end{ger}
@@ -3556,6 +3995,7 @@ in \autoref{tbl:bibtytpes}. Nicht aufgeführte Werkarten erhalten den Typ
   \makeatletter
   \let\sellang\select@language
   \makeatother
+  \smaller
   \centering
   \begin{threeparttable}
     \caption{%
@@ -3617,19 +4057,164 @@ in \autoref{tbl:bibtytpes}. Nicht aufgeführte Werkarten erhalten den Typ
 \end{table}
 \begin{paracol}{2}
 \begin{eng}
-\section{Miscellanea and Further reading}
+\section{Miscellanea}
 \label{sec:reading}
-\begin{itemize}
-\item draft tools
-\item loaded packages
-\item forbidden packages
-\end{itemize}
 \end{eng}
 \begin{ger}
-\section{Verschiedenes und Lesehinweise}
-test
+\section{Verschiedenes}
 \end{ger}
 \end{paracol}
+\begin{Describe}
+  \DescribeOption{draft}\\
+  \DescribeValue{draft}{true}\\
+  \DescribeValue{draft}{full}\\
+  \DescribeOption{todotools}
+\end{Describe}
+\begin{paracol}{2}
+\begin{eng}
+\subsection{Draft tools}
+
+To support editing early versions of reports, the |draft| or |draft=true|
+option can be used to activate a gray bar at the to and the bottom that says
+``Draft''. Many \LaTeX\ packages also react to the |draft| option. Unlike the
+typical effect of the |draft| option, which also disables graphics, the
+\File{hpitr} class makes sure that graphics are displayed also in the draft
+version. To avoid that, use |draft=full|
+
+The |todotools=true| option loads the \File{todonotes} packages (in draft mode)
+and provides a few additional commands.
+\end{eng}
+\begin{ger}
+\section{Edierhilfen}
+
+Zur Unterstüzung von Bericht"=vor"=versionen schaletet die Klassenoption
+|draft| (oder |draft=true|) einen grauen Balken mit der Aufschrift „Draft“ am
+Seitenanfang und "~ende ein. Viele \LaTeX"=Pakete reagieren ebenfalls auf die
+|draft|"=Option. Normalerweise schaltet dies auch alle Bilder ab. Die
+\File{hpitr}"=Klasse sorgt jedoch dafür, dass alle Bilder auch in Vorversionen
+ins Dokument übernommen werden. Sollen Bilder außen vor bleiben, kann die
+|draft=full|"=Option genutzt werden.
+
+Die Option |todotools=true| lädt das \File{todonotes}"=Paket und stellt einige
+zusätzliche Editierbefehle bereit.
+\end{ger}
+\end{paracol}
+
+\begin{paracol}{2}
+\begin{eng}
+\subsection{\LaTeX\ Packages}
+\label{sec:reading}
+
+The following packages are automatically loaded by the \File{hpitr} class.
+\end{eng}
+\begin{ger}
+\subsection{\LaTeX"=Pakete}
+Die folgenden Pakte werden von der \File{hpitr}"=Klasse automatisch geladen.
+\end{ger}
+\end{paracol}
+
+\begin{multicols}{3}
+{\color{DarkGreen}
+\begin{itemize}
+\item \File{amsmath}
+\item \File{amssymb}
+\item \File{babel}
+\item \File{biblatex} \emph{collections\,/\,proceedings only}
+\item \File{blindtext} \emph{draft only}
+\item \File{booktabs}
+\item \File{color}
+\item \File{csquotes}
+\item \File{eso-pic} \emph{draft only}
+\item \File{etoolbox}
+\item \File{eulervm}
+\item \File{expl3}
+\item \File{fixltx2e}
+\item \File{fontenc} \pdfTeX\ \emph{only}
+\item \File{fontspec} \LuaTeX/\XeTeX\ \emph{only}
+\item \File{graphicx}
+\item \File{grffile}
+\item \File{hyperref}
+\item \File{hyperxmp}
+\item \File{hyphsubst}
+\item \File{ifdraft}
+\item \File{ifluatex}
+\item \File{ifthen}
+\item \File{ifxetex}
+\item \File{inputenc}
+\item \File{longtable}
+\item \File{mathcomp}
+\item \File{mathpazo} \pdfTeX\ \emph{only}
+\item \File{microtype}
+\item \File{pdfpages} \emph{proceedings only}
+\item \File{ragged2e} \emph{collections\,/\,proceedings only}
+\item \File{relsize}
+\item \File{scrbase}
+\item \File{scrhack}
+\item \File{scrlayer-scrpage}
+\item \File{siunitx}
+\item \File{sourcecodepro}
+\item \File{sourcesanspro}
+\item \File{tabularx}
+\item \File{textcomp}
+\item \File{tocbasic}
+\item \File{todonotes} \emph{draft only}
+\item \File{xcolor}
+\item \File{xparse}
+\item \File{xspace}
+\end{itemize}}
+\end{multicols}
+
+\begin{paracol}{2}
+\begin{eng}
+\par\noindent The following packages \emph{must not} be loaded.
+\end{eng}
+\begin{ger}
+\par\noindent Die folgenden Pakte \emph{dürfen nicht} geladen werden.
+\end{ger}
+\end{paracol}
+
+\begin{multicols}{3}
+{\color{DarkRed}
+\begin{itemize}
+\item \File{SIstyle}
+\item \File{SIunits}
+\item \File{a4wide}
+\item \File{a4}
+\item \File{aecompl}
+\item \File{ae}
+\item \File{caption2}
+\item \File{cite} \emph{in collections}
+\item \File{courier}
+\item \File{doublespace}
+\item \File{epsfig}
+\item \File{epsf}
+\item \File{euler}
+\item \File{fancyhdr}
+\item \File{fancyheadings}
+\item \File{fourier}
+\item \File{geometry}
+\item \File{glossary}
+\item \File{helvet}
+\item \File{isolatin}
+\item \File{mathpple}
+\item \File{mathptmx}
+\item \File{mathptm}
+\item \File{newtxmath}
+\item \File{newtxtext}
+\item \File{palatino}
+\item \File{psfig}
+\item \File{pslatex}
+\item \File{scrpage}
+\item \File{subfigure}
+\item \File{subfig}
+\item \File{t1enc}
+\item \File{times}
+\item \File{umlaut}
+\item \File{utopia}
+\item \File{zefonts}
+\end{itemize}}
+\end{multicols}
+
 %</manual>
 \DocInput{hpitr.dtx}
 \end{document}
