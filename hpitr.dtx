@@ -36,7 +36,7 @@
 %   Right bracket \]     Circumflex    \^     Underscore    \_
 %   Grave accent  \`     Left brace    \{     Vertical bar  \|
 %   Right brace   \}     Tilde         \~}
-% \CheckSum{0}
+% \CheckSum{4681}
 %
 % \iffalse meta-comment
 %<*dtx|ins>
@@ -63,7 +63,7 @@
 %<*!README>
 [%
 %</!README>
-  2014/09/26 v0.8
+  2014/09/30 v0.9
 %<!README>^^J
   A unified class for Technical Reports at the HPI
 %<*!README>
@@ -76,12 +76,13 @@
 %
 %
 %
-% \changes{v0.1}{2014/06/01}{Inital class derived from polze.cls}
-% \changes{v0.2}{2014/07/10}{Minmial changes to play nice with babel and
+% \changes{v0.1}{2014/06/01}{Initial class derived from polze.cls}
+% \changes{v0.2}{2014/07/10}{Minimal changes to play nice with babel and
 % subcaption}
 % \changes{v0.5}{2014/08/15}{Small fixes to abstract and title, loading of float}
 % \changes{v0.6}{2014/08/27}{Provide \cs{keywords} command.}
 % \changes{v0.7}{2014/09/04}{Discriminate between proceedings and collections}
+% \changes{v0.9}{2014/09/30}{Add inproceedings pseudo-trtype}
 %
 % \GetFileInfo{hpitr.dtx}
 %^^A ==========================================================================
@@ -467,6 +468,7 @@ without this file.
 
 %% proceedings?
 \newbool{TR@proceedings}
+\newbool{TR@inproceedings}
 \newbool{TR@contribtools}
 \newbool{TR@chapters}
 \booltrue{TR@chapters}
@@ -485,7 +487,8 @@ without this file.
     {singlearticle}{0},{article}{0},%
     {singlereport}{1},{report}{1},%
     {proceedings}{2},%
-    {collection}{3}%
+    {collection}{3},%
+    {inproceedings}{4}%
   }{#1}
   \ifcase \@tempa\relax
     \renewcommand*\TR@BaseClass{scrartcl}
@@ -508,6 +511,17 @@ without this file.
     \boolfalse{TR@proceedings}
     \booltrue{TR@contribtools}
     \booltrue{TR@chapters}
+  \or
+    \renewcommand*\TR@BaseClass{scrartcl}
+    \booltrue{TR@proceedings}
+    \booltrue{TR@contribtools}
+    \boolfalse{TR@chapters}
+    \boolfalse{TR@chapterbib}
+    \booltrue{TR@inproceedings}
+    \AtBeginDocument{%
+      \booltrue{TR@firsttitleseen}%
+      \clearheadinfo%
+      }
   \fi
 }
 %    \end{macrocode}
@@ -516,12 +530,14 @@ without this file.
 % \begin{option}{singlereport}
 % \begin{option}{singlearticle}
 % \begin{option}{proceedings}
+% \begin{option}{inproceedings}
 % \begin{option}{collection}
 %    \begin{macrocode}
 \TRStdOption{single}{trtype=singlereport}
 \TRStdOption{singlereport}{trtype=singlereport}
 \TRStdOption{singlearticle}{trtype=singlearticle}
 \TRStdOption{proceedings}{trtype=proceedings}
+\TRStdOption{inproceedings}{trtype=inproceedings}
 \TRStdOption{collection}{trtype=collection}
 %    \end{macrocode}
 % \end{option}
@@ -529,23 +545,8 @@ without this file.
 % \end{option}
 % \end{option}
 % \end{option}
+% \end{option}
 %    \begin{macrocode}
-
-% Deprecated
-\DeclareOption{inproceedings}{
-  \let\TR@curropt\CurrentOption
-  \begingroup
-  \TR@warn{%
-    You've used obsolete option `inproceedings'.\MessageBreak
-    Usage of this option indicates an old document that\MessageBreak
-    used `polze.cls'.\MessageBreak
-    \MessageBreak
-    I switch to `trtype=singlearticle' for you.
-  }
-  \endgroup
-  \TRExecuteOptions{trtype=singlearticle}%
-  \let\CurrentOption\TR@curropt
-}
 
 \TRnewifStd{todotools}
 \TRnewifStd{egiecomma}
@@ -593,7 +594,7 @@ without this file.
   footinclude=false,
   headinclude=true,
 }
-\ifthenelse{\boolean{TR@proceedings}}{
+\ifthenelse{\boolean{TR@proceedings}\AND\boolean{TR@chapters}}{
   \KOMAoption{open}{right}
 }{}
 %
@@ -707,7 +708,6 @@ without this file.
 % \end{macro}
 % \end{macro}
 % \end{macro}
-% \end{macro}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 % Titlepage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -785,8 +785,10 @@ without this file.
 % \changes{v0.4}{2014/08/12}{Add facilities to make collections.}
 %    \begin{macrocode}
   \RequirePackage{ragged2e}
-  \AtEndPreamble{%
-    \RequirePackage{biblatex}}
+  \ifthenelse{\boolean{TR@inproceedings}}{}{%
+    \AtEndPreamble{%
+      \RequirePackage{biblatex}}
+    }
 %    \end{macrocode}
 % Automatically pick up \texttt{preamble.tex} and \texttt{content.tex} for each
 % contribution.
@@ -866,6 +868,14 @@ without this file.
   }
   \newkomafont{abstract}{\normalfont\small}
 
+
+  \def\institute#1{\gdef\@institute{#1}}
+  \def\organisation#1{\gdef\@organization{#1}}
+  \let\organization\organisation
+  \def\group#1{\gdef\@group{#1}}
+  \ifcsundef{email}{\newcommand*\email{}}
+  \renewcommand*\email[1]{\gdef\@email{#1}}
+
   \ifthenelse{\boolean{TR@proceedings}}{%
     \newcounter{@inst}
     \newcounter{@auth}
@@ -875,14 +885,6 @@ without this file.
     \newtoks\tocauthor
     \newtoks\titlerunning
     \newtoks\toctitle
-
-    \def\institute#1{\gdef\@institute{#1}}
-    \def\organisation#1{\gdef\@organization{#1}}
-    \def\group#1{\gdef\@group{#1}}
-    \AtBeginDocument{%
-      \let\TR@email\email
-      \def\email#1{\gdef\@email{#1}}
-    }
 
     \def\institutename{\par\begingroup
       \parskip=\z@
@@ -902,7 +904,7 @@ without this file.
       \ifx\@organization\@empty\relax%
         \@institute%
       \else%
-        \@group \\ \@organization \\ \href{mailto:\@email}{\@email}%
+        \@group \\ \@organization \\ \href{mailto:\@email}{\nolinkurl{\@email}}%
        \fi%
        \par
       \endgroup}
@@ -1011,7 +1013,9 @@ without this file.
   \ifthenelse{\boolean{TR@proceedings}}{%
     \newcommand*\TR@contrib@maketitle{\newpage
       \phantomsection
-      \refstepcounter{chapter}%
+      \ifthenelse{\boolean{TR@chapters}}{%
+        \refstepcounter{chapter}%
+      }{}
       \stepcounter{section}%
       \setcounter{section}{0}%
       \setcounter{subsection}{0}%
@@ -1025,7 +1029,11 @@ without this file.
       \newpage
       \global\@topnum\z@   % Prevents figures from going at top of page.
       \TR@contrib@@maketitle
-      \thispagestyle{\chapterpagestyle}%
+      \ifthenelse{\boolean{TR@chapters}}{%
+        \thispagestyle{\chapterpagestyle}%
+      }{%
+        \thispagestyle{empty}%
+      }
       \@thanks
       \def\\{\unskip\ \ignorespaces}\def\inst##1{\unskip{}}%
       \def\thanks##1{\unskip{}}\def\fnmsep{\unskip}%
@@ -1065,7 +1073,11 @@ without this file.
           \string\authorrunning\space prior to \string\maketitle}%
         \xdef\@runninghead{Authors/Title Suppressed Due to Excessive Length}%
       \fi
-      \addchapmark{\@runninghead}%
+      \ifthenelse{\boolean{TR@chapters}}{%
+        \addchapmark{\@runninghead}%
+      }{%
+        \xdef\TR@titlemark{\@runninghead}%
+      }%
       \endgroup
       \setcounter{footnote}{\fnnstart}%
       \clearheadinfo%
@@ -1110,24 +1122,26 @@ without this file.
        \par\addvspace\baselineskip%
        \noindent\keywordname\enspace\ignorespaces#1}%
 
-  \renewcommand*\thesection{\@arabic\c@section}
-  \renewcommand*\thefigure{\@arabic\c@figure}
-  \renewcommand*\thetable{\@arabic\c@table}
-  \renewcommand*\theequation{\@arabic\c@equation}
-  \@addtoreset{equation}{chapter}
-  \BeforePackage{hyperref}{%
-    \newcommand*\theHequation{\theHsection.\arabic{equation}}%
-    \newcommand*\theHchapter    {\arabic{chapter}}%
-    \newcommand*\theHfigure     {\theHchapter.\arabic{figure}}%
-    \newcommand*\theHtable      {\theHchapter.\arabic{table}}%
-    \newcommand*\theHsection    {\theHchapter.\arabic{section}}%
-    \newcommand*\theHsubsection   {\theHsection.\arabic{subsection}}
-    \newcommand*\theHsubsubsection{\theHsubsection.\arabic{subsubsection}}
-    \newcommand*\theHparagraph    {\theHsubsubsection.\arabic{paragraph}}
-    \newcommand*\theHsubparagraph {\theHparagraph.\arabic{subparagraph}}
-    \newcommand*\theHtheorem      {\theHsection.\arabic{theorem}}
-    \newcommand*\theHthm          {\theHsection.\arabic{thm}}
-  }
+   \ifthenelse{\boolean{TR@chapters}}{%
+     \renewcommand*\thesection{\@arabic\c@section}
+     \renewcommand*\thefigure{\@arabic\c@figure}
+     \renewcommand*\thetable{\@arabic\c@table}
+     \renewcommand*\theequation{\@arabic\c@equation}
+     \@addtoreset{equation}{chapter}
+     \BeforePackage{hyperref}{%
+       \newcommand*\theHequation{\theHsection.\arabic{equation}}%
+       \newcommand*\theHchapter    {\arabic{chapter}}%
+       \newcommand*\theHfigure     {\theHchapter.\arabic{figure}}%
+       \newcommand*\theHtable      {\theHchapter.\arabic{table}}%
+       \newcommand*\theHsection    {\theHchapter.\arabic{section}}%
+       \newcommand*\theHsubsection   {\theHsection.\arabic{subsection}}
+       \newcommand*\theHsubsubsection{\theHsubsection.\arabic{subsubsection}}
+       \newcommand*\theHparagraph    {\theHsubsubsection.\arabic{paragraph}}
+       \newcommand*\theHsubparagraph {\theHparagraph.\arabic{subparagraph}}
+       \newcommand*\theHtheorem      {\theHsection.\arabic{theorem}}
+       \newcommand*\theHthm          {\theHsection.\arabic{thm}}
+     }
+   }{}
   \AtBeginDocument{%
     \setcounter{tocdepth}{0}
   }
@@ -1170,7 +1184,9 @@ without this file.
 %    \end{macrocode}
 % as for title, as for abstract.
 %    \begin{macrocode}
-    \newenvironment{abstract}{%
+    \@ifundefined{abstract}{%
+      \newenvironment{abstract}{}{}}{}%
+    \renewenvironment{abstract}{%
       \ifthenelse{\boolean{TR@firsttitleseen}}{
         \list{}{%\advance\topsep by0.35cm\relax
           \setlength{\topsep}{0pt}%
@@ -1397,7 +1413,11 @@ without this file.
   \automark[chapter]{chapter}
   \automark*[section]{}
 }{
-  \lehead{\@title}
+  \ifthenelse{\boolean{TR@inproceedings}}{
+    \lehead{\TR@titlemark}
+  }{
+    \lehead{\@title}
+  }
   \automark*[section]{}
 }
 
@@ -1406,8 +1426,13 @@ without this file.
 %    \begin{macrocode}
 \lefoot[]{}\lofoot[]{}
 \refoot[]{}\rofoot[]{}
-\cefoot[\pagemark]{\pagemark}
-\cofoot[\pagemark]{\pagemark}
+\ifthenelse{\boolean{TR@inproceedings}}{
+  \cefoot[]{}
+  \cofoot[]{}
+}{
+  \cefoot[\pagemark]{\pagemark}
+  \cofoot[\pagemark]{\pagemark}
+}
 
 %%  \ifthenelse{\boolean{TR@proceedings}\OR\boolean{TR@contribtools}}{
 %%   \lefoot[\@eventtitle]{\@eventtitle}
@@ -1526,11 +1551,11 @@ without this file.
     abbreviate=false,%
     maxnames=20,%
   }
-  \PreventPackageFromLoading[%
-  \message{%
-    ^^J^^JERROR: You tried to load  the cite package that is not compatible with biblatex.^^J^^J}]{%
-cite}
-
+  \PreventPackageFromLoading[\message{%
+    ^^J^^JERROR: You tried to load  the cite package that is not compatible
+    with biblatex.^^J^^J%
+  }]{cite}
+}
 \AtEndPreamble{
   \@ifpackageloaded{biblatex}{}{
 % normal bibtex
@@ -2480,9 +2505,9 @@ language.
   \tabular{|l|}\hline\ignorespaces}
 \def\TR@describe@table@end{%
   \\%
-  \hline\endtabular\nobreak\par\nobreak
+  \hline\endtabular\nobreak\par\nobreak%
   \vspace{1.5\baselineskip}\nobreak\vspace{-\baselineskip}\nobreak%
-  \vspace{0pt minus .5\baselineskip}\nobreak
+  \vspace{0pt minus .5\baselineskip}\nobreak%
 }
 
 % Define new describe commands
@@ -2519,9 +2544,9 @@ language.
   \booltrue{TR@indescribe}%
   \TR@describe@table@begin%
 }{%
-  \TR@describe@table@end%
   \boolfalse{TR@indescribe}%
-  \nobreak%
+  \TR@describe@table@end%
+  \nopagebreak%
   \ignorespaces%
 }
 \makeatother
@@ -2679,9 +2704,9 @@ Ligatures=TeX%
   partopsep=0pt,%
   topsep=\baselineskip,%
   leftmargin=\parindent}
-\setlist[1]{%
-  leftmargin=0pt%
-}
+% \setlist[1]{%
+%   leftmargin=0pt%
+% }
 \setdescription{noitemsep,topsep=\baselineskip,font=\normalfont\scshape,leftmargin=\parindent}
 \DeclareRobustCommand\cf[1]{%
 cf.\,{#1}
@@ -2788,16 +2813,6 @@ typical, like non-standard paper size.
 \tableofcontents
 \iffalse
 TODO:
-
-- microtype, graphicx, amsmath, amssymb, url, booktabs, color, fixltx2e und hyperref
- Werden von hpitr schon geladen, man kann sie also aufführen, muss aber nicht.
-- times, subfig
- Sind veraltet und times ist außerdem mit hpitr nicht zulässig
-- ctable, wrapfix, algorithmic, algorithm2e
- Werden gar nicht verwendet, also habe ich sie entfernt sodass sie nicht stören.
-- WICHTIG: inputenc
- Habe ich entfernt, da ich deinen TR mit lualatex gebaut habe. 
-
 %%%%%
 For conversions from llncs:
 Du benutzt die Defintion-umgebung. Die gibts in lncs, aber nicht
@@ -3005,6 +3020,7 @@ erzeugen.
 \end{ger}
 \end{paracol}
 %^^A----------------------------------------
+\clearpage
 \begin{paracol}{2}
 \begin{eng}
 \section{Report Structure}
@@ -3122,6 +3138,28 @@ Tagungsbände zeichen sich durch eine besondere Formatierung der
 Einzelbeiträge aus; jeder Beitrag beginnt im Gegensatz zu normalen Sammlungen
 mit eigenem Titel, Autorennennung und Zusammenfassung. In normalen Sammlungen
 ordnet sich die Abschnitsnummerierung der Kapitelnummerierung unter.%
+\end{ger}
+\end{paracol}
+
+\begin{Describe}
+\DescribeValue{trtype}{inproceedings}\\
+{\color{gray} \DescribeOption{inproceedings}}
+\end{Describe}
+\begin{paracol}{2}
+\begin{eng}
+\paragraph{Contributions}
+\label{sec:contrib}
+The \File{hpitr} class supports an additional report type, \emph{inproceedings}
+that is not intended to be published as is. Rather, this type can be used to
+produce a \textsc{pdf} version of an individual contribution to a
+proceedings-like report for further processing.
+\end{eng}
+\begin{ger}
+\paragraph{Beiträge zu tagungsbandartigen Berichten}
+Die \File{hpitr}"=Klasse unterstützt eine uneigentliche Beritchart
+\emph{inproceedings}, die nicht eingenständig veröffentlicht werden soll. Sie
+ist dafür gedacht, um einen einzelnen Beitrag zu einem tagungsbandartigen
+Bericht als \textsc{pdf} zur möglichen Weiterverabeitung vorzubereiten.
 \end{ger}
 \end{paracol}
 
@@ -3529,8 +3567,8 @@ Seite hat die Seitenzahl v.
             }}}
       \end{picture}
     }}
-  \caption{\textenglish{Positions for float captions} / \textgerman{\em Positionen
-      für Fließumgebungsbeschriftungen}}
+  \caption{\textenglish{Recommended positions for float captions} /
+    \textgerman{\em Empfohlene Positionen für Fließumgebungsbeschriftungen}}
   \label{fig:floats}
 \end{figure*}
 \begin{paracol}{2}
@@ -3730,6 +3768,15 @@ erste Zeile mit einem Geviert (hier \SI{12}{\pt}) eingezogen.
 
 \end{ger}
 \end{paracol}
+\begin{paracol}{2}
+\begin{eng}
+\subsection*{Additional considerations}
+\end{eng}
+\begin{ger}
+\subsection*{Anderes}
+\end{ger}
+\end{paracol}
+
 \begin{Describe}
   \DescribeMacro{hairspace}\\
   \DescribeMacro{eg}, %
@@ -3742,10 +3789,10 @@ erste Zeile mit einem Geviert (hier \SI{12}{\pt}) eingezogen.
   \DescribeMacro{Dh}\\
   \DescribeOption{egiecomma}
 \end{Describe}
+
 \begin{paracol}{2}
 \begin{eng}
 
-\subsection*{Additional considerations}
 \begingroup
 \def\hairspace{\ifmmode\mskip1mu\else\kern0.08em\fi}
 
@@ -3778,7 +3825,6 @@ enclose a problematic paragraph by a |sloppypar| environment.
 
 \end{eng}
 \begin{ger}
-\subsection*{Anderes}
 \begingroup
 \def\hairspace{\ifmmode\mskip1mu\else\kern0.08em\fi}
 
@@ -3920,11 +3966,19 @@ Abbildungen zu verweisen.
 \end{ger}
 \end{paracol}
 
-\DescribeMacro{cite}
 \begin{paracol}{2}
 \begin{eng}
 \subsection{Bibliographic References}
 \label{sec:biblio}
+\end{eng}
+\begin{ger}
+\subsection{Zitier"~ und Literaturstil}
+\end{ger}
+\end{paracol}
+
+\DescribeMacro{cite}
+\begin{paracol}{2}
+\begin{eng}
 For citations and bibliographies, a \emph{numeric} citation style is used.
 The numbers derive from the \emph{alphabetic} sorting of the list of
 bibliographic entries at the end of the report (or the end of the individual
@@ -3958,7 +4012,6 @@ work not listed should use the \emph{misc} type.
 
 \end{eng}
 \begin{ger}
-\subsection{Zitier"~ und Literaturstil}
 In Zitaten und Literaturlisten wird ein einfacher, \emph{numerischer} Stil
 genutzt. Die Nummerierung folgt der \emph{alphabetischen} Sortierung der
 Literatureinträge in der Literaturliste am Ende des Berichts (oder am Ende
@@ -3991,7 +4044,7 @@ in \autoref{tbl:bibtytpes}. Nicht aufgeführte Werkarten erhalten den Typ
 \end{ger}
 \end{paracol}
 
-\begin{table}
+\begin{table}[hp]
   \makeatletter
   \let\sellang\select@language
   \makeatother
@@ -4058,7 +4111,6 @@ in \autoref{tbl:bibtytpes}. Nicht aufgeführte Werkarten erhalten den Typ
 \begin{paracol}{2}
 \begin{eng}
 \section{Miscellanea}
-\label{sec:reading}
 \end{eng}
 \begin{ger}
 \section{Verschiedenes}
@@ -4085,9 +4137,9 @@ The |todotools=true| option loads the \File{todonotes} packages (in draft mode)
 and provides a few additional commands.
 \end{eng}
 \begin{ger}
-\section{Edierhilfen}
+\subsection{Edierhilfen}
 
-Zur Unterstüzung von Bericht"=vor"=versionen schaletet die Klassenoption
+Zur Unterstüzung von Bericht"=vorversionen schaletet die Klassenoption
 |draft| (oder |draft=true|) einen grauen Balken mit der Aufschrift „Draft“ am
 Seitenanfang und "~ende ein. Viele \LaTeX"=Pakete reagieren ebenfalls auf die
 |draft|"=Option. Normalerweise schaltet dies auch alle Bilder ab. Die
@@ -4103,7 +4155,6 @@ zusätzliche Editierbefehle bereit.
 \begin{paracol}{2}
 \begin{eng}
 \subsection{\LaTeX\ Packages}
-\label{sec:reading}
 
 The following packages are automatically loaded by the \File{hpitr} class.
 \end{eng}
