@@ -36,7 +36,7 @@
 %   Right bracket \]     Circumflex    \^     Underscore    \_
 %   Grave accent  \`     Left brace    \{     Vertical bar  \|
 %   Right brace   \}     Tilde         \~}
-% \CheckSum{4681}
+% \CheckSum{4701}
 %
 % \iffalse meta-comment
 %<*dtx|ins>
@@ -63,7 +63,7 @@
 %<*!README>
 [%
 %</!README>
-  2014/09/30 v0.9
+  2014/09/30 v0.9a
 %<!README>^^J
   A unified class for Technical Reports at the HPI
 %<*!README>
@@ -548,6 +548,9 @@ without this file.
 % \end{option}
 %    \begin{macrocode}
 
+\TRnewifStd{inproceedingspagenumbers}
+
+
 \TRnewifStd{todotools}
 \TRnewifStd{egiecomma}
 
@@ -573,27 +576,26 @@ without this file.
   \RequirePackage[utf8]{inputenc}
 }
 
-
 %    \end{macrocode}
 %
 % Set basic paper and typearea options
 %    \begin{macrocode}
+\KOMAoptions{
+  twocolumn=false,
+  fontsize=12pt,
+  footinclude=false,
+  headinclude=false,
+}
 \KOMAoptions{%
   pagesize=auto,
   paper=a4,
-  DIV=calc,
+  DIV=11,
   twoside=semi,
 }
 \AtEndPreamble{\recalctypearea}
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-\KOMAoptions{
-  twocolumn=false,
-  fontsize=12pt,
-  footinclude=false,
-  headinclude=true,
-}
 \ifthenelse{\boolean{TR@proceedings}\AND\boolean{TR@chapters}}{
   \KOMAoption{open}{right}
 }{}
@@ -737,12 +739,17 @@ without this file.
     \ifthenelse{\boolean{@mainmatter}}{%
       \pagenumbering{arabic}}{%
       \pagenumbering{roman}}
-    \setcounter{page}{5}%
+      \ifthenelse{\boolean{TR@inproceedingspagenumbers}}{}{%
+        \setcounter{page}{5}%
+      }
     \relax%
   }{}{%
     \TR@warn{Cannot patch \string\maketitle}}
 }{%
-  \def\maketitle{\setcounter{page}{5}\relax}
+  \def\maketitle{%
+    \ifthenelse{\boolean{TR@inproceedingspagenumbers}}{}{%
+      \setcounter{page}{5}%
+    }\relax}
 }
 
 
@@ -1077,6 +1084,7 @@ without this file.
         \addchapmark{\@runninghead}%
       }{%
         \xdef\TR@titlemark{\@runninghead}%
+        \xdef\TR@authormark{\@author}%
       }%
       \endgroup
       \setcounter{footnote}{\fnnstart}%
@@ -1425,8 +1433,13 @@ without this file.
 \lefoot[]{}\lofoot[]{}
 \refoot[]{}\rofoot[]{}
 \ifthenelse{\boolean{TR@inproceedings}}{
-  \cefoot[]{}
-  \cofoot[]{}
+  \ifthenelse{\boolean{TR@inproceedingspagenumbers}}{
+    \cefoot[\pagemark]{\pagemark}
+    \cofoot[\pagemark]{\pagemark}
+  }{
+    \cefoot[]{}
+    \cofoot[]{}
+  }
 }{
   \cefoot[\pagemark]{\pagemark}
   \cofoot[\pagemark]{\pagemark}
@@ -1825,10 +1838,14 @@ Instead, use a sloppypar, when necessary:\MessageBreak
 
 %%%%%%% Set counter to 5 (or v), respectively (See above)
 
-\setcounter{page}{5}
+\ifthenelse{\boolean{TR@inproceedingspagenumbers}}{}{%
+  \setcounter{page}{5}
+}
 \ifcsdef{frontmatter}{
   \apptocmd{\frontmatter}{%
-    \setcounter{page}{5}%
+    \ifthenelse{\boolean{TR@inproceedingspagenumbers}}{}{%
+      \setcounter{page}{5}%
+    }%
   }{}{\TR@warn{Cannot patch \string\frontmatter}}
 }{}
 
@@ -2869,7 +2886,7 @@ should help navigating in the  manual.
 \begin{ger}
   Zur schnellen Hilfe zu bestimmen \LaTeX"=Befehlen dieser Klasse wird die
   zugehörige Erklärung mit einem Kasten wie oben zusehen markiert. Befehlsarten
-  haben dabei eigene Präfixe: Befehle~\dm{o}, Umgebungen~\dm{e},
+  haben dabei eigene Präfixe: Befehle~\dm{c}, Umgebungen~\dm{e},
   \mbox{Klassenoptionen~\dm{o}} und Werte für Klassenoptionen~\dm{v}.
   Das soll die Orientierung im Handbuch erleichtern.
 \end{ger}
@@ -3095,7 +3112,7 @@ This is the default type if none is given explicitly.
 Berichte, die ähnlich zu Monographien (wie Abschlussarbeiten) oder
 grundsätzlich eigenständig sind, sind im eigentlichen Sinne
 \emph{berichtartig}.\footnote{Das bedeutet nicht, dass die anderen Arten sich
-nicht als technische Berichte eignen.} Ihre höchste Gliederungsebene sind
+nicht als technische Berichte eignen würden.} Ihre höchste Gliederungsebene sind
 \emph{Kapitel}.
 
 Wird keine Berichtart explizit ausgewählt, ist diese hier Standard.
@@ -3386,13 +3403,13 @@ layout.
   }
 \end{itemize}
 To ensure this layout, the class chooses (approximately) the side margins as
-\SI{31.5}{\mm}, the top margin \SI{29.5}{\mm} and the bottom margin as
-\SI{54}{\mm}. Note that the top margin is slightly larger than half the bottom
+\SI{26.5}{\mm}, the top margin \SI{26.9}{\mm} and the bottom margin as
+\SI{52.2}{\mm}. Note that the top margin is slightly larger than half the bottom
 margin to optically respect the quite filled page header. The actual
 computation of the type area is described in the \textsf{KOMA-Script}
 reference.\footnote{\lstset{basicstyle=\scriptsize\ttfamily}The relevant
-  options to \File{typearea} are \lstinline|paper=a4,DIV=calc,twoside=semi| and
-  \lstinline|footinclude=false,headinclue=true,fontsize=12pt|}.
+  options to \File{typearea} are \lstinline|paper=a4,DIV=11,twoside=semi| and
+  \lstinline|footinclude=false,headinclue=false,fontsize=12pt|}.
 
 Page numbers are set centered on the page foot.
 
@@ -3417,14 +3434,14 @@ Satzeigenschaften genügen.
   }
 \end{itemize}
 Um diesen Satzspiegel zu gewährleisten, wählt die Klasse (ungefähr) die
-Seitenstege mit \SI{31.5}{\mm}, den Kopfsteg mit \SI{29.5}{\mm} und den Fußsteg
-mit \SI{54}{\mm}. Das genaue \(1:2\)"=Verhältnis zwischen Kopf"~ und Fußsteg
+Seitenstege mit \SI{26.5}{\mm}, den Kopfsteg mit \SI{26.9}{\mm} und den Fußsteg
+mit \SI{52.2}{\mm}. Das genaue \(1:2\)"=Verhältnis zwischen Kopf"~ und Fußsteg
 wird absichtlich leicht verletzt, um der recht vollen Kopfzeile optisch
 Rechnung zu tragen. Die eigentliche Satzspiegelkonstruktion ist in der
 \textsf{KOMA-Script}"=Referenz
 beschrieben.\footnote{\lstset{basicstyle=\scriptsize\ttfamily} Die relevanten
-  Werte für \File{typearea} sind \lstinline|paper=a4,DIV=calc,twoside=semi| und
-  \lstinline|footinclude=false,headinclue=true,fontsize=12pt|}
+  Werte für \File{typearea} sind \lstinline|paper=a4,DIV=11,twoside=semi| und
+  \lstinline|footinclude=false,headinclue=false,fontsize=12pt|}
 
 Die Paginierung (Seitenzahlen) erfolgt zentriert im Seitenfuß.
 
