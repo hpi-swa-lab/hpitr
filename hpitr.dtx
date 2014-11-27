@@ -1826,6 +1826,13 @@ without this file.
 \patchcmd{\sloppypar}{\sloppy}{\TR@sloppy}{}{}
 \patchcmd{\@arrayparboxrestore}{\sloppy}{\TR@sloppy}{}{}
 \patchcmd{\thebibliography}{\sloppy}{\TR@sloppy}{}{}
+%    \end{macrocode}
+% \changes{v0.9b}{2014/11/28}{Whitelist \cs{sloppy} in the \File{caption} package}
+%    \begin{macrocode}
+\AfterPackage{caption}{
+  \patchcmd{\caption@boxrestore@mini}{\sloppy}{\TR@sloppy}{}{}
+  \patchcmd{\caption@boxrestore}{\sloppy}{\TR@sloppy}{}{}
+}
 \def\sloppy{\TR@warn{You should not use \string\sloppy. \MessageBreak
 Instead, use a sloppypar, when necessary:\MessageBreak
 \MessageBreak
