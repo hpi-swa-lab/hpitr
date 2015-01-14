@@ -36,7 +36,7 @@
 %   Right bracket \]     Circumflex    \^     Underscore    \_
 %   Grave accent  \`     Left brace    \{     Vertical bar  \|
 %   Right brace   \}     Tilde         \~}
-% \CheckSum{4701}
+% \CheckSum{4665}
 %
 % \iffalse meta-comment
 %<*dtx|ins>
@@ -63,7 +63,7 @@
 %<*!README>
 [%
 %</!README>
-  2014/09/30 v0.9a
+  2015/01/15 v1.0
 %<!README>^^J
   A unified class for Technical Reports at the HPI
 %<*!README>
@@ -83,6 +83,7 @@
 % \changes{v0.6}{2014/08/27}{Provide \cs{keywords} command.}
 % \changes{v0.7}{2014/09/04}{Discriminate between proceedings and collections}
 % \changes{v0.9}{2014/09/30}{Add inproceedings pseudo-trtype}
+% \changes{v1.0}{2015/01/15}{First release}
 %
 % \GetFileInfo{hpitr.dtx}
 %^^A ==========================================================================
@@ -287,22 +288,6 @@ without this file.
 %    \begin{macrocode}
 \ifToplevel{%
   \Msg{* \space\space done.}
-  \Msg{* - Generation of manual and examples:}
-  \expandafter\ifx\csname pdfshellescape\endcsname\relax
-    \Msg{* WARNING: \string\pdfshellescape\space not available!}
-    \Msg{* WARNING: You should run this file with shell-escapes enabled.}
-    \Msg{* WARNING: Otherwise you have to call}
-    \Msg{* WARNING: \space\space lualatex hpitr.ltx}
-    \Msg{* WARNING: to generate the manual and examples on your own!}
-    \batchmode \errmessage{}\csname @@end\endcsname\csname end\endcsname
-  \else\ifnum \pdfshellescape=1 \else
-    \Msg{* WARNING: shell-escapes not activated!}
-    \Msg{* WARNING: You should run this file with shell-escapes enabled.}
-    \Msg{* WARNING: Otherwise you have to call}
-    \Msg{* WARNING: \space\space lualatex hpitr.ltx}
-    \Msg{* WARNING: to generate the manual and examples on your own!}
-    \batchmode \errmessage{}\csname @@end\endcsname\csname end\endcsname
-  \fi\fi
 }
 
 \immediate\write18{cp README.txt README || copy README.txt README}
@@ -317,10 +302,6 @@ without this file.
 \immediate\write18{lualatex -interaction=nonstopmode hpitr-manual.ltx}
 \immediate\write18{mkindex hpitr-manual}
 \immediate\write18{lualatex -interaction=nonstopmode hpitr-manual.ltx}
-
-\immediate\write18{lualatex -interaction=nonstopmode example-single.tex}
-\immediate\write18{lualatex -interaction=nonstopmode example-singlea.tex}
-\immediate\write18{lualatex -interaction=nonstopmode example-proceedings.tex}
 
 \ifToplevel{%
   \Msg{* \space\space done.}
@@ -1885,6 +1866,7 @@ Instead, use a sloppypar, when necessary:\MessageBreak
 %<single&article>  trtype=singlearticle%
 %<single&!article>  trtype=singlereport,draft%
 ]{hpitr}
+\usepackage[backend=biber]{biblatex}
 \usepackage{blindtext}
 \usepackage{threeparttable}
 \usepackage{listings}
@@ -1913,6 +1895,7 @@ Instead, use a sloppypar, when necessary:\MessageBreak
   Volume = {8},
   Year = {1973}}
 \end{filecontents}
+\addbibresource{example.bib}
 
 \begin{document}
 
@@ -2323,7 +2306,7 @@ There is no need for special content, but the length of words should match the
 language.
 
 
-\bibliography{example}
+\printbibliography
 
 %%% Local Variables: 
 %%% mode: latex
