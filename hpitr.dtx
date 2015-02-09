@@ -4049,7 +4049,7 @@ in \autoref{tbl:bibtytpes}. Nicht aufgeführte Werkarten erhalten den Typ
 \end{ger}
 \end{paracol}
 
-\begin{table}[hp]
+\begin{table}[htbp]
   \makeatletter
   \let\sellang\select@language
   \makeatother
@@ -4270,6 +4270,57 @@ Die folgenden Pakte werden von der \File{hpitr}"=Klasse automatisch geladen.
 \item \File{zefonts}
 \end{itemize}}
 \end{multicols}
+
+\begin{paracol}{2}
+\begin{eng}
+\section{Troubleshooting}
+\end{eng}
+\begin{ger}
+\section{Fehlerbehebung}
+\end{ger}
+\end{paracol}
+
+\begin{paracol}{2}
+\begin{eng}
+\subsection{Biber}
+\end{eng}
+\begin{ger}
+\subsection{Biber}
+\end{ger}
+\end{paracol}
+
+\begin{paracol}{2}
+\begin{eng}
+Biber may complain about ``missing files'', such as
+\end{eng}
+\begin{ger}
+Biber beklagt sich zeitweise über "`fehlende
+Dateien"', z.\,B.
+\end{ger}
+ \end{paracol}
+\par\smallskip
+{\centering\ttfamily\bfseries
+read\_file '\meta{\textit{a path}}/recode\_data.xml' -
+sysopen: No such file or directory at \meta{\textit{another path}}/bda77484.pm
+line 112.
+\par}
+\medskip
+\begin{paracol}{2}
+\begin{eng}
+  \noindent The reason for this error is the Biber's cach directory is
+  corrupted. This is unfortunate but not problematic. The location of Biber's
+  cache directory can be obtained with \lstinline|biber -cache|. Just deleting
+  this directory should resolve this error. Biber's next run will just be a
+  little bit slower.
+\end{eng}
+\begin{ger}
+  \noindent Der Grund liegt in einem kaputten oder unvollständigem
+  Cache"=Verzeichins. Das ist zwar unerfreulich aber nicht problematisch. Wird
+  das Cache"=Verzeichnis (mit \lstinline|biber -cache| herauszufinden)
+  gelöscht, wird Biber es beim nächsten Lauf wieder korrekt angelegen und der
+  Fehler ist behoben.
+\end{ger}
+\end{paracol}
 
 %</manual>
 \DocInput{hpitr.dtx}
