@@ -36,7 +36,7 @@
 %   Right bracket \]     Circumflex    \^     Underscore    \_
 %   Grave accent  \`     Left brace    \{     Vertical bar  \|
 %   Right brace   \}     Tilde         \~}
-% \CheckSum{4665}
+% \CheckSum{4728}
 %
 % \iffalse meta-comment
 %<*dtx|ins>
@@ -63,7 +63,7 @@
 %<*!README>
 [%
 %</!README>
-  2015/01/15 v1.0
+  2015/02/09 v1.0a
 %<!README>^^J
   A unified class for Technical Reports at the HPI
 %<*!README>
@@ -811,12 +811,21 @@ without this file.
   }
 %    \end{macrocode}
 % Include \texttt{content.tex}, make it appear local and pick up bibliography.
+% \changes{v1.0a}{2015/02/09}{Fix \cs{input} and \cs{include} to respect \TeX\ paths}
 %    \begin{macrocode}
   \newcommand*{\TR@includedir}[1]{%
     \global\let\TR@saved@include\include
     \global\let\TR@saved@input\input
-    \gdef\include##1{\TR@saved@include{#1/##1}}
-    \gdef\input##1{\TR@saved@input{#1/##1}}
+    \gdef\include##1{%
+      \IfFileExists{#1/##1}{%
+        \TR@saved@include{#1/##1}
+      }{%
+        \TR@saved@include{##1}}}
+    \gdef\input##1{%
+      \IfFileExists{#1/##1}{%
+        \TR@saved@input{#1/##1}%
+      }{%
+        \TR@saved@input{##1}}}
     \graphicspath{{#1/}}
     \TR@includedir@{#1}
     \global\let\include\TR@saved@include%
