@@ -878,6 +878,7 @@ without this file.
     \newcounter{@auth}
     \newcounter{auco}
     \newbox\headrun
+    \newbox\authrun
     \newtoks\authorrunning
     \newtoks\tocauthor
     \newtoks\titlerunning
@@ -1059,10 +1060,11 @@ without this file.
         \else
           \edef\@author{\the\authorrunning}%
         \fi
-
-        \xdef\@runninghead{\unskip\ignorespaces\@author: \@title}
+%
+        \gdef\@runninghead{\unskip\ignorespaces\@author: \@title}
       \fi
 
+      \global\setbox\authrun=\hbox{\usekomafont{pagehead}\@author}%
       \global\setbox\headrun=\hbox{\usekomafont{pagehead}\@runninghead}%
       \ifdim\wd\headrun>\hsize
         \TR@warn{Title and author names too long for running head. Please supply
@@ -1070,6 +1072,8 @@ without this file.
           \string\authorrunning\space prior to \string\maketitle}%
         \xdef\@runninghead{Authors/Title Suppressed Due to Excessive Length}%
       \fi
+      \xdef\@runninghead{\copy\headrun}
+      \xdef\@author{\copy\authrun}
       \ifthenelse{\boolean{TR@chapters}}{%
         \addchapmark{\@runninghead}%
       }{%
@@ -1532,7 +1536,7 @@ without this file.
 
 \ifthenelse{\boolean{TR@chapters}}{
   \renewcommand*\raggedchapterentry{\raggedright}
-}
+}{}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Abstract
