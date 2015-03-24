@@ -2,7 +2,7 @@
 % ============================================================================
 % hpitr.dtx
 % Copyright (c) Daniel Richter, Uwe Hentschel 2013-2014
-% Copyright (c) Tobias Pape, 2014
+% Copyright (c) Tobias Pape, 2014-2015
 %
 % This work may be distributed and/or modified under the conditions of
 % the LaTeX Project Public License, version 1.3c of the license.
@@ -36,7 +36,7 @@
 %   Right bracket \]     Circumflex    \^     Underscore    \_
 %   Grave accent  \`     Left brace    \{     Vertical bar  \|
 %   Right brace   \}     Tilde         \~}
-% \CheckSum{4728}
+% \CheckSum{4931}
 %
 % \iffalse meta-comment
 %<*dtx|ins>
@@ -63,7 +63,7 @@
 %<*!README>
 [%
 %</!README>
-  2015/02/09 v1.0a
+  2015/02/13 v1.1a
 %<!README>^^J
   A unified class for Technical Reports at the HPI
 %<*!README>
@@ -84,6 +84,9 @@
 % \changes{v0.7}{2014/09/04}{Discriminate between proceedings and collections}
 % \changes{v0.9}{2014/09/30}{Add inproceedings pseudo-trtype}
 % \changes{v1.0}{2015/01/15}{First release}
+% \changes{v1.1}{2015/02/13}{golden ratio text block, record prc, make
+% copyright an option, inproceedings example}
+% \changes{v1.1a}{2015/03/24}{Compatibility for older \TeX en}
 %
 % \GetFileInfo{hpitr.dtx}
 %^^A ==========================================================================
@@ -243,7 +246,7 @@
 
 \preamble
 Copyright (c) Daniel Richter, Uwe Hentschel 2013-2014
-Copyright (c) Tobias Pape, 2014
+Copyright (c) Tobias Pape, 2014-2015
 
 This file was generated from file(s) of hpitr distribution.
 ----------------------------------------------------------------------
@@ -279,6 +282,7 @@ without this file.
   \file{example-single.tex}{\from{hpitr.dtx}{example,single}}%
   \file{example-singlea.tex}{\from{hpitr.dtx}{example,single,article}}%
   \file{example-proceedings.tex}{\from{hpitr.dtx}{example,proceedings}}%
+  \file{example-inproceedings.tex}{\from{hpitr.dtx}{example,inproceedings,article}}%
   \file{README.txt}{\from{hpitr.dtx}{README}}%
 }%
 %    \end{macrocode}
@@ -302,6 +306,14 @@ without this file.
 \immediate\write18{lualatex -interaction=nonstopmode hpitr-manual.ltx}
 \immediate\write18{mkindex hpitr-manual}
 \immediate\write18{lualatex -interaction=nonstopmode hpitr-manual.ltx}
+
+
+\immediate\write18{lualatex -interaction=nonstopmode example-inproceedings}
+\immediate\write18{biber example-inproceedings}
+\immediate\write18{lualatex -interaction=nonstopmode example-inproceedings}
+\immediate\write18{lualatex -interaction=nonstopmode example-inproceedings}
+
+
 
 \ifToplevel{%
   \Msg{* \space\space done.}
@@ -454,10 +466,21 @@ without this file.
 \newbool{TR@chapters}
 \booltrue{TR@chapters}
 %    \end{macrocode}
-% \begin{option}{trtype}
+% \begin{option}{chapterbib}
 %    \begin{macrocode}
 \TRnewifStd{chapterbib}
 \TRStdOption{chapterbib}{chapterbib=true}
+%    \end{macrocode}
+% \end{option}
+%
+% \begin{option}{copyrightmark}
+%   \changes{v1.1}{2015/02/13}{Optionalize copyright mark} %
+%   Provide an option to not include a copyright information in the pdf
+%   metadata.
+%    \begin{macrocode}
+\TRnewifStd{copyrightmark}
+\TRStdOption{copyrightmark}{copyrightmark=true}
+\TRStdOption{nocopyrightmark}{copyrightmark=false}
 %    \end{macrocode}
 % \end{option}
 %
@@ -538,6 +561,7 @@ without this file.
 %% execute the standard options
 \TRExecuteOptions{
   trtype=singlereport,%
+  copyrightmark=true,%
 }
 
 \FamilyProcessOptions{hpitr}\relax
@@ -563,16 +587,24 @@ without this file.
 %    \begin{macrocode}
 \KOMAoptions{
   twocolumn=false,
-  fontsize=12pt,
+  fontsize=11pt,
   footinclude=false,
   headinclude=false,
 }
 \KOMAoptions{%
   pagesize=auto,
   paper=a4,
-  DIV=11,
+  DIV=9,
   twoside=semi,
 }
+%    \end{macrocode}
+%
+% Adjust the text block to exhibit a \(\phi\) ratio (golden ratio).
+% \mbox{}
+% \changes{v1.1}{2015/02/13}{golden ratio textblock}
+%    \begin{macrocode}
+\areaset[current]{\textwidth}{1.61803399\textwidth}
+
 \AtEndPreamble{\recalctypearea}
 %    \end{macrocode}
 %
@@ -651,7 +683,7 @@ without this file.
 % \end{macro}
 % \begin{macro}{\hairspace}
 % \mbox{}
-%\changes{v0.8}{2014/09/26}{Provide hairspace commando}
+%\changes{v0.8}{2014/09/26}{Provide hairspace command}
 %    \begin{macrocode}
 \providecommand*\hairspace{\ifmmode\mskip1mu\else\kern0.08em\fi}
 %    \end{macrocode}
@@ -772,7 +804,7 @@ without this file.
 % Collections
 % \changes{v0.4}{2014/08/12}{Add facilities to make collections.}
 %    \begin{macrocode}
-  \RequirePackage{ragged2e}
+  \RequirePackage{ragged2e,trimspaces}
   \ifthenelse{\boolean{TR@inproceedings}}{}{%
     \AtEndPreamble{%
       \RequirePackage{biblatex}}
@@ -787,14 +819,19 @@ without this file.
     \configureContributions%
   }
   \newcommand*{\TR@preamble}[1]{%
-    \InputIfFileExists {#1/preamble}{}{}}
+      \InputIfFileExists {#1/preamble}{}{}%
+      \ifthenelse{\boolean{TR@chapterbib}}{}{%
+        \addbibresource{#1/references.bib}
+      }}
 
   \newcommand*{\configureContributions}{%
     \def\doit{}%
     \@for\next:=\TR@contributions\do{%
-      \ifx\@empty\next\relax\else%
+      \expandafter\edef\expandafter\@tempa\expandafter%
+      {\expandafter\trim@spaces\expandafter{\next}}
+      \ifx\@empty\@tempa\relax\else%
       \expandafter\appto\expandafter\doit\expandafter%
-      {\expandafter\TR@preamble\expandafter{\next}}%
+      {\expandafter\TR@preamble\expandafter{\@tempa}}%
       \fi%
     }%
     \doit{}%
@@ -802,9 +839,11 @@ without this file.
   \newcommand*{\includeContributionContents}{%
     \def\doit{}%
     \@for\next:=\TR@contributions\do{%
-      \ifx\@empty\next\else%
+      \expandafter\edef\expandafter\@tempa\expandafter%
+      {\expandafter\trim@spaces\expandafter{\next}}
+      \ifx\@empty\@tempa\else%
       \expandafter\appto\expandafter\doit\expandafter%
-      {\expandafter\TR@includedir\expandafter{\next}}%
+      {\expandafter\TR@includedir\expandafter{\@tempa}}%
       \fi%
     }%
     \doit{}%
@@ -950,6 +989,27 @@ without this file.
     \providecommand*{\toclevel@author}{999}
     %%% to make title-entry parent of section-entries
     \providecommand*{\toclevel@title}{0}
+    \ifthenelse{\boolean{TR@inproceedings}}{%
+%    \end{macrocode}
+% \changes{v1.1}{2015/02/13}{Record inproceedings information to prc file}
+% For a |inproceedings| report, we write crucial information to
+% \File{\jobname.prc} to (potentially) pick it up in a |proceedings| run.
+%    \begin{macrocode}
+      \AtEndDocument{%
+        \begingroup
+          \def\and{\noexpand\protect\noexpand\and}%
+          \addtocontents{prc}{\protect\title{\@title}}
+          \addtocontents{prc}{\protect\author{\@author}}
+          \addtocontents{prc}{\protect\event{\@eventtitle}}
+          \addtocontents{prc}{\protect\papernumber{\@papernumber}}
+          \addtocontents{prc}{\protect\file{\jobname.pdf}}
+        \endgroup
+        \if@filesw
+          \expandafter\newwrite\csname tf@prc\endcsname
+          \immediate\openout \csname tf@prc\endcsname \jobname.prc\relax
+        \fi
+      }
+    }{}
 %%% /if proceedings
   }{}
 %    \end{macrocode}
@@ -999,7 +1059,7 @@ without this file.
       \else
         \unskip \lastandname\
       \fi}%
-    \def\and{\stepcounter{@auth}\relax
+    \def\and{\csname\endcsname\stepcounter{@auth}\relax
       \ifnum\value{@auth}=\value{auco}%
         \lastand
       \else
@@ -1119,10 +1179,13 @@ without this file.
        \end{center}%
      }
 
+     % \providecaptionname{english}{\keywordname}{Keywords}
+     % \providecaptionname{german,ngerman}{\keywordname}{Schlagworte}
      \newcommand*\TR@contrib@author[1]{\gdef\@author{#1}}
-     \newcommand*{\TR@contrib@keywords}[1]{%
-       \par\addvspace\baselineskip%
-       \noindent\keywordname\enspace\ignorespaces#1}%
+     % \newcommand*{\TR@contrib@keywords}[1]{%
+     %   \par\addvspace\baselineskip%
+     %   \noindent\keywordname\enspace\ignorespaces#1}%
+     \newcommand*\TR@contrib@keywords[1]{}
 
    \ifthenelse{\boolean{TR@chapters}}{%
      \renewcommand*\thesection{\@arabic\c@section}
@@ -1312,7 +1375,7 @@ without this file.
 %
 \RequirePackage[T1]{fontenc}
 \ifthenelse{\boolean{luatex} \or \boolean{xetex}}{%
-  \RequirePackage{fontspec}[2014/06/21]
+  \RequirePackage{fontspec}[2013/05/20]
 }{}
 
 % math font: euler
@@ -1322,15 +1385,26 @@ without this file.
 %    \end{macrocode}
 % \changes{v0.4}{2014/08/12}{Load TeX Gyre Pagella before Adobe Source for
 % MatchLowercase reference.}
+% \changes{v1.1a}{2015/03/24}{Compatibility for older \TeX en}
 %    \begin{macrocode}
-  \setmainfont{texgyrepagella}[ExternalLocation,%
-      Numbers={Proportional,OldStyle},%
-      UprightFont= *-regular,%
-      BoldFont=*-bold,%
-      ItalicFont=*-italic,%
-      BoldItalicFont=*-bolditalic,%
-      Ligatures={Common,TeX},%
-      ]
+  \@ifpackagelater{fontspec}{2014/06/01}{%
+    \setmainfont{texgyrepagella}[ExternalLocation,%
+        Numbers={Proportional,OldStyle},%
+        UprightFont= *-regular,%
+        BoldFont=*-bold,%
+        ItalicFont=*-italic,%
+        BoldItalicFont=*-bolditalic,%
+        ]
+  }{%
+    \setmainfont[ExternalLocation,%
+        Numbers={Proportional,OldStyle},%
+        UprightFont= *-regular,%
+        BoldFont=*-bold,%
+        ItalicFont=*-italic,%
+        BoldItalicFont=*-bolditalic,%
+        Ligatures={Common,TeX},%
+        ]{texgyrepagella}
+  }
   \RequirePackage[scale=MatchLowercase,semibold]{sourcecodepro}
   \RequirePackage[scale=MatchLowercase,semibold,osf]{sourcesanspro}
 }{
@@ -1360,6 +1434,7 @@ without this file.
 \addtokomafont{descriptionlabel}{\rmfamily}
 \renewcommand*\labelitemii{\normalfont\textendash}
 \setfootnoterule{4cc}
+\setlength{\skip\footins}{2\baselineskip}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1458,16 +1533,18 @@ without this file.
   \renewcommand*{\chapterheadendvskip}{\vspace*{2\baselineskip}}
 }{}
 \@ifpackagelater{scrbase}{2014/10/28}{%
+  \AtEndPreamble{%
   \RedeclareSectionCommand[%
     beforeskip=-2\baselineskip,afterskip=\baselineskip]{section}
   \RedeclareSectionCommand[%
-    beforeskip=-\baselineskip,afterskip=\baselineskip]{subsection}
+    beforeskip=-1\baselineskip,afterskip=\baselineskip]{subsection}
   \RedeclareSectionCommand[%
-    beforeskip=-\baselineskip,afterskip=1sp plus -1sp minus 1sp]{subsubsection}
+    beforeskip=-1\baselineskip,afterskip=1sp plus -1sp minus 1sp]{subsubsection}
   \RedeclareSectionCommand[%
     beforeskip=\baselineskip]{paragraph}
   \RedeclareSectionCommand[%
     beforeskip=\baselineskip]{subparagraph}
+    }
 }{
   % for sections, not so easy.
   \def\TR@patchw{\TR@warn{Cannot patch sectioning command.\MessageBreak This is
@@ -1510,21 +1587,31 @@ without this file.
     pdfsubject = {Technical Report},
     pdfkeywords = {},
     pdfcreator = {HPI},
-    pdfcopyright = {Copyright (c) \the\year, HPI},
     pdfmetalang = {en},
     pdfproducer = {\TR@ClassName - Technical Reports at the HPI},
     pdflang = {\TR@lang},
     pdfdisplaydoctitle = false,
     pdfpagemode = UseOutlines,
   }
+%    \end{macrocode}
+%
+%   \changes{v1.1}{2015/02/13}{Optionalize copyright mark}%
+%   Provide an option to not include a copyright information in the pdf
+%   metadata.
+%    \begin{macrocode}
+  \ifthenelse{\boolean{TR@copyrightmark}}{%
+    \hypersetup{pdfcopyright = {Copyright (c) \the\year, HPI}}}{}
+%    \end{macrocode}
+%    \begin{macrocode}
 }
+%    \end{macrocode}
 %%
 %%
 %% Table of contents
 %%
 %% no protrusion there
 %% starts on own page.
-
+%    \begin{macrocode}
 \RequirePackage{tocbasic}
 \setcounter{tocdepth}{1}
 \tocbasicautomode
@@ -1628,6 +1715,8 @@ without this file.
     \floatplacement{figure}{htbp}
     \floatplacement{table}{htp}
   }
+  \setlength{\abovecaptionskip}{.5\baselineskip}
+  \setlength{\belowcaptionskip}{.5\baselineskip}
 }
 
 \AfterPackage{float}{
@@ -1662,8 +1751,8 @@ without this file.
       basicstyle=\TR@listingfont,
       floatplacement=htbp,
       captionpos=t,
-      abovecaptionskip=0pt,
-      belowcaptionskip=0pt,
+      abovecaptionskip=.5\baselineskip,
+      belowcaptionskip=.5\baselineskip,
       upquote=true,
       showstringspaces=false,
       inputencoding=utf8,
@@ -1724,7 +1813,7 @@ without this file.
   \RequirePackage{blindtext}
   \errorcontextlines=999
   \RequirePackage{eso-pic}
-  \newkomafont{draftline}{\sffamily}
+  \newkomafont{draftline}{\small\sffamily}
   \newsavebox{\TR@draftPageLine}
   \AddToShipoutPicture{%
     \AtPageUpperLeft{%
@@ -1757,10 +1846,10 @@ without this file.
     }}
     \sbox{\TR@draftPageLine}{%
       \colorbox{black!10}{%
-        % enlarge box vertically by 2/3 lines
+        % enlarge box vertically by 1/6 lines
         \raisebox{0pt}%
-        [\dimexpr .33\baselineskip + \height]%
-        [\dimexpr .33\baselineskip + \depth]{%
+        [\dimexpr .166\baselineskip + \height]%
+        [\dimexpr .166\baselineskip + \depth]{%
           \makebox[\paperwidth]{\color{black!50}\TR@draftInfo}}}}
   }
 %    \end{macrocode}
@@ -1870,8 +1959,26 @@ Instead, use a sloppypar, when necessary:\MessageBreak
   \DeclareUTFcharacter[\UTFencname]{x201C}{\grqq}
   \DeclareUTFcharacter[\UTFencname]{x201E}{\glqq}
 }{}
-\PassOptionsToPackage{binary-units}{siunitx}
 \AtEndPreamble{\RequirePackage{siunitx}}
+\AfterPackage{siunitx}{%
+  \sisetup{
+    binary-units,
+    detect-all,
+    free-standing-units,
+    space-before-unit,
+    use-xspace,
+    unit-optional-argument,
+    parse-units = false,
+  }
+  \AtEndPreamble{
+    \@ifpackageloaded{pgf}{
+      \SendSettingsToPgf
+    }
+    \addto\extrasgerman{\sisetup{locale = DE}}
+    \addto\extrasngerman{\sisetup{locale = DE}}
+    \addto\extrasenglish{\sisetup{locale = US}}
+  }
+}
 
 %    \end{macrocode}
 % \iffalse meta-comment
@@ -1888,6 +1995,7 @@ Instead, use a sloppypar, when necessary:\MessageBreak
   english,%
   todotools=true,%
 %<proceedings>  trtype=proceedings%
+%<inproceedings>  trtype=inproceedings%
 %<single&article>  trtype=singlearticle%
 %<single&!article>  trtype=singlereport,draft%
 ]{hpitr}
@@ -2601,6 +2709,7 @@ Scale=MatchLowercase,%
 Numbers=OldStyle,%
 Ligatures=TeX%
 ]
+\newcommand*\cfrac[2]{{\addfontfeature{Fractions=On} #1/#2}}
 \usepackage{unicode-math}
 \setmathfont{EB Garamond}
 \usepackage[scale=MatchLowercase,semibold,osf]{sourcesanspro}
@@ -2616,6 +2725,7 @@ Ligatures=TeX%
 \usepackage{array}
 \usepackage[binary-units]{siunitx}
 \DeclareSIUnit[number-unit-product = {}] \pt{pt}
+\DeclareSIUnit[number-unit-product = {}] \pc{pc}
 \usepackage{listings}
 %^^A\definecolor{Blue1}{rgb}{0,0,1}
 \lstdefinelanguage[hpitr]{TeX}[AlLaTeX]{TeX}{%
@@ -2812,11 +2922,11 @@ Schriftwahl).
 -------------------------------------------------------------------------------
 Note: To generate all files, you should simply call
 
-      luatex -shell-escape hpitr.dtx
+      pdftex -shell-escape hpitr.dtx
 
 If you are using MiKTeX you have to use
 
-     luatex --enable-write18 hpitr.dtx
+     pdftex --enable-write18 hpitr.dtx
 
 to fully enable shell escapes which are also known as \write18 feature.
 
@@ -3313,9 +3423,11 @@ Longer original or proceedings-like reports may justify the use of parts.
 
 In proceedings-like reports, chapters should only be used outside the
 individual contributions as each contribution acts like an article-like report.
-Hence \emph{in} individual contributions, only sections and possibly paragraphs
-should be used. Chapter should be used for general document parts such as a
-preface or foreword, closing remarks, or a general introduction.
+Hence \emph{within} individual contributions, only sections and possibly
+paragraphs should be used. Appendix and bibliography act like sections and do
+not appear on a page of their own. Chapter should be used for general document
+parts such as a preface or foreword, closing remarks, or a general
+introduction.
 
 \end{eng}
 \begin{ger}
@@ -3346,9 +3458,10 @@ rechtfertigen.
 In Tagungsbänden und ähnlichen Berichten sollten Kapitel nur außerhalb der
 eigentlichen, eigenständigen Beiträge Verwendung finden, da jeder Beitrag
 einzeln wie ein artikelartiger Bericht wirkt. Daher sollten \emph{in} den
-Beiträgen nur Abschnitte und ggf. markierte Absätze genutzt werden. Kapitel
-hingegen sollten für allgemeine Dokumentteile wie Vorworte, Nachworte oder
-allgemeine Einführungen genutzt werden.
+Beiträgen nur Abschnitte und ggf. markierte Absätze genutzt werden. Anhang und
+Literturverzeichnis verhalten sich wie Abschnitte und stehen nicht allein auf
+einer neuen Seite. Kapitel hingegen sollten für allgemeine Dokumentteile wie
+Vorworte, Nachworte oder allgemeine Einführungen genutzt werden.
 
 \end{ger}
 \end{paracol}
@@ -3397,7 +3510,6 @@ eigenes Inhaltsverzeichnis haben.
 \end{ger}
 \end{paracol}
 
-
 \begin{paracol}{2}
 \begin{eng}
 \section{Layout}
@@ -3411,20 +3523,19 @@ layout.
 \begin{itemize}
 \item All text is set in a single column.
 \item The paper size is \SI{210}{\mm}\(\times\)\SI{297}{\mm}
-  (\textsc{iso}\,216 A4 \emph{aka} \textsc{din}\,A4).
-\item There should be typically not more than 80 characters per line.
+  (\textsc{iso}\,216 A4 \emph{aka} \textsc{din}\,A4); the aspect ratio is \(\sqrt{2}\).
+\item There should be typically not more than 85 characters per line.
+\item The type area aspect ratio is \emph{Φ}, the \emph{golden ratio}. %\symbol{\string"03A6}
 \item The margins fulfill the following equations: {\let\V\mathit
   \[ \V{top} < \V{left} \leq \V{right} < \V{bottom} \text{ and } \V{top} : \V{bottom} = 1 : 2 \]
   }
 \end{itemize}
 To ensure this layout, the class chooses (approximately) the side margins as
-\SI{26.5}{\mm}, the top margin \SI{26.9}{\mm} and the bottom margin as
-\SI{52.2}{\mm}. Note that the top margin is slightly larger than half the bottom
-margin to optically respect the quite filled page header. The actual
-computation of the type area is described in the \textsf{KOMA-Script}
-reference.\footnote{\lstset{basicstyle=\scriptsize\ttfamily}The relevant
-  options to \File{typearea} are \lstinline|paper=a4,DIV=11,twoside=semi| and
-  \lstinline|footinclude=false,headinclue=false,fontsize=12pt|}.
+{99}\,\si{\pt} or 8\cfrac{1}{4}\,\si{\pc}, the top margin
+{66}\,\si{\pt} or 5\cfrac{1}{2}\,\si{\pc}, and the bottom
+margin as {135}\,\si{\pt} or
+11\cfrac{1}{4}\,\si{\pc}\footnote{about
+  \SI{34.9}{\mm}, \SI{23.3}{\mm}, and \SI{47.6}{\mm}, respectively}.
 
 Page numbers are set centered on the page foot.
 
@@ -3442,21 +3553,20 @@ Satzeigenschaften genügen.
 \begin{itemize}
 \item Der Satz erfolgt ausschließlich einspaltig.
 \item Die Papiergröße ist \SI{210}{\mm}\(\times\)\SI{297}{\mm}
-(\textsc{iso}\,216 A4 alias \textsc{din}\,A4).
-\item Die Zeilenlänge sollte 80 Zeichen nicht überschreiten.
+(\textsc{iso}\,216 A4 alias \textsc{din}\,A4) mit einem Seitenverhältnis von \(\sqrt{2}\).
+\item Die Zeilenlänge sollte 85 Zeichen nicht überschreiten.
+\item Der Satzspiegel steht im goldenen Schnitt \emph{Φ}.
 \item Die Stege (Ränder) sollten folgenden Gleichungen genügen:{\let\V\mathrm
   \[ \V{oben} < \V{links} \leq \V{rechts} < \V{unten} \text{ und } \V{oben} : \V{unten} = 1 : 2 \]
   }
 \end{itemize}
+
 Um diesen Satzspiegel zu gewährleisten, wählt die Klasse (ungefähr) die
-Seitenstege mit \SI{26.5}{\mm}, den Kopfsteg mit \SI{26.9}{\mm} und den Fußsteg
-mit \SI{52.2}{\mm}. Das genaue \(1:2\)"=Verhältnis zwischen Kopf"~ und Fußsteg
-wird absichtlich leicht verletzt, um der recht vollen Kopfzeile optisch
-Rechnung zu tragen. Die eigentliche Satzspiegelkonstruktion ist in der
-\textsf{KOMA-Script}"=Referenz
-beschrieben.\footnote{\lstset{basicstyle=\scriptsize\ttfamily} Die relevanten
-  Werte für \File{typearea} sind \lstinline|paper=a4,DIV=11,twoside=semi| und
-  \lstinline|footinclude=false,headinclue=false,fontsize=12pt|}
+Seitenstege mit {99}\,\si{\pt} oder 8\cfrac{1}{4}\,\si{\pc},
+den Kopfsteg mit {66}\,\si{\pt} oder 5\cfrac{1}{2}\,\si{\pc}
+und den Fußsteg mit {135}\,\si{\pt} oder
+11\cfrac{1}{4}\,\si{\pc}\footnote{circa \SI{34.9}{\mm},
+  \SI{23.3}{\mm}, beziehungswiese \SI{47.6}{\mm}}.
 
 Die Paginierung (Seitenzahlen) erfolgt zentriert im Seitenfuß.
 
@@ -4145,6 +4255,31 @@ in \autoref{tbl:bibtytpes}. Nicht aufgeführte Werkarten erhalten den Typ
 \end{ger}
 \end{paracol}
 \begin{Describe}
+  \DescribeOption{copyrightmark}\\
+  \DescribeValue{copyrightmark}{true}\\
+  \DescribeValue{copyrightmark}{false}\\
+\end{Describe}
+\begin{paracol}{2}
+\begin{eng}
+\subsection{Copyright metadata}
+
+By default, a copyright mark of the form ``Copyright (c) \the\year, HPI'' is
+added to the metadata of the resulting PDF file. This corresponds to the option
+|copyrightmark| or |copyrightmark=true|. To not add the information, use
+|copyrightmark=false|.
+\end{eng}
+\begin{ger}
+\subsection{Coyprightvermerk in den Metadaten}
+
+Standardmäßig wird eine Vermerk der form "`Copyright (c) \the\year, HPI"' dem
+erzeugten PDF hinzugefügt, was der Option |copyrightmark| oder
+|copyrightmark=true| entspricht. Um den Vermerk zu verindern, sollte die Option
+|copyrightmark=false| verwendet werden.
+\end{ger}
+\end{paracol}
+
+
+\begin{Describe}
   \DescribeOption{draft}\\
   \DescribeValue{draft}{true}\\
   \DescribeValue{draft}{full}\\
@@ -4159,7 +4294,7 @@ option can be used to activate a gray bar at the to and the bottom that says
 ``Draft''. Many \LaTeX\ packages also react to the |draft| option. Unlike the
 typical effect of the |draft| option, which also disables graphics, the
 \File{hpitr} class makes sure that graphics are displayed also in the draft
-version. To avoid that, use |draft=full|
+version. To avoid that, use |draft=full|.
 
 The |todotools=true| option loads the \File{todonotes} packages (in draft mode)
 and provides a few additional commands.
