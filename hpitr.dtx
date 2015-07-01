@@ -63,7 +63,7 @@
 %<*!README>
 [%
 %</!README>
-  2015/02/13 v1.1a
+  2015/03/26 v1.1b
 %<!README>^^J
   A unified class for Technical Reports at the HPI
 %<*!README>
@@ -87,6 +87,7 @@
 % \changes{v1.1}{2015/02/13}{golden ratio text block, record prc, make
 % copyright an option, inproceedings example}
 % \changes{v1.1a}{2015/03/24}{Compatibility for older \TeX en}
+% \changes{v1.1b}{2015/03/26}{Font load order}
 %
 % \GetFileInfo{hpitr.dtx}
 %^^A ==========================================================================
@@ -1260,11 +1261,12 @@ without this file.
           \setlength{\listparindent}{\parindent}%
           \setlength{\itemindent}{\parindent}%
           \setlength{\parsep}{\parskip}%
-          \usekomafont{abstract}
+          \usekomafont{abstract}%
           }\item[]\noindent\ignorespaces%
       }{%
         \TR@error{Proceedings should not have \MessageBreak
-          abstracts. Please remove it.}}
+          abstracts. Please remove it.}%
+      }%
     }%
     {\ifthenelse{\boolean{TR@firsttitleseen}}{\endlist}{}}
 
@@ -1372,15 +1374,18 @@ without this file.
 %    \end{macrocode}
 %  engine-dependent, eg, encoding, loading.
 %    \begin{macrocode}
-%
 \RequirePackage[T1]{fontenc}
 \ifthenelse{\boolean{luatex} \or \boolean{xetex}}{%
   \RequirePackage{fontspec}[2013/05/20]
 }{}
-
-% math font: euler
-\RequirePackage[euler-digits,T1]{eulervm}
-\let\mathbf\mathbold
+%    \end{macrocode}
+% \changes{v1.1b}{2015/03/26}{Font load order}
+% Set main font to Palatino, Sans/Mono font to source and math font to Euler.
+% Since it takes missing characters from the default text font, we
+% unconditionally set up Palatino for T1 encoding, regardless of the actual
+% engine/encoding/font-mechanism used.
+%    \begin{macrocode}
+\RequirePackage[osf,sc]{mathpazo}
 \ifthenelse{\boolean{luatex} \or \boolean{xetex}}{%
 %    \end{macrocode}
 % \changes{v0.4}{2014/08/12}{Load TeX Gyre Pagella before Adobe Source for
@@ -1410,16 +1415,22 @@ without this file.
 }{
   \RequirePackage[scale=.9,semibold]{sourcecodepro}
   \RequirePackage[scale=.9,semibold,osf]{sourcesanspro}
-  \RequirePackage[osf,sc]{mathpazo}
 }
+%    \end{macrocode}
+% Palatino is rather heavy and needs a slight increas in leading. 5\,\% is
+% plenty.
+%    \begin{macrocode}
 \linespread{1.05} % a bit more for Palatino
-
-
+%    \end{macrocode}
+% Load Euler virtual math font. It is only available in T1 yet. Note that we
+% substitute the |\mathbf| font by Euler's bold math, which is a lot prettier.
+%    \begin{macrocode}
+\RequirePackage[euler-digits,T1]{eulervm}
+\let\mathbf\mathbold
 %    \end{macrocode}
 % Akin to LNCS, let footnotes be a bit larger
 %    \begin{macrocode}
 \let\footnotesize\small
-
 %    \end{macrocode}
 % \changes{v0.4}{2014/08/12}{Disable tracking=smallcaps in luatex, also. Is broken.}
 %    \begin{macrocode}
@@ -1534,17 +1545,20 @@ without this file.
 }{}
 \@ifpackagelater{scrbase}{2014/10/28}{%
   \AtEndPreamble{%
-  \RedeclareSectionCommand[%
-    beforeskip=-2\baselineskip,afterskip=\baselineskip]{section}
-  \RedeclareSectionCommand[%
-    beforeskip=-1\baselineskip,afterskip=\baselineskip]{subsection}
-  \RedeclareSectionCommand[%
-    beforeskip=-1\baselineskip,afterskip=1sp plus -1sp minus 1sp]{subsubsection}
-  \RedeclareSectionCommand[%
-    beforeskip=\baselineskip]{paragraph}
-  \RedeclareSectionCommand[%
-    beforeskip=\baselineskip]{subparagraph}
-    }
+    \RedeclareSectionCommand[%
+      beforeskip=-2\baselineskip,
+      afterskip=1\baselineskip]{section}
+    \RedeclareSectionCommand[%
+      beforeskip=-1\baselineskip,
+      afterskip=1\baselineskip]{subsection}
+    \RedeclareSectionCommand[%
+      beforeskip=-1\baselineskip,
+      afterskip=1sp plus -1sp minus 1sp]{subsubsection}
+    \RedeclareSectionCommand[%
+      beforeskip=1\baselineskip]{paragraph}
+    \RedeclareSectionCommand[%
+      beforeskip=1\baselineskip]{subparagraph}
+  }
 }{
   % for sections, not so easy.
   \def\TR@patchw{\TR@warn{Cannot patch sectioning command.\MessageBreak This is
@@ -1624,17 +1638,17 @@ without this file.
 \ifthenelse{\boolean{TR@chapters}}{
   \renewcommand*\raggedchapterentry{\raggedright}
 }{}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Abstract
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+%    \end{macrocode}
+% \subsubsection{Abstract}
+% The main abstract for the non-proceedings case, i.\,e., there is exactly one
+% abstract in the whole document.
+%    \begin{macrocode}
 \ifthenelse{\boolean{TR@proceedings}\OR\boolean{TR@contribtools}}{}{
   \renewenvironment{abstract}{%
     \thispagestyle{plain.scrheadings}
     \null\vfil\leavevmode%
     \noindent%
-    \ignorespaces
+    \ignorespaces%
   }{%
     \par\vfil%
     \cleardoublepage%
