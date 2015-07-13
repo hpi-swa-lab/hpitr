@@ -88,6 +88,7 @@
 % copyright an option, inproceedings example}
 % \changes{v1.1a}{2015/03/24}{Compatibility for older \TeX en}
 % \changes{v1.1b}{2015/03/26}{Font load order}
+% \changes{v1.1c}{2015/07/13}{Allow for empty groups in proceedings}
 %
 % \GetFileInfo{hpitr.dtx}
 %^^A ==========================================================================
@@ -942,7 +943,13 @@ without this file.
       \ifx\@organization\@empty\relax%
         \@institute%
       \else%
-        \@group \\ \@organization \\ \href{mailto:\@email}{\nolinkurl{\@email}}%
+%    \end{macrocode}
+% \changes{v1.1c}{2015/07/13}{Allow for empty groups in proceedings}
+%    \begin{macrocode}
+        \ifx\@group\@empty\relax\else%
+          \@group \\%
+        \fi%
+        \@organization \\ \href{mailto:\@email}{\nolinkurl{\@email}}%
        \fi%
        \par
       \endgroup}
