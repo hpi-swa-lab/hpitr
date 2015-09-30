@@ -36,7 +36,7 @@
 %   Right bracket \]     Circumflex    \^     Underscore    \_
 %   Grave accent  \`     Left brace    \{     Vertical bar  \|
 %   Right brace   \}     Tilde         \~}
-% \CheckSum{4931}
+% \CheckSum{4950}
 %
 % \iffalse meta-comment
 %<*dtx|ins>
@@ -59,11 +59,11 @@
 %</dtx|ins|doc|manual>
 %<*dtx|ins|doc|class|README>
 %<README>hpitr
-%<README>  Copyright (c) Tobias Pape <tobias.pape at hpi.de>
+%<README>  Copyright (c) Tobias Pape <tobias.pape at hpi.uni-potsdam.de>
 %<*!README>
 [%
 %</!README>
-  2015/03/26 v1.1b
+  2015/09/30 v1.1d
 %<!README>^^J
   A unified class for Technical Reports at the HPI
 %<*!README>
@@ -89,6 +89,8 @@
 % \changes{v1.1a}{2015/03/24}{Compatibility for older \TeX en}
 % \changes{v1.1b}{2015/03/26}{Font load order}
 % \changes{v1.1c}{2015/07/13}{Allow for empty groups in proceedings}
+% \changes{v1.1d}{2015/09/30}{Use \cs{hypcap}; \cs{lstinline} fix for contrib
+% inclusion; use \cs{ltxcmds} version of some commands}
 %
 % \GetFileInfo{hpitr.dtx}
 %^^A ==========================================================================
@@ -350,6 +352,7 @@ without this file.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \RequirePackage{etoolbox}
+\RequirePackage{ltxcmds}
 \RequirePackage{scrbase}[2013/12/19]
 
 
@@ -853,6 +856,8 @@ without this file.
 %    \end{macrocode}
 % Include \texttt{content.tex}, make it appear local and pick up bibliography.
 % \changes{v1.0a}{2015/02/09}{Fix \cs{input} and \cs{include} to respect \TeX\ paths}
+% \changes{v1.1d}{2015/09/30}{Fix \cs{TR@includedir} to look for
+% \ac{lstinline}, if present}
 %    \begin{macrocode}
   \newcommand*{\TR@includedir}[1]{%
     \global\let\TR@saved@include\include
@@ -868,6 +873,7 @@ without this file.
       }{%
         \TR@saved@input{##1}}}
     \graphicspath{{#1/}}
+    \ltx@ifpackageloaded{listings}{\lstset{inputpath=#1/}}{}
     \TR@includedir@{#1}
     \global\let\include\TR@saved@include%
     \global\let\input\TR@saved@input%
@@ -1585,10 +1591,8 @@ without this file.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% PDF links and bookmarks
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \changes{v0.4}{2014/08/12}{Delay hyperreft to the latest possible point.}
+% \changes{v0.4}{2014/08/12}{Delay hyperref to the latest possible point.}
 %    \begin{macrocode}
-
-
 \PassOptionsToPackage{hyphens}{url}
 \PassOptionsToPackage{%
   final,%
@@ -1614,6 +1618,17 @@ without this file.
     pdfdisplaydoctitle = false,
     pdfpagemode = UseOutlines,
   }
+%    \end{macrocode}
+% \changes{v1.1d}{2015/09/30}{Use \cs{hypcap} for \cs{hyperref}/float compatibility.}
+% \cs{hyperref} places anchors at funny points, \cs{hypcap} fixes this but must
+% be loaded \emph{after} \cs{hyperref}, so we need to \cs{AtEndPreamble} that, too.
+%    \begin{macrocode}
+\PassOptionsToPackage{all}{hypcap}
+\AfterPackage{hyperref}{\RequirePackage{hypcap}}
+%    \end{macrocode}
+% \changes{v1.1d}{2015/09/30}{Use \cs{accsupp} for alternative text.}
+%    \begin{macrocode}
+\RequirePackage{accsupp}
 %    \end{macrocode}
 %
 %   \changes{v1.1}{2015/02/13}{Optionalize copyright mark}%
@@ -1682,7 +1697,7 @@ without this file.
   }]{cite}
 }
 \AtEndPreamble{
-  \@ifpackageloaded{biblatex}{}{
+  \ltx@ifpackageloaded{biblatex}{}{
 % normal bibtex
     \bibliographystyle{plain}
   }
@@ -1730,7 +1745,7 @@ without this file.
 \RequirePackage{grffile}
 
 \AtEndPreamble{
-  \@ifpackageloaded{float}{}{% mock float
+  \ltx@ifpackageloaded{float}{}{% mock float
     \providecommand*\floatname[2]{\@namedef{fname@#1}{#2}}
     \providecommand*\floatplacement[2]{\@namedef{fps@#1}{#2}}
     \floatplacement{figure}{htbp}
@@ -1992,9 +2007,9 @@ Instead, use a sloppypar, when necessary:\MessageBreak
     parse-units = false,
   }
   \AtEndPreamble{
-    \@ifpackageloaded{pgf}{
+    \ltx@ifpackageloaded{pgf}{
       \SendSettingsToPgf
-    }
+    }{}
     \addto\extrasgerman{\sisetup{locale = DE}}
     \addto\extrasngerman{\sisetup{locale = DE}}
     \addto\extrasenglish{\sisetup{locale = US}}
@@ -4351,6 +4366,7 @@ Die folgenden Pakte werden von der \File{hpitr}"=Klasse automatisch geladen.
 \begin{multicols}{3}
 {\color{DarkGreen}
 \begin{itemize}
+\item \File{accsupp}
 \item \File{amsmath}
 \item \File{amssymb}
 \item \File{babel}
@@ -4368,6 +4384,7 @@ Die folgenden Pakte werden von der \File{hpitr}"=Klasse automatisch geladen.
 \item \File{fontspec} \LuaTeX/\XeTeX\ \emph{only}
 \item \File{graphicx}
 \item \File{grffile}
+\item \File{hypcap}
 \item \File{hyperref}
 \item \File{hyperxmp}
 \item \File{hyphsubst}
@@ -4377,6 +4394,7 @@ Die folgenden Pakte werden von der \File{hpitr}"=Klasse automatisch geladen.
 \item \File{ifxetex}
 \item \File{inputenc}
 \item \File{longtable}
+\item \File{ltxcmds}
 \item \File{mathcomp}
 \item \File{mathpazo} \pdfTeX\ \emph{only}
 \item \File{microtype}
