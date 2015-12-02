@@ -1713,12 +1713,15 @@ without this file.
   \defcaptionname{german}{\bibname}{\refname}
   \defcaptionname{english}{\bibname}{\refname}
 }{}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Math mode
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\RequirePackage{amsmath}
+%    \end{macrocode}
+% \subsubsection{Math mode}
+%% \changes{v1.2}{2015/12/02}{Use \cs{mathtools} if available (see \ghissue{4})}
+%    \begin{macrocode}
+\IfFileExists{mathtools.sty}{
+  \RequirePackage{mathtools}
+}{
+ \RequirePackage{amsmath}
+}
 \RequirePackage{amssymb}
 
 
