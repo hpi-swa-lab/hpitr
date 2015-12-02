@@ -280,8 +280,8 @@ without this file.
 % \end{verbatim}\vskip-\baselineskip
 %    \begin{macrocode}
   \file{hpitr.cls}{\from{hpitr.dtx}{class}}%
-  \file{hpitr-manual.ltx}{\from{hpitr.dtx}{doc,manual}}%
-  \file{hpitr.ltx}{\from{hpitr.dtx}{doc}}%
+  \file{hpitr-full.ltx}{\from{hpitr.dtx}{doc}}%
+  \file{hpitr.ltx}{\from{hpitr.dtx}{doc,manual}}%
   \nopreamble\nopostamble
   \file{example-single.tex}{\from{hpitr.dtx}{example,single}}%
   \file{example-singlea.tex}{\from{hpitr.dtx}{example,single,article}}%
@@ -291,7 +291,7 @@ without this file.
 }%
 %    \end{macrocode}
 % After file generation, wie use shell escapes (aka \verb|\write18| feature) to
-% create \File{hpitr-manual.pdf}, the manual, and \File{hpitr.pdf}, the full
+% create \File{hpitr.pdf}, the manual, and \File{hpitr-full.pdf}, the full
 % documentation.
 %    \begin{macrocode}
 \ifToplevel{%
@@ -305,11 +305,11 @@ without this file.
 \immediate\write18{mkindex hpitr}
 \immediate\write18{lualatex -interaction=nonstopmode hpitr.ltx}
 
-\immediate\write18{lualatex -interaction=nonstopmode hpitr-manual.ltx}
-\immediate\write18{mkindex hpitr-manual}
-\immediate\write18{lualatex -interaction=nonstopmode hpitr-manual.ltx}
-\immediate\write18{mkindex hpitr-manual}
-\immediate\write18{lualatex -interaction=nonstopmode hpitr-manual.ltx}
+\immediate\write18{lualatex -interaction=nonstopmode hpitr-full.ltx}
+\immediate\write18{mkindex hpitr-full}
+\immediate\write18{lualatex -interaction=nonstopmode hpitr-full.ltx}
+\immediate\write18{mkindex hpitr-full}
+\immediate\write18{lualatex -interaction=nonstopmode hpitr-full.ltx}
 
 
 \immediate\write18{lualatex -interaction=nonstopmode example-inproceedings}
@@ -1723,26 +1723,20 @@ without this file.
  \RequirePackage{amsmath}
 }
 \RequirePackage{amssymb}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Tables
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+%    \end{macrocode}
+% \subsubsection{Tables}
+%    \begin{macrocode}
 \RequirePackage{tabularx}
 \RequirePackage{longtable}
 \RequirePackage{booktabs}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Graphics and Floats
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+%    \end{macrocode}
+% \subsubsection{Graphics and Floats}
+%    \begin{macrocode}
 \RequirePackage{graphicx}
 %    \end{macrocode}
 % \changes{v0.4}{2014/08/12}{Require grffile for non-trivial file names}
 %    \begin{macrocode}
 \RequirePackage{grffile}
-
 \AtEndPreamble{
   \ltx@ifpackageloaded{float}{}{% mock float
     \providecommand*\floatname[2]{\@namedef{fname@#1}{#2}}
@@ -1753,17 +1747,21 @@ without this file.
   \setlength{\abovecaptionskip}{.5\baselineskip}
   \setlength{\belowcaptionskip}{.5\baselineskip}
 }
-
+%    \end{macrocode}
+% The [H] specifier should not be used with this class, so disable it the hard
+% way.
+%    \begin{macrocode}
 \AfterPackage{float}{
-% disable [H]
   \def\@float@HH#1{%
     \TR@error{The [H] specifier for floats is forbidden for\MessageBreak
       the hpitr class.}}
   \floatstyle{komabelow}
 }
-
 \setcapindent{1em}
 \addtokomafont{captionlabel}{\bfseries}
+%    \end{macrocode}
+% \subsubsection{Listings}
+%    \begin{macrocode}
 \PassOptionsToPackage{ruled}{algorithm2e}
 
 \providecommand*\TR@listingfont{}
@@ -1794,30 +1792,24 @@ without this file.
     }
   }
 }
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Color
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%    \end{macrocode}
+% \subsubsection{Color}
+%    \begin{macrocode}
 \RequirePackage{color}
 \RequirePackage[table,svgnames,dvipsnames]{xcolor}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% include PDF Documents
-%% with more than 1 page
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+%    \end{macrocode}
+% \subsubsection{PDF File Inclusion}
+%    \begin{macrocode}
 \ifthenelse{\boolean{TR@proceedings}}{
   \RequirePackage{pdfpages}
   \ifthenelse{\boolean{xetex}}{}{\pdfinclusioncopyfonts = 1}
   \includepdfset{pagecommand={\thispagestyle{plain.scrheadings}}}
 }{}
-
-
-
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% %% Comments and Todo help
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+%    \end{macrocode}
+% \subsubsection{Comments and ToDo Help}
+%    \begin{macrocode}
 \ifthenelse{\boolean{TR@todotools}}{%
   \RequirePackage[obeyDraft,colorinlistoftodos]{todonotes}
   \newcommand*\todosec{\par\noindent\todo[inline]}
@@ -1836,14 +1828,9 @@ without this file.
     \expandafter\newcommand\csname #2\endcsname[2][\empty]{%
       \todo[color=#1,##1]{#2: ##2}}}
 }
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%
-%%  Draft Stuff
-%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+%    \end{macrocode}
+% \subsubsection{Drafting support}
+%    \begin{macrocode}
 \ifthenelse{\boolean{@draft}}{%
   \RequirePackage{blindtext}
   \errorcontextlines=999
@@ -1898,48 +1885,51 @@ without this file.
   \let\blinddocument\relax
   \let\Blinddocument\relax
 }
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Show the page layout
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%\RequirePackage{showframe}
-% \if@showlayout
-%         \RequirePackage{layout}
-%         \AtEndDocument{%
-%                 \clearpage
-%                 \layout
-%         }
-% \fiifthenelse{\boolean{xetex} \or \boolean{luatex}}{}{%
-% }
-
-
-
+%    \end{macrocode}
+% \subsubsection{Forbidden Packages}
+% Certain packages are known not to work with this class or are for other
+% reasons undesirable. We disable them by preventing loading them.
+%    \begin{macrocode}
 \PreventPackageFromLoading[%
 \message{%
   ^^J^^JERROR: You tried to load a package that is not to be used with this class.^^J^^J}]{%
-%
-% Disallowed
-%
-% Layout
+%    \end{macrocode}
+% \paragraph{Disallowed}
+% \begin{itemize}
+% \item Layout
+%    \begin{macrocode}
   geometry,a4,a4wide,%
-% Fonts
+%    \end{macrocode}
+% \item Fonts
+%    \begin{macrocode}
   mathptmx,helvet,courier,newtxtext,newtxmath,fourier,%
 %
   fancyhdr,%
 %
-% Not to use.
-%
-% Fonts / encoding
+%    \end{macrocode}
+% \end{itemize}
+% \paragraph{Deprecated or discouraged}
+% \begin{itemize}
+% \item Fonts / encoding
+%    \begin{macrocode}
   ae,aecompl,zefonts,times,mathptm,pslatex,palatino,mathpple,%
   utopia,euler,%
   isolatin,umlaut,t1enc,%
-% Graphics
+%    \end{macrocode}
+% \item Graphics
+%    \begin{macrocode}
   epsf,psfig,epsfig,subfig,subfigure%
-% Outdated
+%    \end{macrocode}
+% \item Simply outdated or superseded
+%    \begin{macrocode}
   fancyheadings,scrpage,caption2,glossary,SIstyle,SIunits,%
-% Typography
+%    \end{macrocode}
+% \item Typography
+%    \begin{macrocode}
   doublespace%
+%    \end{macrocode}
+% \end{itemize}
+%    \begin{macrocode}
 }
 
 \csgappto{bf}{\TR@fonterror}
@@ -2886,9 +2876,6 @@ Ligatures=TeX%
   partopsep=0pt,%
   topsep=\baselineskip,%
   leftmargin=\parindent}
-% \setlist[1]{%
-%   leftmargin=0pt%
-% }
 \setdescription{noitemsep,topsep=\baselineskip,font=\normalfont\scshape,leftmargin=\parindent}
 \DeclareRobustCommand\cf[1]{%
 cf.\,{#1}
