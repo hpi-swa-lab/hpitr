@@ -63,7 +63,7 @@
 %<*!README>
 [%
 %</!README>
-  2015/09/30 v1.1d
+  2015/12/02 v1.2
 %<!README>^^J
   A unified class for Technical Reports at the HPI
 %<*!README>
@@ -91,7 +91,7 @@
 % \changes{v1.1c}{2015/07/13}{Allow for empty groups in proceedings}
 % \changes{v1.1d}{2015/09/30}{Use \cs{hypcap}; \cs{lstinline} fix for contrib
 % inclusion; use \cs{ltxcmds} version of some commands}
-%
+% \changes{v1.2}{2015/12/02}{Revert to Palatino as maths font}
 % \GetFileInfo{hpitr.dtx}
 %^^A ==========================================================================
 %^^A ==========================================================================
@@ -1393,7 +1393,8 @@ without this file.
 }{}
 %    \end{macrocode}
 % \changes{v1.1b}{2015/03/26}{Font load order}
-% Set main font to Palatino, Sans/Mono font to source and math font to Euler.
+% \changes{v1.2}{2015/12/02}{Revert to Palatino as maths font}
+% Set main and math font to Palatino and Sans/Mono font to Source.
 % Since it takes missing characters from the default text font, we
 % unconditionally set up Palatino for T1 encoding, regardless of the actual
 % engine/encoding/font-mechanism used.
@@ -1434,12 +1435,6 @@ without this file.
 % plenty.
 %    \begin{macrocode}
 \linespread{1.05} % a bit more for Palatino
-%    \end{macrocode}
-% Load Euler virtual math font. It is only available in T1 yet. Note that we
-% substitute the |\mathbf| font by Euler's bold math, which is a lot prettier.
-%    \begin{macrocode}
-\RequirePackage[euler-digits,T1]{eulervm}
-\let\mathbf\mathbold
 %    \end{macrocode}
 % Akin to LNCS, let footnotes be a bit larger
 %    \begin{macrocode}
