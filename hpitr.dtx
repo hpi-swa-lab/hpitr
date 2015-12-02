@@ -49,7 +49,9 @@
 %<*dtx|ins|doc|manual>
 \ProvidesFile{%
   hpitr%
-%<manual>  -manual%
+%<*doc>
+%<!manual>  -full%
+%</doc>
 %<*dtx>
   .dtx%
 %</dtx>
@@ -857,7 +859,7 @@ without this file.
 % Include \texttt{content.tex}, make it appear local and pick up bibliography.
 % \changes{v1.0a}{2015/02/09}{Fix \cs{input} and \cs{include} to respect \TeX\ paths}
 % \changes{v1.1d}{2015/09/30}{Fix \cs{TR@includedir} to look for
-% \ac{lstinline}, if present}
+% \cs{lstinline}, if present}
 %    \begin{macrocode}
   \newcommand*{\TR@includedir}[1]{%
     \global\let\TR@saved@include\include
@@ -1715,7 +1717,7 @@ without this file.
 }{}
 %    \end{macrocode}
 % \subsubsection{Math mode}
-%% \changes{v1.2}{2015/12/02}{Use \cs{mathtools} if available (see \ghissue{4})}
+% \changes{v1.2}{2015/12/02}{Use \cs{mathtools} if available (see \ghissue{4})}
 %    \begin{macrocode}
 \IfFileExists{mathtools.sty}{
   \RequirePackage{mathtools}
@@ -1827,7 +1829,7 @@ without this file.
   \newcommand\todoauthor[2][\empty]{
     \expandafter\newcommand\csname #2\endcsname[2][\empty]{%
       \todo[color=#1,##1]{#2: ##2}}}
-}
+}{}
 %    \end{macrocode}
 % \subsubsection{Drafting support}
 %    \begin{macrocode}
