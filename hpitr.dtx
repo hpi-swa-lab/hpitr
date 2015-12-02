@@ -1675,8 +1675,9 @@ without this file.
 %    \end{macrocode}
 % \subsubsection{Bibliography}
 % \changes{v0.4}{2014/08/12}{Provide common biblatex ground}
+% \changes{v1.2}{2015/12/02}{Adapt \cs{biblatex} options (see \ghissue{3})}
 %    \begin{macrocode}
-\PassOptionsToPackage{style=numeric-comp,firstinits=true}{biblatex}
+\PassOptionsToPackage{style=numeric,sortcites,firstinits=true}{biblatex}
 \AfterPackage{biblatex}{
   \setcounter{biburllcpenalty}{7000}
   \setcounter{biburlucpenalty}{8000}
@@ -2831,7 +2832,14 @@ Ligatures=TeX%
 % else |hypdoc| is upset.)
 %    \begin{macrocode}
 \newcommand*{\File}{}\def\File{\texttt}
-
+%    \end{macrocode}
+% A macro for GitHub issue links.
+%    \begin{macrocode}
+\newcommand*{\ghissue}[1]{%
+\href{https://github.com/HPI-SWA-Lab/hpitr/issues/#1}{GitHub issue \##1}\xspace}
+%    \end{macrocode}
+% Logos.
+%    \begin{macrocode}
 \providecommand*\LuaTeX{\hologo{LuaTeX}}
 \providecommand*\pdfTeX{\hologo{pdfTeX}}
 \providecommand*\XeTeX{\hologo{XeTeX}}
@@ -4331,7 +4339,7 @@ The |todotools=true| option loads the \File{todonotes} packages (in draft mode)
 and provides a few additional commands.
 \end{eng}
 \begin{ger}
-\subsection{Edierhilfen}
+\subsection{Editierhilfen}
 
 Zur Unterstüzung von Bericht"=vorversionen schaletet die Klassenoption
 |draft| (oder |draft=true|) einen grauen Balken mit der Aufschrift „Draft“ am
