@@ -351,6 +351,9 @@ without this file.
 %    \begin{macrocode}
 \edef\TR@ClassName{\@currname}
 \RequirePackage{hardwrap}
+\def\HardWrapSetup{%
+  \def\MessageBreak{\\}%
+  \def\newline{\\}}
 \GenerateLogMacros{class}[TR]{\TR@ClassName}
 \newcommand*\TR@fonterror{\TR@error{%
     Old font commands are not to be used}}
@@ -776,7 +779,6 @@ without this file.
 \ifthenelse{\boolean{TR@proceedings}\OR\boolean{TR@contribtools}}{
 %    \end{macrocode}
 %
-%
 %  Proceedings stuff.
 % \begin{macro}{\event}
 %% Title of the event
@@ -784,8 +786,7 @@ without this file.
 %    \begin{macrocode}
   \newcommand*\event[1]{%
     \gdef\@eventtitle{#1}
-    \AfterPreamble{\hypersetup{pdfsubject = {Technical Report: #1}}}
-  }
+    \AfterPreamble{\hypersetup{pdfsubject = {Technical Report: #1}}}}
   \def\@eventtitle{%
     \TR@warning{No \string\event\space given}
     \global\cslet{@eventtitle}\@empty}
@@ -796,7 +797,11 @@ without this file.
 % \changes{v0.4}{2014/08/12}{Provide \cs{noevent}}
 %    \begin{macrocode}
   \newcommand*\noevent{\gdef\@eventtitle{}}
-%% Paper number
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\papernumber}
+% Provide the number of the paper within the proceedings.
+%    \begin{macrocode}
   \newcommand{\papernumber}[1]{%
     \def\@papernumber{#1}
     \ifx\@papernumber\empty
@@ -1008,17 +1013,21 @@ without this file.
     \ifthenelse{\boolean{TR@inproceedings}}{%
 %    \end{macrocode}
 % \changes{v1.1}{2015/02/13}{Record inproceedings information to prc file}
+% \changes{v1.4}{2016/09/01}{Robustify writing the prc file}
 % For a |inproceedings| report, we write crucial information to
 % \File{\jobname.prc} to (potentially) pick it up in a |proceedings| run.
 %    \begin{macrocode}
       \AtEndDocument{%
         \begingroup
           \def\and{\noexpand\protect\noexpand\and}%
-          \addtocontents{prc}{\protect\title{\@title}}
-          \addtocontents{prc}{\protect\author{\@author}}
-          \addtocontents{prc}{\protect\event{\@eventtitle}}
-          \addtocontents{prc}{\protect\papernumber{\@papernumber}}
-          \addtocontents{prc}{\protect\file{\jobname.pdf}}
+          \newsavebox{\TR@devnull}%
+          \def\record#1#2{\sbox{\TR@devnull}{#2}%
+            \addtocontents{prc}{\protect#1{#2}}}
+          \record{\title}{\@title}
+          \record{\author}{\@author}
+          \record{\event}{\@eventtitle}
+          \record{\papernumber}{\@papernumber}
+          \record{\file}{\jobname.pdf}
         \endgroup
         \if@filesw
           \expandafter\newwrite\csname tf@prc\endcsname
@@ -1280,7 +1289,7 @@ without this file.
           }\item[]\noindent\ignorespaces%
       }{%
         \TR@error{Proceedings should not have \MessageBreak
-          abstracts. Please remove it.}%
+          abstracts. Please remove it.}{}%
       }%
     }%
     {\ifthenelse{\boolean{TR@firsttitleseen}}{\endlist}{}}
@@ -1760,8 +1769,8 @@ without this file.
 %    \begin{macrocode}
 \AfterPackage{float}{
   \def\@float@HH#1{%
-    \TR@error{The [H] specifier for floats is forbidden for\MessageBreak
-      the hpitr class.}}
+    \TR@error{The [H] specifier for floats is forbidden for
+      the hpitr class.}{}}
   \floatstyle{komabelow}
 }
 \setcapindent{1em}
@@ -1960,13 +1969,13 @@ without this file.
   \patchcmd{\caption@boxrestore@mini}{\sloppy}{\TR@sloppy}{}{}
   \patchcmd{\caption@boxrestore}{\sloppy}{\TR@sloppy}{}{}
 }
-\def\sloppy{\TR@warning{You should not use \string\sloppy. \MessageBreak
-Instead, use a sloppypar, when necessary:\MessageBreak
-\MessageBreak
-\string\begin{sloppypar}\MessageBreak
-\space\space...\MessageBreak
-\string\end{sloppypar}}%
-\TR@sloppy}
+\def\sloppy{\TR@warning{You should not use \string\sloppy. 
+    Instead, use a sloppypar, when necessary:\MessageBreak
+    \MessageBreak
+    \string\begin{sloppypar}\MessageBreak
+      \space\space...\MessageBreak
+      \string\end{sloppypar}}%
+  \TR@sloppy}
 
 
 
