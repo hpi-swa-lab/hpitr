@@ -94,6 +94,7 @@
 % \changes{v1.1d}{2015/09/30}{Use \cs{hypcap}; \cs{lstinline} fix for contrib
 % inclusion; use \cs{ltxcmds} version of some commands}
 % \changes{v1.2}{2015/12/02}{Revert to Palatino as maths font}
+% \changes{v1.3}{2016/06/23}{Disable \cs{hyphsubst} for \LuaTeX}
 % \GetFileInfo{hpitr.dtx}
 %^^A ==========================================================================
 %^^A ==========================================================================
@@ -572,24 +573,32 @@ without this file.
 }
 
 \FamilyProcessOptions{hpitr}\relax
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Load base class file
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\LoadClass{\TR@BaseClass}
-
-
-%%
-%% early stuff
-%%
-\ifthenelse{\boolean{xetex} \or \boolean{luatex}}{}{%
-  \RequirePackage[utf8]{inputenc}
-}
-
 %    \end{macrocode}
 %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  Load base class file
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%    \begin{macrocode}
+\LoadClass{\TR@BaseClass}
+%    \end{macrocode}
+% \changes{v1.3}{2016/06/23}{Make greek letters work in \pdfTeX}
+%    \begin{macrocode}
+\RequirePackage[LGR,OT1,LY1,T1]{fontenc}
+\ifthenelse{\boolean{xetex} \or \boolean{luatex}}{}{%
+  \RequirePackage[utf8]{inputenx}
+  \input{ix-utf8enc.dfu}
+  \RequirePackage{alphabeta}
+}
+%    \end{macrocode}
+% With \TeX Live 2016, \LuaTeX does not expose most \pdfTeX primitives under
+% the \cs{pdf..} names. Currently, some packages still rely on this, however.
+% So we use \cs{luatex85}. Since the package first appeared in 2016, it is a
+% good way to see whether we need it in the first place.
+%    \begin{macrocode}
+\ifthenelse{\boolean{luatex}}{%
+  \IfFileExists{luatex85.sty}{%
+    \RequirePackage{luatex85}}{}}{}%
+%    \end{macrocode}
 % Set basic paper and typearea options
 %    \begin{macrocode}
 \KOMAoptions{
@@ -623,7 +632,11 @@ without this file.
 % Fixes
 %
 %
-\RequirePackage{fixltx2e}[2014/06/10]
+\IfFileExists{latexrelease.sty}%
+   {\PreventPackageFromLoading*[%
+     \typeout{avoid fixltx2e if it does nothing in the first place}]%
+   {fixltx2e}}
+   {\RequirePackage{fixltx2e}}%
 \RequirePackage{scrhack}
 
 \PassOptionsToPackage{log-declarations=false}{xparse}
@@ -1309,9 +1322,12 @@ without this file.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %% Language
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \changes{v1.3}{2016/06/23}{Disable \cs{hyphsubst} for \LuaTeX}
 %    \begin{macrocode}
-\RequirePackage{hyphsubst}
-\HyphSubstLet{ngerman}{ngerman-x-latest}
+\ifthenelse{\boolean{luatex}}{}{
+  \RequirePackage{hyphsubst}
+  \HyphSubstLet{ngerman}{ngerman-x-latest}
+}
 \RequirePackage{babel}
 \newcommand*\TR@lang{}\let\TR@lang\@empty
 
@@ -1389,7 +1405,6 @@ without this file.
 %    \end{macrocode}
 %  engine-dependent, eg, encoding, loading.
 %    \begin{macrocode}
-\RequirePackage[T1]{fontenc}
 \ifthenelse{\boolean{luatex} \or \boolean{xetex}}{%
   \RequirePackage{fontspec}[2013/05/20]
 }{}
@@ -2741,8 +2756,6 @@ Ligatures=TeX%
 \setmathfont{EB Garamond}
 \usepackage[scale=MatchLowercase,semibold,osf]{sourcesanspro}
 \usepackage[scale=MatchLowercase,semibold]{sourcecodepro}
-\RequirePackage{hyphsubst}
-\HyphSubstLet{ngerman}{ngerman-x-latest}
 \usepackage[main=english,ngerman]{babel}
 \babeltags{german=ngerman,english=english}
 \usepackage{graphicx}
@@ -4382,7 +4395,7 @@ Die folgenden Pakte werden von der \File{hpitr}"=Klasse automatisch geladen.
 \item \File{hypcap}
 \item \File{hyperref}
 \item \File{hyperxmp}
-\item \File{hyphsubst}
+\item \File{hyphsubst} \pdfTeX\ \emph{only}
 \item \File{ifdraft}
 \item \File{ifluatex}
 \item \File{ifthen}
