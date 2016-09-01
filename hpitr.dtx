@@ -781,7 +781,7 @@ without this file.
 %
 %  Proceedings stuff.
 % \begin{macro}{\event}
-%% Title of the event
+%  Title of the event
 % \changes{v0.4}{2014/08/12}{Delay to latest point for hyperref}
 %    \begin{macrocode}
   \newcommand*\event[1]{%
@@ -1976,51 +1976,50 @@ without this file.
       \space\space...\MessageBreak
       \string\end{sloppypar}}%
   \TR@sloppy}
-
-
-
-%%%%%%% Set counter to 5 (or v), respectively (See above)
-
-\ifthenelse{\boolean{TR@inproceedingspagenumbers}}{}{%
-  \setcounter{page}{5}
-}
-\ifcsdef{frontmatter}{
-  \apptocmd{\frontmatter}{%
-    \ifthenelse{\boolean{TR@inproceedingspagenumbers}}{}{%
-      \setcounter{page}{5}%
-    }%
-  }{}{\TR@warning@noline{Cannot patch \string\frontmatter}}
-}{}
-
-
-\RequirePackage{xspace}
-\RequirePackage{csquotes}
+%    \end{macrocode}
+% Page number: Set counter to 5 (or v), respectively (See above)
+%    \begin{macrocode}
+\ifthenelse{\boolean{TR@inproceedingspagenumbers}}%
+  {}%
+  {\setcounter{page}{5}}
+\ifcsdef{frontmatter}%
+  {\apptocmd{\frontmatter}%
+    {\ifthenelse{\boolean{TR@inproceedingspagenumbers}}%
+      {}%
+      {\setcounter{page}{5}}}%
+    {}%
+    {\TR@warning@noline{Cannot patch \string\frontmatter}}}%
+  {}
+%    \end{macrocode}
+% Misc packages.
+% \changes{v1.4}{2016/09/01}{Decide for end-of-preamble for \cs{siunitx} (see \ghissue{5})}
+% \changes{v1.4}{2016/09/01}{Use \cs{extdash} (see \ghissue{8})}
+%    \begin{macrocode}
+\RequirePackage{xspace,csquotes}
 \ifthenelse{\boolean{luatex}\OR\boolean{xetex}}{
   %% http://tex.stackexchange.com/a/16995
   \DeclareUTFcharacter[\UTFencname]{x201C}{\grqq}
   \DeclareUTFcharacter[\UTFencname]{x201E}{\glqq}
 }{}
+\PassOptionsToPackage{shortcuts}{extdash}
+\AtEndPreamble{\RequirePackage{extdash}}
 \AtEndPreamble{\RequirePackage{siunitx}}
 \AfterPackage{siunitx}{%
-  \sisetup{
+  \sisetup{%
     binary-units,
     detect-all,
     free-standing-units,
     space-before-unit,
     use-xspace,
     unit-optional-argument,
-    parse-units = false,
-  }
-  \AtEndPreamble{
-    \ltx@ifpackageloaded{pgf}{
-      \SendSettingsToPgf
-    }{}
+    parse-units = false}
+  \AtEndPreamble{%
+    \ltx@ifpackageloaded{pgf}%
+      {\SendSettingsToPgf}%
+      {}
     \addto\extrasgerman{\sisetup{locale = DE}}
     \addto\extrasngerman{\sisetup{locale = DE}}
-    \addto\extrasenglish{\sisetup{locale = US}}
-  }
-}
-
+    \addto\extrasenglish{\sisetup{locale = US}}}}
 %    \end{macrocode}
 % \iffalse meta-comment
 %</class>
@@ -4385,7 +4384,8 @@ Die folgenden Pakte werden von der \File{hpitr}"=Klasse automatisch geladen.
 \item \File{etoolbox}
 \item \File{eulervm}
 \item \File{expl3}
-\item \File{fixltx2e}
+\item \File{extdash}
+\item \File{fixltx2e} pre-\TeX Live 2015 \emph{only}
 \item \File{fontenc} \pdfTeX\ \emph{only}
 \item \File{fontspec} \LuaTeX/\XeTeX\ \emph{only}
 \item \File{graphicx}
