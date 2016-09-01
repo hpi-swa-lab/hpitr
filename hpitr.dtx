@@ -918,8 +918,6 @@ without this file.
     \global\let\@titlerunning\@empty% only non-proceedings
   }
   \newkomafont{abstract}{\normalfont\small}
-
-
   \def\institute#1{\gdef\@institute{#1}}
   \def\organisation#1{\gdef\@organization{#1}}
   \let\organization\organisation
@@ -1038,7 +1036,7 @@ without this file.
 %%% /if proceedings
   }{}
 %    \end{macrocode}
-% Patch maketitle to allow one global and multiple local titles.
+% Patch \cs{\maketitle} to allow one global and multiple local titles.
 %    \begin{macrocode}
   \newbool{TR@firsttitleseen}
   \boolfalse{TR@firsttitleseen}
@@ -1093,84 +1091,79 @@ without this file.
   }{}{%
     \TR@warning@noline{Cannot patch \string\tableofcontents}}
 
-  \ifthenelse{\boolean{TR@proceedings}}{%
-    \newcommand*\TR@contrib@maketitle{\newpage
-      \phantomsection
-      \ifthenelse{\boolean{TR@chapters}}{%
-        \refstepcounter{chapter}%
-      }{}
-      \stepcounter{section}%
-      \setcounter{section}{0}%
-      \setcounter{subsection}{0}%
-      \setcounter{figure}{0}
-      \setcounter{table}{0}
-      \setcounter{equation}{0}
-      \setcounter{footnote}{0}%
-      \begingroup
-      \parindent=\z@
-      \renewcommand\thefootnote{\@fnsymbol\c@footnote}%
-      \newpage
-      \global\@topnum\z@   % Prevents figures from going at top of page.
-      \TR@contrib@@maketitle
-      \ifthenelse{\boolean{TR@chapters}}{%
-        \thispagestyle{\chapterpagestyle}%
-      }{%
-        \thispagestyle{empty}%
-      }
-      \@thanks
-      \def\\{\unskip\ \ignorespaces}\def\inst##1{\unskip{}}%
-      \def\thanks##1{\unskip{}}\def\fnmsep{\unskip}%
-      \if!\the\toctitle!\addcontentsline{toc}{title}{\@title}\else
-        \addcontentsline{toc}{title}{\the\toctitle}\fi
-      \if!\the\titlerunning!\else
-        \edef\@title{\the\titlerunning}%
-      \fi
-      \ifx\@author\empty\relax%
-        \xdef\@runninghead{\ignorespaces\@title}
-      \else
-        \if!\the\tocauthor!\relax
-          {\def\and{\noexpand\protect\noexpand\and}%
-            \protected@xdef\toc@uthor{\@author}}%
+  \ifthenelse{\boolean{TR@proceedings}}%
+    {\newcommand*\TR@contrib@maketitle{\newpage
+        \phantomsection
+        \ifthenelse{\boolean{TR@chapters}}%
+          {\refstepcounter{chapter}}%
+          {}
+        \stepcounter{section}%
+        \setcounter{section}{0}%
+        \setcounter{subsection}{0}%
+        \setcounter{figure}{0}
+        \setcounter{table}{0}
+        \setcounter{equation}{0}
+        \setcounter{footnote}{0}%
+        \begingroup
+          \parindent=\z@
+          \renewcommand\thefootnote{\@fnsymbol\c@footnote}%
+          \newpage
+%    \end{macrocode}
+% Prevents figures from going at top of page.
+%    \begin{macrocode}
+        \global\@topnum\z@
+        \TR@contrib@@maketitle
+        \ifthenelse{\boolean{TR@chapters}}%
+          {\thispagestyle{\chapterpagestyle}}%
+          {\thispagestyle{empty}}%
+        \@thanks
+        \def\\{\unskip\ \ignorespaces}\def\inst##1{\unskip{}}%
+        \def\thanks##1{\unskip{}}\def\fnmsep{\unskip}%
+        \if!\the\toctitle!\addcontentsline{toc}{title}{\@title}\else
+          \addcontentsline{toc}{title}{\the\toctitle}\fi
+        \if!\the\titlerunning!\else
+          \edef\@title{\the\titlerunning}\fi
+        \ifx\@author\empty\relax%
+          \xdef\@runninghead{\ignorespaces\@title}
         \else
-          \def\\{\noexpand\protect\noexpand\newline}%
-          \protected@xdef\scratch{\the\tocauthor}%
-          \protected@xdef\toc@uthor{\scratch}%
-        \fi
-        \addtocontents{toc}{\noexpand\protect\noexpand\authcount{\the\c@auco}}%
-        \addcontentsline{toc}{author}{\toc@uthor}%
+          \if!\the\tocauthor!\relax
+            {\def\and{\noexpand\protect\noexpand\and}%
+              \protected@xdef\toc@uthor{\@author}}%
+          \else
+            \def\\{\noexpand\protect\noexpand\newline}%
+            \protected@xdef\scratch{\the\tocauthor}%
+            \protected@xdef\toc@uthor{\scratch}%
+          \fi
+          \addtocontents{toc}{\noexpand\protect\noexpand\authcount{\the\c@auco}}%
+          \addcontentsline{toc}{author}{\toc@uthor}%
 
-        \if!\the\authorrunning!
-          \value{@inst}=\value{@auth}%
-          \setcounter{@auth}{1}%
-        \else
-          \edef\@author{\the\authorrunning}%
+          \if!\the\authorrunning!
+            \value{@inst}=\value{@auth}%
+            \setcounter{@auth}{1}%
+          \else
+            \edef\@author{\the\authorrunning}%
+          \fi
+          \gdef\@runninghead{\unskip\ignorespaces\@author: \@title}
         \fi
-%
-        \gdef\@runninghead{\unskip\ignorespaces\@author: \@title}
-      \fi
-
-      \global\setbox\authrun=\hbox{\usekomafont{pagehead}\@author}%
-      \global\setbox\headrun=\hbox{\usekomafont{pagehead}\@runninghead}%
-      \ifdim\wd\headrun>\hsize
-        \TR@warning{Title and author names too long for running head. Please supply
-          a shorter form with \string\titlerunning\space and
-          \string\authorrunning\space prior to \string\maketitle}%
-        \xdef\@runninghead{Authors/Title Suppressed Due to Excessive Length}%
-      \fi
-      \xdef\@runninghead{\copy\headrun}
-      \xdef\@author{\copy\authrun}
-      \ifthenelse{\boolean{TR@chapters}}{%
-        \addchapmark{\@runninghead}%
-      }{%
-        \xdef\TR@titlemark{\@runninghead}%
-        \xdef\TR@authormark{\@author}%
-      }%
+        \global\setbox\authrun=\hbox{\usekomafont{pagehead}\@author}%
+        \global\setbox\headrun=\hbox{\usekomafont{pagehead}\@runninghead}%
+        \ifdim\wd\headrun>\hsize
+          \TR@warning{Title and author names too long for running head. Please supply
+            a shorter form with \string\titlerunning\space and
+            \string\authorrunning\space prior to \string\maketitle}%
+          \xdef\@runninghead{Authors/Title Suppressed Due to Excessive Length}%
+        \fi
+        \xdef\@runninghead{\copy\headrun}
+        \xdef\@author{\copy\authrun}
+        \ifthenelse{\boolean{TR@chapters}}%
+          {\addchapmark{\@runninghead}}%
+          {\xdef\TR@titlemark{\@runninghead}%
+            \xdef\TR@authormark{\@author}}%
       \endgroup
       \setcounter{footnote}{\fnnstart}%
       \clearheadinfo%
       \relax%
       \ignorespaces}
-
     \newcommand*\TR@contrib@@maketitle{\newpage
       \def\lastand{\ifnum\value{@inst}=2\relax
           \unskip{} \andname\
@@ -1201,76 +1194,67 @@ without this file.
            \noindent\ignorespaces
            \@author\vskip.35cm}
          {\small\institutename}
-       \end{center}%
-     }
+       \end{center}}
+%^^A      % \providecaptionname{english}{\keywordname}{Keywords}
+%^^A     % \providecaptionname{german,ngerman}{\keywordname}{Schlagworte}
+    \newcommand*\TR@contrib@author[1]{\gdef\@author{#1}}
+%^^A     % \newcommand*{\TR@contrib@keywords}[1]{%
+%^^A     % \par\addvspace\baselineskip%
+%^^A     % \noindent\keywordname\enspace\ignorespaces#1}%
+    \newcommand*\TR@contrib@keywords[1]{}
+    \ifthenelse{\boolean{TR@chapters}}%
+      {\renewcommand*\thesection{\@arabic\c@section}
+        \renewcommand*\thefigure{\@arabic\c@figure}
+        \renewcommand*\thetable{\@arabic\c@table}
+        \renewcommand*\theequation{\@arabic\c@equation}
+        \@addtoreset{equation}{chapter}
+        \BeforePackage{hyperref}{%
+          \newcommand*\theHequation{\theHsection.\arabic{equation}}%
+          \newcommand*\theHchapter    {\arabic{chapter}}%
+          \newcommand*\theHfigure     {\theHchapter.\arabic{figure}}%
+          \newcommand*\theHtable      {\theHchapter.\arabic{table}}%
+          \newcommand*\theHsection    {\theHchapter.\arabic{section}}%
+          \newcommand*\theHsubsection   {\theHsection.\arabic{subsection}}
+          \newcommand*\theHsubsubsection{\theHsubsection.\arabic{subsubsection}}
+          \newcommand*\theHparagraph    {\theHsubsubsection.\arabic{paragraph}}
+          \newcommand*\theHsubparagraph {\theHparagraph.\arabic{subparagraph}}
+          \newcommand*\theHtheorem      {\theHsection.\arabic{theorem}}
+          \newcommand*\theHthm          {\theHsection.\arabic{thm}}}}%
+      {}
+    \AtBeginDocument{\setcounter{tocdepth}{0}}}
+%    \end{macrocode}
+% This was |proceedings|, now |collection|
+%    \begin{macrocode}
+    {\let\TR@contrib@author\@gobble
+      \let\TR@contrib@keywords\@gobble
+      \let\institute\@gobble
+      \let\authorrunning\@gobble
+      \let\toctitle\@gobble
+      \let\tocauthor\@gobble
 
-     % \providecaptionname{english}{\keywordname}{Keywords}
-     % \providecaptionname{german,ngerman}{\keywordname}{Schlagworte}
-     \newcommand*\TR@contrib@author[1]{\gdef\@author{#1}}
-     % \newcommand*{\TR@contrib@keywords}[1]{%
-     %   \par\addvspace\baselineskip%
-     %   \noindent\keywordname\enspace\ignorespaces#1}%
-     \newcommand*\TR@contrib@keywords[1]{}
-
-   \ifthenelse{\boolean{TR@chapters}}{%
-     \renewcommand*\thesection{\@arabic\c@section}
-     \renewcommand*\thefigure{\@arabic\c@figure}
-     \renewcommand*\thetable{\@arabic\c@table}
-     \renewcommand*\theequation{\@arabic\c@equation}
-     \@addtoreset{equation}{chapter}
-     \BeforePackage{hyperref}{%
-       \newcommand*\theHequation{\theHsection.\arabic{equation}}%
-       \newcommand*\theHchapter    {\arabic{chapter}}%
-       \newcommand*\theHfigure     {\theHchapter.\arabic{figure}}%
-       \newcommand*\theHtable      {\theHchapter.\arabic{table}}%
-       \newcommand*\theHsection    {\theHchapter.\arabic{section}}%
-       \newcommand*\theHsubsection   {\theHsection.\arabic{subsection}}
-       \newcommand*\theHsubsubsection{\theHsubsection.\arabic{subsubsection}}
-       \newcommand*\theHparagraph    {\theHsubsubsection.\arabic{paragraph}}
-       \newcommand*\theHsubparagraph {\theHparagraph.\arabic{subparagraph}}
-       \newcommand*\theHtheorem      {\theHsection.\arabic{theorem}}
-       \newcommand*\theHthm          {\theHsection.\arabic{thm}}
-     }
-   }{}
-  \AtBeginDocument{%
-    \setcounter{tocdepth}{0}
-  }
-
-
-  }{%%%% collection
-    \let\TR@contrib@author\@gobble
-    \let\TR@contrib@keywords\@gobble
-    \let\institute\@gobble
-    \let\authorrunning\@gobble
-    \let\toctitle\@gobble
-    \let\tocauthor\@gobble
-
-    \let\@titlerunning\@empty
-    \setkomafont{abstract}{\footnotesize\itshape}
-    \newcommand*\titlerunning[1]{\gdef\@titlerunning{#1}}
-    \newcommand*\TR@contrib@maketitle{%
-      \ifcsempty{@titlerunning}{%
-        \expandafter\chapter\expandafter{\@title}%
-      }{%
-        \expandafter\chapter\expandafter[\expandafter\@titlerunning\expandafter]\expandafter{\@title}%
-      }
-      \edef\@templ{lbl:chapter-\thechapter}%
-      \expandafter\label\expandafter{\@templ}%
-      \clearheadinfo%
-    }
-  }
-
-  \AfterPackage{listings}{
-    \lstset{numberbychapter=true}}
-  \ifthenelse{\boolean{TR@proceedings}}{%
-    \AfterPackage{listings}{
-      \AtBeginDocument{
-        \def\thelstlisting{\@arabic\c@lstlisting}%
-        \def\theHlstnumber{\ifx\lst@@caption\@empty \lst@neglisting
+      \let\@titlerunning\@empty
+      \setkomafont{abstract}{\footnotesize\itshape}
+      \newcommand*\titlerunning[1]{\gdef\@titlerunning{#1}}
+      \newcommand*\TR@contrib@maketitle{%
+        \ifcsempty{@titlerunning}%
+          {\expandafter\chapter\expandafter{\@title}}%
+          {\expandafter\chapter\expandafter[\expandafter\@titlerunning\expandafter]\expandafter{\@title}}%
+        \edef\@templ{lbl:chapter-\thechapter}%
+        \expandafter\label\expandafter{\@templ}%
+%    \end{macrocode}
+% \changes{v1.4}{2016/09/01}{Inform about automatically generated labels (see \ghissue{15})}
+%    \begin{macrocode}
+        \typeout{^^J^^JSet label "\@templ" for contribution "\@title"^^J^^J}
+        \clearheadinfo}}
+  \AfterPackage{listings}{\lstset{numberbychapter=true}}
+  \ifthenelse{\boolean{TR@proceedings}}%
+    {\AfterPackage{listings}{
+        \AtBeginDocument{
+          \def\thelstlisting{\@arabic\c@lstlisting}%
+          \def\theHlstnumber{\ifx\lst@@caption\@empty \lst@neglisting
                                                  \else \theHlstlisting \fi%
-                                                 .\thelstnumber}}}
-  }{}
-
+                                                 .\thelstnumber}}}}%
+    {}
 %    \end{macrocode}
 % as for title, as for abstract.
 %    \begin{macrocode}
