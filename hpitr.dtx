@@ -347,6 +347,7 @@ without this file.
 % \subsection{The Tech Report Class}
 %
 % \subsubsection{Identification and Error handling}
+% \changes{v1.4}{2016/09/01}{Use \cs{hardwrap} for error messages (see \ghissue{16}).}
 %    \begin{macrocode}
 \edef\TR@ClassName{\@currname}
 \RequirePackage{hardwrap}
@@ -615,10 +616,9 @@ without this file.
 \ifthenelse{\boolean{TR@proceedings}\AND\boolean{TR@chapters}}{
   \KOMAoption{open}{right}
 }{}
-%
-% Fixes
-%
-%
+%    \end{macrocode}
+% \changes{v1.4}{2016/09/01}{Load \cs{fixltx2e} only if necessary (see \ghissue{2})}
+%    \begin{macrocode}
 \IfFileExists{latexrelease.sty}%
    {\PreventPackageFromLoading*[%
      \typeout{avoid fixltx2e if it does nothing in the first place}]%
@@ -1306,10 +1306,10 @@ without this file.
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-%% Language
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \changes{v1.3}{2016/06/23}{Disable \cs{hyphsubst} for \LuaTeX}
+%
+% Language
+%
+% \changes{v1.3}{2016/06/23}{Disable \cs{hyphsubst} for \LuaTeX (see \ghissue{12})}
 %    \begin{macrocode}
 \ifthenelse{\boolean{luatex}}{}{
   \RequirePackage{hyphsubst}
@@ -1317,21 +1317,19 @@ without this file.
 }
 \RequirePackage{babel}
 \newcommand*\TR@lang{}\let\TR@lang\@empty
-
 %    \end{macrocode}
-% \changes{v0.4}{2014/08/12}{Silence babel+hyperref+shorthands}
+% \changes{v0.4}{2014/08/12}{Silence \cs{babel}+\cs{hyperref}+shorthands}%
+% The combination of \cs{babel} and \cs{hyperref} might produce bogus
+% ``redifintion'' warnings, that are meaningless. Ignore
+% them\footnote{\url{https://tex.stackexchange.com/questions/193025/babel-hyperref-redefining-shorthand-several-times-per-page}}.
 %    \begin{macrocode}
-\AfterPackage{hyperref}{
-  % https://tex.stackexchange.com/questions/193025/babel-hyperref-redefining-shorthand-several-times-per-page
-  \patchcmd{\pdfstringdef}
+\AfterPackage{hyperref}%
+  {\patchcmd{\pdfstringdef}%
     {\csname HyPsd@babel@}
     {\let\bbl@info\@gobble\csname HyPsd@babel@}
-    {}{}
-}
-
-
+    {}{}}
 %    \end{macrocode}
-% extract ISO 639-2 code from babel language name
+% Extract ISO 639-2 code from babel language name
 % \DoNotIndex{\@l,\@L}
 %    \begin{macrocode}
 {
@@ -1680,11 +1678,16 @@ without this file.
 % \subsubsection{Bibliography}
 % \changes{v0.4}{2014/08/12}{Provide common biblatex ground}
 % \changes{v1.2}{2015/12/02}{Adapt \cs{biblatex} options (see \ghissue{3})}
+% \changes{v1.4}{2016/09/01}{Conditionalize \cs{biblatex} |init| option based
+% on version (see \ghissue{14})}
 %    \begin{macrocode}
-\PassOptionsToPackage{style=numeric,sortcites,firstinits=true}{biblatex}
+\PassOptionsToPackage{style=numeric,sortcites}{biblatex}
 \AfterPackage{biblatex}{
   \setcounter{biburllcpenalty}{7000}
   \setcounter{biburlucpenalty}{8000}
+  \@ifpackagelater{biblatex}{2016/03/01}
+    {\ExecuteBibliographyOptions{giveninits=true}}
+    {\ExecuteBibliographyOptions{firstinits=true}}
   \ExecuteBibliographyOptions{
     url=false,%
     urldate=iso8601,%
