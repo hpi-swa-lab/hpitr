@@ -1299,6 +1299,10 @@ without this file.
   \let\statements\relax
 }{}
 %    \end{macrocode}
+% Let the subsubsections be numbered.
+%    \begin{macrocode}
+\setcounter{secnumdepth}{\subsubsectionnumdepth}
+%    \end{macrocode}
 % \begin{macro}{\keywords}
 % \begin{macro}{\test}
 % \changes{v0.6}{2014/08/27}{Provide \cs{keywords} command.}
@@ -1310,8 +1314,7 @@ without this file.
     \begingroup
     \appto\pdfstringdefPreHook{\def\\{\space\ignorespaces}}
     \hypersetup{pdfkeywords={#1}}
-    \endgroup}
-}
+    \endgroup}}
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
