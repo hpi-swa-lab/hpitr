@@ -346,35 +346,22 @@ without this file.
 %
 % \subsection{The Tech Report Class}
 %
-%
-% \subsubsection{Preparation}
-%
+% \subsubsection{Identification and Error handling}
 %    \begin{macrocode}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Basic tools
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\RequirePackage{etoolbox}
-\RequirePackage{ltxcmds}
-\RequirePackage{scrbase}[2013/12/19]
-
-
-%%
-%% Id and error
-%%
 \edef\TR@ClassName{\@currname}
-\def\TR@warn{\ClassWarning{\TR@ClassName}}
-\def\TR@info{\ClassInfo{\TR@ClassName}}
-\def\TR@error{\ClassError{\TR@ClassName}}
+\RequirePackage{hardwrap}
+\GenerateLogMacros{class}[TR]{\TR@ClassName}
 \newcommand*\TR@fonterror{\TR@error{%
     Old font commands are not to be used}}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Conditional statements
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+%    \end{macrocode}
+%
+% \subsubsection{Preparation}
+%  Some basic tools we need everywhere: Common macros, the KOMA-Script base
+%  package. Also, all the conditionals we might need.
+%    \begin{macrocode}
+\RequirePackage{etexcmds,etoolbox,ltxcmds}
+\RequirePackage{scrbase}[2013/12/19]
 \RequirePackage{ifthen,ifdraft,ifxetex,ifluatex}
-
 %    \end{macrocode}
 % 
 % \subsubsection{Initialization}
@@ -680,7 +667,7 @@ without this file.
     \hypersetup{pdftitle={#1}}
     \endgroup}}
 {}{%
-  \TR@warn{Cannot patch \string\title to set pdftitle}}
+  \TR@warning@noline{Cannot patch \string\title to set pdftitle}}
 
 \apptocmd{\author}{%
   \AfterPreamble{
@@ -690,7 +677,7 @@ without this file.
     \endgroup}
   }
 {}{%
-  \TR@warn{Cannot patch \string\author to set pdfauthor}}
+  \TR@warning@noline{Cannot patch \string\author to set pdfauthor}}
 
 %    \end{macrocode}
 %
@@ -766,7 +753,7 @@ without this file.
     \let\endcenter\endflushright%
     \let\huge\normalsize%
   }{}{%
-    \TR@warn{Cannot patch \string\maketitle}}
+    \TR@warning@noline{Cannot patch \string\maketitle}}
   \apptocmd{\endtitlepage}{%
     \cleardoubleemptypage%
     \ifthenelse{\boolean{@mainmatter}}{%
@@ -777,7 +764,7 @@ without this file.
       }
     \relax%
   }{}{%
-    \TR@warn{Cannot patch \string\maketitle}}
+    \TR@warning@noline{Cannot patch \string\maketitle}}
 }{%
   \def\maketitle{%
     \ifthenelse{\boolean{TR@inproceedingspagenumbers}}{}{%
@@ -800,7 +787,7 @@ without this file.
     \AfterPreamble{\hypersetup{pdfsubject = {Technical Report: #1}}}
   }
   \def\@eventtitle{%
-    \TR@warn{No \string\event\space given}
+    \TR@warning{No \string\event\space given}
     \global\cslet{@eventtitle}\@empty}
 %    \end{macrocode}
 % \end{macro}
@@ -1057,7 +1044,7 @@ without this file.
         \booltrue{TR@firsttitleseen}}}
     % we switch to title seen also when people do not use \maketitle
     \apptocmd{\tableofcontents}{\booltrue{TR@firsttitleseen}}{}{%
-      \TR@warn{Cannot patch \string\tableofcontents}}
+      \TR@warning@noline{Cannot patch \string\tableofcontents}}
 
   \let\TR@firsttitle@author\author
   \renewcommand*\author{
@@ -1095,7 +1082,7 @@ without this file.
         \unskip,
       \fi}%
   }{}{%
-    \TR@warn{Cannot patch \string\tableofcontents}}
+    \TR@warning@noline{Cannot patch \string\tableofcontents}}
 
   \ifthenelse{\boolean{TR@proceedings}}{%
     \newcommand*\TR@contrib@maketitle{\newpage
@@ -1156,7 +1143,7 @@ without this file.
       \global\setbox\authrun=\hbox{\usekomafont{pagehead}\@author}%
       \global\setbox\headrun=\hbox{\usekomafont{pagehead}\@runninghead}%
       \ifdim\wd\headrun>\hsize
-        \TR@warn{Title and author names too long for running head. Please supply
+        \TR@warning{Title and author names too long for running head. Please supply
           a shorter form with \string\titlerunning\space and
           \string\authorrunning\space prior to \string\maketitle}%
         \xdef\@runninghead{Authors/Title Suppressed Due to Excessive Length}%
@@ -1586,7 +1573,7 @@ without this file.
   }
 }{
   % for sections, not so easy.
-  \def\TR@patchw{\TR@warn{Cannot patch sectioning command.\MessageBreak This is
+  \def\TR@patchw{\TR@warning@noline{Cannot patch sectioning command.\MessageBreak This is
       not severe.}}
   \patchcmd{\section}{-3.5ex \@plus -1ex \@minus -.2ex}{-2\baselineskip}{}{\TR@patchw}
   \patchcmd{\section}{2.3ex \@plus.2ex}{\baselineskip}{}{\TR@patchw}
@@ -1970,7 +1957,7 @@ without this file.
   \patchcmd{\caption@boxrestore@mini}{\sloppy}{\TR@sloppy}{}{}
   \patchcmd{\caption@boxrestore}{\sloppy}{\TR@sloppy}{}{}
 }
-\def\sloppy{\TR@warn{You should not use \string\sloppy. \MessageBreak
+\def\sloppy{\TR@warning{You should not use \string\sloppy. \MessageBreak
 Instead, use a sloppypar, when necessary:\MessageBreak
 \MessageBreak
 \string\begin{sloppypar}\MessageBreak
@@ -1990,7 +1977,7 @@ Instead, use a sloppypar, when necessary:\MessageBreak
     \ifthenelse{\boolean{TR@inproceedingspagenumbers}}{}{%
       \setcounter{page}{5}%
     }%
-  }{}{\TR@warn{Cannot patch \string\frontmatter}}
+  }{}{\TR@warning@noline{Cannot patch \string\frontmatter}}
 }{}
 
 
@@ -2740,7 +2727,6 @@ language.
 \usepackage[tocflat,toctextentriesindented]{tocstyle}%
 \usetocstyle{nopagecolumn}
 \usepackage[toc]{multitoc}
-\usepackage{fixltx2e}
 \usepackage{relsize}
 \usepackage{fontspec}
 \usepackage{microtype}
