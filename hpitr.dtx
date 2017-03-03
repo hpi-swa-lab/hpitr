@@ -65,7 +65,7 @@
 %<*!README>
 [%
 %</!README>
-  2015/12/02 v1.2
+  2017/03/03 v1.5
 %<!README>^^J
   A unified class for Technical Reports at the HPI
 %<*!README>
@@ -98,6 +98,7 @@
 % \changes{v1.4}{2016/09/01}{Fix compatibility (\ghissue{2}, \ghissue{4},
 % \ghissue{5}), add \cs{extdash} (\ghissue{8}),  announce automatic chapter
 % labels (\ghissue{15}), robustify with \cs{hardwrap} (\ghissue{16})}
+% \changes{v1.5}{2017/03/03}{Expand README a little bit}
 % \GetFileInfo{hpitr.dtx}
 %^^A ==========================================================================
 %^^A ==========================================================================
@@ -294,6 +295,7 @@ without this file.
   \file{example-proceedings.tex}{\from{hpitr.dtx}{example,proceedings}}%
   \file{example-inproceedings.tex}{\from{hpitr.dtx}{example,inproceedings,article}}%
   \file{README.txt}{\from{hpitr.dtx}{README}}%
+  \file{README.md}{\from{hpitr.dtx}{README}}%
 }%
 %    \end{macrocode}
 % After file generation, wie use shell escapes (aka \verb|\write18| feature) to
@@ -304,7 +306,6 @@ without this file.
   \Msg{* \space\space done.}
 }
 
-\immediate\write18{cp README.txt README || copy README.txt README}
 \immediate\write18{lualatex -interaction=nonstopmode hpitr.ltx}
 \immediate\write18{mkindex hpitr}
 \immediate\write18{lualatex -interaction=nonstopmode hpitr.ltx}
@@ -2953,11 +2954,11 @@ Schriftwahl).
 -------------------------------------------------------------------------------
 Note: To generate all files, you should simply call
 
-      pdftex -shell-escape hpitr.dtx
+    pdftex -shell-escape hpitr.dtx
 
 If you are using MiKTeX you have to use
 
-     pdftex --enable-write18 hpitr.dtx
+    pdftex --enable-write18 hpitr.dtx
 
 to fully enable shell escapes which are also known as \write18 feature.
 
@@ -2967,6 +2968,11 @@ package folder.
 
 But maybe your distributor already distributes a ready for installation
 package, so you do not need to create files and copy them yourself.
+
+-------------------------------------------------------------------------------
+
+Prepared files (class, documentation) are available for releases at  
+<https://github.com/HPI-SWA-Lab/hpitr/releases>
 %</README>
 %<*manual>
 This manual gives a concise usage guide for the \texttt{hpitr} class, used to
