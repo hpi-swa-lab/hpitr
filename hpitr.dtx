@@ -65,7 +65,7 @@
 %<*!README>
 [%
 %</!README>
-  2017/03/03 v1.5
+  2017/08/09 v1.6
 %<!README>^^J
   A unified class for Technical Reports at the HPI
 %<*!README>
@@ -99,6 +99,7 @@
 % \ghissue{5}), add \cs{extdash} (\ghissue{8}),  announce automatic chapter
 % labels (\ghissue{15}), robustify with \cs{hardwrap} (\ghissue{16})}
 % \changes{v1.5}{2017/03/03}{Expand README a little bit}
+% \changes{v1.6}{2017/08/09}{Only predef quotes when \cs{xunicode} is there.}
 % \GetFileInfo{hpitr.dtx}
 %^^A ==========================================================================
 %^^A ==========================================================================
@@ -1985,12 +1986,15 @@ without this file.
 % Misc packages.
 % \changes{v1.4}{2016/09/01}{Decide for end-of-preamble for \cs{siunitx} (see \ghissue{5})}
 % \changes{v1.4}{2016/09/01}{Use \cs{extdash} (see \ghissue{8})}
+% \changes{v1.6}{2017/08/09}{Only predef quotes when \cs{xunicode} is there.}
 %    \begin{macrocode}
 \RequirePackage{xspace,csquotes}
 \ifthenelse{\boolean{luatex}\OR\boolean{xetex}}{
-  %% http://tex.stackexchange.com/a/16995
-  \DeclareUTFcharacter[\UTFencname]{x201C}{\grqq}
-  \DeclareUTFcharacter[\UTFencname]{x201E}{\glqq}
+  \ltx@ifpackageloaded{xunicode}{
+    %% http://tex.stackexchange.com/a/16995
+    \DeclareUTFcharacter[\UTFencname]{x201C}{\grqq}
+    \DeclareUTFcharacter[\UTFencname]{x201E}{\glqq}
+  }{}
 }{}
 \PassOptionsToPackage{shortcuts}{extdash}
 \AtEndPreamble{\RequirePackage{extdash}}
