@@ -1,8 +1,9 @@
+% \CheckSum{4819}
 % \iffalse meta-comment
 % ============================================================================
 % hpitr.dtx
 % Copyright (c) Daniel Richter, Uwe Hentschel 2013-2014
-% Copyright (c) Tobias Pape, 2014-2016
+% Copyright (c) Tobias Pape, 2014-2018
 %
 % This work may be distributed and/or modified under the conditions of
 % the LaTeX Project Public License, version 1.3c of the license.
@@ -36,7 +37,6 @@
 %   Right bracket \]     Circumflex    \^     Underscore    \_
 %   Grave accent  \`     Left brace    \{     Vertical bar  \|
 %   Right brace   \}     Tilde         \~}
-% \CheckSum{4968}
 %
 % \iffalse meta-comment
 %<*dtx|ins>
@@ -49,23 +49,22 @@
 %<*dtx|ins|doc|manual>
 \ProvidesFile{%
   hpitr%
-%<*doc>
-%<!manual>  -full%
-%</doc>
-%<*dtx>
-  .dtx%
-%</dtx>
+%<doc&!manual> -source%
+%<de> -de%
+%<dtx> .dtx%
 %<ins>  .ins%
 %<doc>  .ltx%
 }%
 %</dtx|ins|doc|manual>
-%<*dtx|ins|doc|class|README>
 %<README>hpitr
+%<README>=====
 %<README>  Copyright (c) Tobias Pape <tobias.pape at hpi.uni-potsdam.de>
+%<*dtx|ins|doc|class|README>
 %<*!README>
 [%
 %</!README>
-  2017/08/09 v1.6
+  2018/02/10 v1.7
+%<README>
 %<!README>^^J
   A unified class for Technical Reports at the HPI
 %<*!README>
@@ -74,9 +73,6 @@
 %</dtx|ins|doc|class|README>
 % \fi^^A meta-comment
 % ^^A -------------------------------------------------------------------------
-%
-%
-%
 %
 % \changes{v0.1}{2014/06/01}{Initial class derived from polze.cls}
 % \changes{v0.2}{2014/07/10}{Minimal changes to play nice with babel and
@@ -100,6 +96,7 @@
 % labels (\ghissue{15}), robustify with \cs{hardwrap} (\ghissue{16})}
 % \changes{v1.5}{2017/03/03}{Expand README a little bit}
 % \changes{v1.6}{2017/08/09}{Only predef quotes when \cs{xunicode} is there.}
+% \changes{v1.7}{2018/02/10}{Split the documentation (\ghissue{1}).}
 % \GetFileInfo{hpitr.dtx}
 %^^A ==========================================================================
 %^^A ==========================================================================
@@ -148,8 +145,6 @@
 %  \@@enc@update,\cf@encoding,\f@encoding}
 %  \DoNotIndex{\foreign@language,\languagename,\select@language,\shorthandoff}
 %  \DoNotIndex{\pdfstringdefDisableCommands,\pdfstringdefWarn} ^^A hyperref
-%  \DoNotIndex{\ifpdf} ^^A ifpdf
-%
 %  \DoNotIndex{\wd,\xdef,\year,\z@}
 %  \DoNotIndex{\@abstrtfalse,\@abstrttrue,\@addtoreset,\@afterheading}
 %  \DoNotIndex{\@afterindentfalse,\@alph,\@arabic}
@@ -216,9 +211,9 @@
 % \DoNotIndex{\string}
 % \DoNotIndex{\the,\thispagestyle,\triangleright,\ttfamily}
 % \DoNotIndex{\twocolumn,\typeout}
-%  \DoNotIndex{\undefined,\usecounter}
+% \DoNotIndex{\undefined,\usecounter}
 % \DoNotIndex{\vfil,\vfill,\vspace}
-%  \DoNotIndex{\ifthenelse,\OR,\AND,\boolean}
+% \DoNotIndex{\ifthenelse,\OR,\AND,\boolean}
 % \makeatother
 %
 %^^A ==========================================================================
@@ -258,7 +253,7 @@
 
 \preamble
 Copyright (c) Daniel Richter, Uwe Hentschel 2013-2014
-Copyright (c) Tobias Pape, 2014-2015
+Copyright (c) Tobias Pape, 2014-2018
 
 This file was generated from file(s) of hpitr distribution.
 ----------------------------------------------------------------------
@@ -283,13 +278,12 @@ without this file.
 %    \end{macrocode}
 % But while the dtx file is the ins file itself, we will never generate this
 % file.
-% \begin{verbatim}
-%  \file{hpitr.ins}{\from{hpitr.dtx}{ins}}% not needed
-% \end{verbatim}\vskip-\baselineskip
+% |\file{hpitr.ins}{\from{hpitr.dtx}{ins}}% not needed|
 %    \begin{macrocode}
   \file{hpitr.cls}{\from{hpitr.dtx}{class}}%
-  \file{hpitr-full.ltx}{\from{hpitr.dtx}{doc}}%
-  \file{hpitr.ltx}{\from{hpitr.dtx}{doc,manual}}%
+  \file{hpitr-source.ltx}{\from{hpitr.dtx}{doc,en}}%
+  \file{hpitr.ltx}{\from{hpitr.dtx}{doc,manual,en}}%
+  \file{hpitr-de.ltx}{\from{hpitr.dtx}{doc,manual,de}}%
   \nopreamble\nopostamble
   \file{example-single.tex}{\from{hpitr.dtx}{example,single}}%
   \file{example-singlea.tex}{\from{hpitr.dtx}{example,single,article}}%
@@ -300,8 +294,8 @@ without this file.
 }%
 %    \end{macrocode}
 % After file generation, wie use shell escapes (aka \verb|\write18| feature) to
-% create \File{hpitr.pdf}, the manual, and \File{hpitr-full.pdf}, the full
-% documentation.
+% create \File{hpitr.pdf}, the manual, and \File{hpitr-source.pdf}, the full
+% documentation including source code.
 %    \begin{macrocode}
 \ifToplevel{%
   \Msg{* \space\space done.}
@@ -313,19 +307,23 @@ without this file.
 \immediate\write18{mkindex hpitr}
 \immediate\write18{lualatex -interaction=nonstopmode hpitr.ltx}
 
-\immediate\write18{lualatex -interaction=nonstopmode hpitr-full.ltx}
-\immediate\write18{mkindex hpitr-full}
-\immediate\write18{lualatex -interaction=nonstopmode hpitr-full.ltx}
-\immediate\write18{mkindex hpitr-full}
-\immediate\write18{lualatex -interaction=nonstopmode hpitr-full.ltx}
+\immediate\write18{lualatex -interaction=nonstopmode hpitr-de.ltx}
+\immediate\write18{mkindex hpitr-de}
+\immediate\write18{lualatex -interaction=nonstopmode hpitr-de.ltx}
+\immediate\write18{mkindex hpitr-de}
+\immediate\write18{lualatex -interaction=nonstopmode hpitr-de.ltx}
+
+\immediate\write18{lualatex -interaction=nonstopmode hpitr-source.ltx}
+\immediate\write18{mkindex hpitr-source}
+\immediate\write18{lualatex -interaction=nonstopmode hpitr-source.ltx}
+\immediate\write18{mkindex hpitr-source}
+\immediate\write18{lualatex -interaction=nonstopmode hpitr-source.ltx}
 
 
 \immediate\write18{lualatex -interaction=nonstopmode example-inproceedings}
 \immediate\write18{biber example-inproceedings}
 \immediate\write18{lualatex -interaction=nonstopmode example-inproceedings}
 \immediate\write18{lualatex -interaction=nonstopmode example-inproceedings}
-
-
 
 \ifToplevel{%
   \Msg{* \space\space done.}
@@ -374,26 +372,25 @@ without this file.
 %    \end{macrocode}
 % 
 % \subsubsection{Initialization}
+% First, option handling.
+%
+% We need to reach into the gut of latex' kernel to push back global vars which
+% we consumed. This makes it possible to, eg, consume |draft| but also pass it on.
 %    \begin{macrocode}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Options
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-% reach into the gut of latex' kernel to push back global vars
 \newcommand*\@pushback@classoption[1]{%
   \xdef\@classoptionslist{%
     \ifx\@classoptionslist\@empty\else\@classoptionslist,\fi
     #1}%
 }
-
-
+%    \end{macrocode}
+% Inspired by KOMA, a command that ensures execution after the class has been
+% loaded.
+%    \begin{macrocode}
 \newcommand*{\TR@NowButAtEndOfClass}{\AtEndOfClass}
 \AtEndOfClass{\let\TR@NowButAtEndOfClass\@firstofone}
-
-% from scrkbase
-
+%    \end{macrocode}
+% Set up |hpitr| key-value settings, inspired by the base ``family'' in |scrkbase|.
+%    \begin{macrocode}
 \DefineFamily{hpitr}
 \def\TRFamily{\DefineFamilyMember{hpitr}}
 \TRFamily%
@@ -571,9 +568,7 @@ without this file.
 \FamilyProcessOptions{hpitr}\relax
 %    \end{macrocode}
 %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  Load base class file
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %    \begin{macrocode}
 \LoadClass{\TR@BaseClass}
 %    \end{macrocode}
@@ -586,7 +581,7 @@ without this file.
   \RequirePackage{alphabeta}
 }
 %    \end{macrocode}
-% With \TeX Live 2016, \LuaTeX does not expose most \pdfTeX primitives under
+% With \TeX Live 2016, \LuaTeX\ does not expose most \pdfTeX\ primitives under
 % the \cs{pdf..} names. Currently, some packages still rely on this, however.
 % So we use \cs{luatex85}. Since the package first appeared in 2016, it is a
 % good way to see whether we need it in the first place.
@@ -910,7 +905,7 @@ without this file.
 
 %    \end{macrocode}
 %
-% Support for multiple seperate work titles, portions from llncs.cls
+% Support for multiple separate work titles, portions from llncs.cls
 %    \begin{macrocode}
   \def\clearheadinfo{\gdef\@author{No Author Given}%
     \gdef\@title{No Title Given}%
@@ -1041,7 +1036,7 @@ without this file.
 %%% /if proceedings
   }{}
 %    \end{macrocode}
-% Patch \cs{\maketitle} to allow one global and multiple local titles.
+% Patch \cs{maketitle} to allow one global and multiple local titles.
 %    \begin{macrocode}
   \newbool{TR@firsttitleseen}
   \boolfalse{TR@firsttitleseen}
@@ -1293,7 +1288,6 @@ without this file.
 \setcounter{secnumdepth}{\subsubsectionnumdepth}
 %    \end{macrocode}
 % \begin{macro}{\keywords}
-% \begin{macro}{\test}
 % \changes{v0.6}{2014/08/27}{Provide \cs{keywords} command.}
 % We provide a \cs{keyword} macro to record keywords for the printed PDF.
 % Should there already be one, we patch it like \cs{title} and \cs{author}
@@ -1305,7 +1299,6 @@ without this file.
     \hypersetup{pdfkeywords={#1}}
     \endgroup}}
 %    \end{macrocode}
-% \end{macro}
 % \end{macro}
 %
 % Language
@@ -1439,8 +1432,9 @@ without this file.
 %    \begin{macrocode}
 \linespread{1.05} % a bit more for Palatino
 %    \end{macrocode}
-% Akin to LNCS, let footnotes be a bit larger
+% Akin to LNCS, let footnotes be a bit larger, but save the original.
 %    \begin{macrocode}
+\let\TR@orig@footnotesize
 \let\footnotesize\small
 %    \end{macrocode}
 % \changes{v0.4}{2014/08/12}{Disable tracking=smallcaps in luatex, also. Is broken.}
@@ -1660,7 +1654,7 @@ without this file.
 }{}
 %    \end{macrocode}
 % \subsubsection{Abstract}
-% The main abstract for the non-proceedings case, i.\,e., there is exactly one
+% The main abstract for the non-proceedings case, \ie, there is exactly one
 % abstract in the whole document.
 %    \begin{macrocode}
 \ifthenelse{\boolean{TR@proceedings}\OR\boolean{TR@contribtools}}{}{
@@ -1798,14 +1792,16 @@ without this file.
       showstringspaces=false,
       inputencoding=utf8,
     }
-  }
+    \lst@AddToHook{Init}{\let\ttdefault\f@family}
+  }  
 }
 
 %    \end{macrocode}
 % \subsubsection{Color}
 %    \begin{macrocode}
 \RequirePackage{color}
-\RequirePackage[table,svgnames,dvipsnames]{xcolor}
+\PassOptionsToPackage{table,svgnames,dvipsnames,x11names}{xcolor}
+\RequirePackage{xcolor}
 
 %    \end{macrocode}
 % \subsubsection{PDF File Inclusion}
@@ -2084,15 +2080,16 @@ without this file.
 
 %<*!proceedings>
 \begin{abstract}
-  Hello, here is some text without a meaning. This text should show what a
-  printed text will look like at this place. If you read this text, you will
-  get no information. Really? Is there no information? Is there a difference
-  between this text and some nonsense like “Huardest gefburn”? Kjift – not at
-  all! A blind text like this gives you information about the selected font,
-  how the letters are written and an impression of the look. This text should
-  contain all letters of the alphabet and it should be written in of the
-  original language. There is no need for special content, but the length of
-  words should match the language.
+  Hello, here is some text without a meaning. This text should show
+  what a printed text will look like at this place. If you read this
+  text, you will get no information. Really? Is there no
+  information? Is there a difference between this text and some
+  nonsense like “Huardest gefburn”? Kjift – not at all! A blind text
+  like this gives you information about the selected font, how the
+  letters are written and an impression of the look. This text
+  should contain all letters of the alphabet and it should be
+  written in of the original language. There is no need for special
+  content, but the length of words should match the language.
 \end{abstract}
 %</!proceedings>
 %<proceedings>\frontmatter
@@ -2112,86 +2109,92 @@ Other sectioning examples, including listings and tables.
 \section{Introduction}
 \label{sec:introduction}
 
-Hello, here is some text without a meaning. This text should show what a
-printed text will look like at this place. If you read this text, you will get
-no information. Really? Is there no information? Is there a difference between
-this text and some nonsense like “Huardest gefburn”? Kjift – not at all! A
-blind text like this gives you information about the selected font, how the
-letters are written and an impression of the look. This text should contain all
-letters of the alphabet and it should be written in of the original language.
-There is no need for special content, but the length of words should match the
-language.\todo{cite}
+Hello, here is some text without a meaning. This text should show
+what a printed text will look like at this place. If you read this
+text, you will get no information. Really? Is there no information?
+Is there a difference between this text and some nonsense like
+“Huardest gefburn”? Kjift – not at all! A blind text like this gives
+you information about the selected font, how the letters are written
+and an impression of the look. This text should contain all letters
+of the alphabet and it should be written in of the original
+language. There is no need for special content, but the length of
+words should match the language.\todo{cite}
 
 \subsection{Contributions}
 \label{sec:contributions}
 
 
-Hello, here is some text without a meaning. This text should show what a
-printed text will look like at this place. If you read this text, you will get
-no information. Really? Is there no information? Is there a difference between
-this text and some nonsense like “Huardest gefburn”? Kjift – not at all! A
-blind text like this gives you information about the selected font, how the
-letters are written and an impression of the look. This text should contain all
-letters of the alphabet and it should be written in of the original language.
-There is no need for special content, but the length of words should match the
-language.
+Hello, here is some text without a meaning. This text should show
+what a printed text will look like at this place. If you read this
+text, you will get no information. Really? Is there no information?
+Is there a difference between this text and some nonsense like
+“Huardest gefburn”? Kjift – not at all! A blind text like this gives
+you information about the selected font, how the letters are written
+and an impression of the look. This text should contain all letters
+of the alphabet and it should be written in of the original
+language. There is no need for special content, but the length of
+words should match the language.
 
 \section{Context}
 \label{sec:context}
 
-Hello, here is some text without a meaning. This text should show what a
-printed text will look like at this place. If you read this text, you will get
-no information. Really? Is there no information? Is there a difference between
-this text and some nonsense like “Huardest gefburn”? Kjift – not at all! A
-blind text like this gives you information about the selected font, how the
-letters are written and an impression of the look. This text should contain all
-letters of the alphabet and it should be written in of the original language.
-There is no need for special content, but the length of words should match the
-language.
+Hello, here is some text without a meaning. This text should show
+what a printed text will look like at this place. If you read this
+text, you will get no information. Really? Is there no information?
+Is there a difference between this text and some nonsense like
+“Huardest gefburn”? Kjift – not at all! A blind text like this gives
+you information about the selected font, how the letters are written
+and an impression of the look. This text should contain all letters
+of the alphabet and it should be written in of the original
+language. There is no need for special content, but the length of
+words should match the language.
 
 \todosec{Is that redundant?}
 
 \subsection{Background}
 \label{sec:background}
 
-Hello, here is some text without a meaning. This text should show what a
-printed text will look like at this place. If you read this text, you will get
-no information. Really? Is there no information? Is there a difference between
-this text and some nonsense like “Huardest gefburn”? Kjift – not at all! A
-blind text like this gives you information about the selected font, how the
-letters are written and an impression of the look. This text should contain all
-letters of the alphabet and it should be written in of the original language.
-There is no need for special content, but the length of words should match the
-language.
+Hello, here is some text without a meaning. This text should show
+what a printed text will look like at this place. If you read this
+text, you will get no information. Really? Is there no information?
+Is there a difference between this text and some nonsense like
+“Huardest gefburn”? Kjift – not at all! A blind text like this gives
+you information about the selected font, how the letters are written
+and an impression of the look. This text should contain all letters
+of the alphabet and it should be written in of the original
+language. There is no need for special content, but the length of
+words should match the language.
 
 \section{Problem}
 \label{sec:problem}
 
 \secmissing{The Main Problem}
-Hello, here is some text without a meaning. This text should show what a
-printed text will look like at this place. If you read this text, you will get
-no information. Really? Is there no information? Is there a difference between
-this text and some nonsense like “Huardest gefburn”? Kjift – not at all! A
-blind text like this gives you information about the selected font, how the
-letters are written and an impression of the look. This text should contain all
-letters of the alphabet and it should be written in of the original language.
-There is no need for special content, but the length of words should match the
-language.~\cite{953350}
+Hello, here is some text without a meaning. This text should show
+what a printed text will look like at this place. If you read this
+text, you will get no information. Really? Is there no information?
+Is there a difference between this text and some nonsense like
+“Huardest gefburn”? Kjift – not at all! A blind text like this gives
+you information about the selected font, how the letters are written
+and an impression of the look. This text should contain all letters
+of the alphabet and it should be written in of the original
+language. There is no need for special content, but the length of
+words should match the language.~\cite{953350}
 
 
 
 \subsection{Specific Problem}
 \label{sec:specific-problem}
 
-Hello, here is some text without a meaning. This text should show what a
-printed text will look like at this place. If you read this text, you will get
-no information. Really? Is there no information? Is there a difference between
-this text and some nonsense like “Huardest gefburn”? Kjift – not at all! A
-blind text like this gives you information about the selected font, how the
-letters are written and an impression of the look. This text should contain all
-letters of the alphabet and it should be written in of the original language.
-There is no need for special content, but the length of words should match the
-language.
+Hello, here is some text without a meaning. This text should show
+what a printed text will look like at this place. If you read this
+text, you will get no information. Really? Is there no information?
+Is there a difference between this text and some nonsense like
+“Huardest gefburn”? Kjift – not at all! A blind text like this gives
+you information about the selected font, how the letters are written
+and an impression of the look. This text should contain all letters
+of the alphabet and it should be written in of the original
+language. There is no need for special content, but the length of
+words should match the language.
 
 \section{Solution}
 \label{sec:solution}
@@ -2201,28 +2204,30 @@ language.
 \item Put B into C
 \item Pull D from C
 }%
-Hello, here is some text without a meaning. This text should show what a
-printed text will look like at this place. If you read this text, you will get
-no information. Really? Is there no information? Is there a difference between
-this text and some nonsense like “Huardest gefburn”? Kjift – not at all! A
-blind text like this gives you information about the selected font, how the
-letters are written and an impression of the look. This text should contain all
-letters of the alphabet and it should be written in of the original language.
-There is no need for special content, but the length of words should match the
-language.
+Hello, here is some text without a meaning. This text should show
+what a printed text will look like at this place. If you read this
+text, you will get no information. Really? Is there no information?
+Is there a difference between this text and some nonsense like
+“Huardest gefburn”? Kjift – not at all! A blind text like this gives
+you information about the selected font, how the letters are written
+and an impression of the look. This text should contain all letters
+of the alphabet and it should be written in of the original
+language. There is no need for special content, but the length of
+words should match the language.
 
 \subsection{Specific Solution}
 \label{sec:specific-solution}
 
-Hello, here is some text without a meaning. This text should show what a
-printed text will look like at this place. If you read this text, you will get
-no information. Really? Is there no information? Is there a difference between
-this text and some nonsense like “Huardest gefburn”? Kjift – not at all! A
-blind text like this gives you information about the selected font, how the
-letters are written and an impression of the look. This text should contain all
-letters of the alphabet and it should be written in of the original language.
-There is no need for special content, but the length of words should match the
-language.
+Hello, here is some text without a meaning. This text should show
+what a printed text will look like at this place. If you read this
+text, you will get no information. Really? Is there no information?
+Is there a difference between this text and some nonsense like
+“Huardest gefburn”? Kjift – not at all! A blind text like this gives
+you information about the selected font, how the letters are written
+and an impression of the look. This text should contain all letters
+of the alphabet and it should be written in of the original
+language. There is no need for special content, but the length of
+words should match the language.
 
 
 \begin{table}
@@ -2235,11 +2240,11 @@ language.
     \multicolumn{2}{c}{Item}\\ \cmidrule(r){1-2}
     Animal    & Description & {Value}   & Unit\\
     \midrule
-    Gnat      & per gram    &    2.3456 & \dB                       \\
-              & each        &    1.2e-3 & \metre\squared\per\second \\
-    Gnu       & stuffed     &       e3  & \kilo\hertz               \\
-    Emu       & stuffed     &   90.473  & \percent                  \\
-    Armadillo & frozen      & 5642.5    & \mega\byte                \\
+    Gnat      & per gram &    2.3456 & \dB                       \\
+              & each     &    1.2e-3 & \metre\squared\per\second \\
+    Gnu       & stuffed  &       e3  & \kilo\hertz               \\
+    Emu       & stuffed  &   90.473  & \percent                  \\
+    Armadillo & frozen   & 5642.5    & \mega\byte                \\
     \bottomrule
     \showrowcolors
   \end{tabular}
@@ -2248,19 +2253,20 @@ language.
 \section{Implementation}
 \label{sec:implementation}
 
-Hello, here is some text without a meaning. This text should show what a
-printed text will look like at this place. If you read this text, you will get
-no information. Really? Is there no information? Is there a difference between
-this text and some nonsense like “Huardest gefburn”? Kjift – not at all! A
-blind text like this gives you information about the selected font, how the
-letters are written and an impression of the look. This text should contain all
-letters of the alphabet and it should be written in of the original language.
-There is no need for special content, but the length of words should match the
-language.
+Hello, here is some text without a meaning. This text should show
+what a printed text will look like at this place. If you read this
+text, you will get no information. Really? Is there no information?
+Is there a difference between this text and some nonsense like
+“Huardest gefburn”? Kjift – not at all! A blind text like this gives
+you information about the selected font, how the letters are written
+and an impression of the look. This text should contain all letters
+of the alphabet and it should be written in of the original
+language. There is no need for special content, but the length of
+words should match the language.
 
 \begin{figure}
   \centering
-  \setlength{\unitlength}{.01in}%{.025in}
+  \setlength{\unitlength}{.01in}
   \begin{picture}(200,75)
     \put(0,25){\vector(1,0){200}}
     \put(25,0){\vector(0,1){75}}
@@ -2281,15 +2287,16 @@ language.
   \label{fig:test}
 \end{figure}
 
-Hello, here is some text without a meaning. This text should show what a
-printed text will look like at this place. If you read this text, you will get
-no information. Really? Is there no information? Is there a difference between
-this text and some nonsense like “Huardest gefburn”? Kjift – not at all! A
-blind text like this gives you information about the selected font, how the
-letters are written and an impression of the look. This text should contain all
-letters of the alphabet and it should be written in of the original language.
-There is no need for special content, but the length of words should match the
-language.
+Hello, here is some text without a meaning. This text should show
+what a printed text will look like at this place. If you read this
+text, you will get no information. Really? Is there no information?
+Is there a difference between this text and some nonsense like
+“Huardest gefburn”? Kjift – not at all! A blind text like this gives
+you information about the selected font, how the letters are written
+and an impression of the look. This text should contain all letters
+of the alphabet and it should be written in of the original
+language. There is no need for special content, but the length of
+words should match the language.
 
 \missingfigure{Make a overview sketch of the whole system}
 
@@ -2334,28 +2341,30 @@ $+l(v_j)$
 \end{algorithmic}
 \end{algorithm}
 
-Hello, here is some text without a meaning. This text should show what a
-printed text will look like at this place. If you read this text, you will get
-no information. Really? Is there no information? Is there a difference between
-this text and some nonsense like “Huardest gefburn”? Kjift – not at all! A
-blind text like this gives you information about the selected font, how the
-letters are written and an impression of the look. This text should contain all
-letters of the alphabet and it should be written in of the original language.
-There is no need for special content, but the length of words should match the
-language.
+Hello, here is some text without a meaning. This text should show
+what a printed text will look like at this place. If you read this
+text, you will get no information. Really? Is there no information?
+Is there a difference between this text and some nonsense like
+“Huardest gefburn”? Kjift – not at all! A blind text like this gives
+you information about the selected font, how the letters are written
+and an impression of the look. This text should contain all letters
+of the alphabet and it should be written in of the original
+language. There is no need for special content, but the length of
+words should match the language.
 
 \section{Evaluation}
 \label{sec:evaluation}
 
-Hello, here is some text without a meaning. This text should show what a
-printed text will look like at this place. If you read this text, you will get
-no information. Really? Is there no information? Is there a difference between
-this text and some nonsense like “Huardest gefburn”? Kjift – not at all! A
-blind text like this gives you information about the selected font, how the
-letters are written and an impression of the look. This text should contain all
-letters of the alphabet and it should be written in of the original language.
-There is no need for special content, but the length of words should match the
-language.
+Hello, here is some text without a meaning. This text should show
+what a printed text will look like at this place. If you read this
+text, you will get no information. Really? Is there no information?
+Is there a difference between this text and some nonsense like
+“Huardest gefburn”? Kjift – not at all! A blind text like this gives
+you information about the selected font, how the letters are written
+and an impression of the look. This text should contain all letters
+of the alphabet and it should be written in of the original
+language. There is no need for special content, but the length of
+words should match the language.
 
 \lstset{language=Java}
 \begin{lstlisting}[label=lst:example,caption={An example code snippet},float,numbers=left]
@@ -2367,8 +2376,8 @@ class HelloWorldApp {
 \end{lstlisting}
 
 
-We have nice things: some code in \autoref{lst:example} and some information
-in \autoref{tbl:things}.
+We have nice things: some code in \autoref{lst:example} and some
+information in \autoref{tbl:things}.
 
 \[\nabla \cdot \mathbf{E} = \frac{\rho}{\varepsilon_0}\]
 \[\nabla \cdot \mathbf{B} = 0\]
@@ -2380,52 +2389,56 @@ in \autoref{tbl:things}.
 \label{sec:threats-valitidy}
 
 
-Hello, here is some text without a meaning. This text should show what a
-printed text will look like at this place. If you read this text, you will get
-no information. Really? Is there no information? Is there a difference between
-this text and some nonsense like “Huardest gefburn”? Kjift – not at all! A
-blind text like this gives you information about the selected font, how the
-letters are written and an impression of the look. This text should contain all
-letters of the alphabet and it should be written in of the original language.
-There is no need for special content, but the length of words should match the
-language.
+Hello, here is some text without a meaning. This text should show
+what a printed text will look like at this place. If you read this
+text, you will get no information. Really? Is there no information?
+Is there a difference between this text and some nonsense like
+“Huardest gefburn”? Kjift – not at all! A blind text like this gives
+you information about the selected font, how the letters are written
+and an impression of the look. This text should contain all letters
+of the alphabet and it should be written in of the original
+language. There is no need for special content, but the length of
+words should match the language.
 
 \section{Related Work}
 \label{sec:related-work}
 
-Hello, here is some text without a meaning. This text should show what a
-printed text will look like at this place. If you read this text, you will get
-no information. Really? Is there no information? Is there a difference between
-this text and some nonsense like “Huardest gefburn”? Kjift – not at all! A
-blind text like this gives you information about the selected font, how the
-letters are written and an impression of the look. This text should contain all
-letters of the alphabet and it should be written in of the original language.
-There is no need for special content, but the length of words should match the
-language.
+Hello, here is some text without a meaning. This text should show
+what a printed text will look like at this place. If you read this
+text, you will get no information. Really? Is there no information?
+Is there a difference between this text and some nonsense like
+“Huardest gefburn”? Kjift – not at all! A blind text like this gives
+you information about the selected font, how the letters are written
+and an impression of the look. This text should contain all letters
+of the alphabet and it should be written in of the original
+language. There is no need for special content, but the length of
+words should match the language.
 
-Hello, here is some text without a meaning. This text should show what a
-printed text will look like at this place. If you read this text, you will get
-no information. Really? Is there no information? Is there a difference between
-this text and some nonsense like “Huardest gefburn”? Kjift – not at all! A
-blind text like this gives you information about the selected font, how the
-letters are written and an impression of the look. This text should contain all
-letters of the alphabet and it should be written in of the original language.
-There is no need for special content, but the length of words should match the
-language.
+Hello, here is some text without a meaning. This text should show
+what a printed text will look like at this place. If you read this
+text, you will get no information. Really? Is there no information?
+Is there a difference between this text and some nonsense like
+“Huardest gefburn”? Kjift – not at all! A blind text like this gives
+you information about the selected font, how the letters are written
+and an impression of the look. This text should contain all letters
+of the alphabet and it should be written in of the original
+language. There is no need for special content, but the length of
+words should match the language.
 
 
 \section{Conclusion}
 \label{sec:conclusion}
 
-Hello, here is some text without a meaning. This text should show what a
-printed text will look like at this place. If you read this text, you will get
-no information. Really? Is there no information? Is there a difference between
-this text and some nonsense like “Huardest gefburn”? Kjift – not at all! A
-blind text like this gives you information about the selected font, how the
-letters are written and an impression of the look. This text should contain all
-letters of the alphabet and it should be written in of the original language.
-There is no need for special content, but the length of words should match the
-language.
+Hello, here is some text without a meaning. This text should show
+what a printed text will look like at this place. If you read this
+text, you will get no information. Really? Is there no information?
+Is there a difference between this text and some nonsense like
+“Huardest gefburn”? Kjift – not at all! A blind text like this gives
+you information about the selected font, how the letters are written
+and an impression of the look. This text should contain all letters
+of the alphabet and it should be written in of the original
+language. There is no need for special content, but the length of
+words should match the language.
 
 
 
@@ -2460,26 +2473,26 @@ language.
   \end{threeparttable}
 \end{table}
 
-We have nice things: some code in \autoref{lst:example} and some information
-in \autoref{tbl:things}.
+We have nice things: some code in \autoref{lst:example} and some
+information in \autoref{tbl:things}.
 
-Hello, here is some text without a meaning. This text should show what a
-printed text will look like at this place. If you read this text, you will get
-no information. Really? Is there no information? Is there a difference between
-this text and some nonsense like “Huardest gefburn”? Kjift – not at all! A
-blind text like this gives you information about the selected font, how the
-letters are written and an impression of the look. This text should contain all
-letters of the alphabet and it should be written in of the original language.
-There is no need for special content, but the length of words should match the
-language.
+Hello, here is some text without a meaning. This text should show
+what a printed text will look like at this place. If you read this
+text, you will get no information. Really? Is there no information?
+Is there a difference between this text and some nonsense like
+“Huardest gefburn”? Kjift – not at all! A blind text like this gives
+you information about the selected font, how the letters are written
+and an impression of the look. This text should contain all letters
+of the alphabet and it should be written in of the original
+language. There is no need for special content, but the length of
+words should match the language.
 
 
 \printbibliography
-
+\end{document}
 %%% Local Variables: 
 %%% mode: latex
 %%% End: 
-\end{document}
 %    \end{macrocode}
 %
 % \iffalse meta-comment
@@ -2490,50 +2503,43 @@ language.
 % \subsection{The Manual}
 % \label{sec:manual}
 %
-% Load standard \LaTeX documentation class, passing all options to it
-% but use |scrartcl| instead of |article|.
+% Load this class but emulate the important parts of |ltxdoc|, the
+% \LaTeX{} documentation class.
 %    \begin{macrocode}
-%<*doc|manual|README>
-%<*!README>
-\RequirePackage{scrlfile}
-\ReplaceClass{article}{scrartcl}
+%<*doc>
+\documentclass[
+%<de> ngerman%
+%<en> english%
+,trtype=singlearticle
+]{hpitr}
+\usepackage{showframe}
 %    \end{macrocode}
-%
-% Should we need \textsc{url}s, we want them to break nicely, also on hyphens.
-% Since either \texttt{ltxdoc} or \texttt{hypdoc} loads the \texttt{url}
-% package, we pass this option early.
+% As |ltxdoc|, we use the |doc| package and then adapt, eg, \verb!|!
+% as a shortcut verbatim.
 %    \begin{macrocode}
-\PassOptionsToPackage{hyphens}{url}
+\usepackage{doc}
+\AtBeginDocument{\MakeShortVerb{\|}}
+\CodelineNumbered
+\setcounter{StandardModuleDepth}{1}
 %    \end{macrocode}
-% Load the \texttt{ltxdoc} class (patched to subsequently load a KOMAScript
-% class). We set a calculating \texttt{DIV}\footnote{see KOMAScript guide} and
-% the two-column option, since we eventually end up kind-of two-column anyways.
-% However, we do this not by the normal means so we force |\onecolumn| once the
-% document commences.
+% These commands are heavily inspired by their counterparts from |ltxdoc|.
+% \begin{macro}{\cs}
 %    \begin{macrocode}
-\documentclass{ltxdoc}
-\KOMAoptions{%
-  paper=a4,
-  fontsize=9pt,
-  pagesize,twocolumn=true,DIV=calc,mpinclude=true}
-\AtBeginDocument{\onecolumn}
-
-
-\usepackage{ifpdf,ifxetex,etoolbox,xspace}
-\usepackage{color}
-\usepackage[x11names,dvipsnames,svgnames]{xcolor}
-
-\patchcmd{\section}{-3.5ex \@plus -1ex \@minus -.2ex}{-2\baselineskip}{}{}
-\patchcmd{\section}{2.3ex \@plus.2ex}{\baselineskip}{}{}
-\patchcmd{\subsection}{-3.25ex\@plus -1ex \@minus -.2ex}{-\baselineskip}{}{}
-\patchcmd{\subsection}{1.5ex \@plus .2ex}{\baselineskip}{}{}
-\patchcmd{\subsubsection}{-3.25ex\@plus -1ex \@minus -.2ex}{-\baselineskip}{}{}
-\patchcmd{\subsubsection}{1.5ex \@plus .2ex}{1sp \@plus 1sp \@minus 1sp}{}{}
-\patchcmd{\paragraph}{3.25ex \@plus1ex \@minus .2ex}{\baselineskip}{}{}
-\patchcmd{\subparagraph}{3.25ex \@plus1ex \@minus .2ex}{\baselineskip}{}{}
-
-
+\DeclareRobustCommand\cs[1]{\texttt{\textbackslash #1}}
 %    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\marg}
+%    |\marg{text}| prints \marg{text}, `mandatory argument'.
+%    \begin{macrocode}
+\providecommand*\marg[1]{\texttt{\{}\meta{#1}\texttt{\}}}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\oarg}
+%    |\oarg{text}| prints \oarg{text}, `optional argument'.
+%    \begin{macrocode}
+\providecommand*\oarg[1]{\texttt{[}\meta{#1}\texttt{]}}
+%    \end{macrocode}
+% \end{macro}
 % Customize the display of our code:
 % \begin{itemize}
 % \item Use two columns at index
@@ -2543,59 +2549,46 @@ language.
 % \end{itemize}
 %    \begin{macrocode}
 \setcounter{IndexColumns}{2}
-\MacroTopsep=0pt
-\MacrocodeTopsep=3pt
+ % \MacroTopsep=0pt
+ % \MacrocodeTopsep=3pt
 \setlength\MacroIndent{0pt}
-\setlength{\columnsep}{18pt}
-\providecommand*\theCodelineNo{%
+\renewcommand*\theCodelineNo{%
   \normalfont\sffamily\color{black!50}\scriptsize%
   \arabic{CodelineNo}\ }
 \let\dmsize\scriptsize
 \def\dm#1{{\dmsize\textrm{\textit{\textcolor{DarkBlue}{#1}}}}\xspace}
 
 \providecommand*\MacroFont{\ttfamily\small}
-\providecommand*\AltMacroFont{\ttfamily\footnotesize}
+\providecommand*\AltMacroFont{\ttfamily\itshape\small}
 \providecommand*\EnvName{environment}
 \providecommand*\EnvsName{environments}
 \providecommand*\OptionName{option}
 \providecommand*\OptionsName{options}
 
- % tob be overridden by hypdoc
 \renewcommand*\PrintMacroName[1]{\strut\MacroFont\string #1}
-\renewcommand*\PrintDescribeMacro[1]{\strut \dm{c} \MacroFont #1\ }
+\renewcommand*\PrintDescribeMacro[1]{\strut \dm{c} \MacroFont \char`\\#1\ }
+ \usepackage{hypdoc}
 \makeatletter
-\renewcommand*\PrintEnvName[1]{%
-  \HD@target%
-  \strut \MacroFont #1\ }
-\renewcommand*\PrintDescribeEnv[1]{%
-  \HD@target%
-  \strut \dm{e} \MacroFont #1\ }
-\newcommand*\PrintDescribeOption[1]{%
-  \HD@target%
-  \strut \dm{o} \MacroFont #1\ }
-\newcommand*\PrintOptionName[1]{%
-  \HD@target%
-  \strut \MacroFont #1\ }
+\renewcommand*\PrintEnvName[1]{\HD@target\strut \MacroFont #1\ }
+\renewcommand*\PrintDescribeEnv[1]{\HD@target \strut \dm{e} \MacroFont #1\ }
+\newcommand*\PrintDescribeOption[1]{\HD@target \strut \dm{o} \MacroFont #1\ }
+\newcommand*\PrintOptionName[1]{\HD@target \strut \MacroFont #1\ }
+\newcommand*\PrintDescribeValue[2]{\strut \dm{v} \MacroFont{\scriptsize #1=}#2\ }
 \makeatother
-\newcommand*\PrintDescribeValue[2]{%
-  \strut \dm{v} \MacroFont{\scriptsize #1=}#2\ }
 
-
-\usepackage{hypdoc}
-
-\makeatletter
 \def\macro{\begingroup
   \catcode`\\12
-  \MakePrivateLetters \m@cro@{0}}
+  \MakePrivateLetters \TRDmacro{0}}
 \def\environment{\begingroup
   \catcode`\\12
-  \MakePrivateLetters \m@cro@{1}}
+  \MakePrivateLetters \TRDmacro{1}}
 \def\option{\begingroup
   \catcode`\\12
-  \MakePrivateLetters \m@cro@{2}}
+  \MakePrivateLetters \TRDmacro{2}}
 
+\makeatletter
 %^^A \def\endmacro{}
-\long\def\m@cro@#1#2{\endgroup \topsep\MacroTopsep \trivlist
+\long\def\TRDmacro#1#2{\endgroup \topsep\MacroTopsep \trivlist
   \edef\saved@macroname{\string#2}%
   \def\makelabel##1{\llap{##1}}%
   \if@inlabel
@@ -2648,8 +2641,6 @@ language.
 \newcommand*{\SpecialMainOptionIndex}[1]{%
   \SpecialMainIndex@Type{#1}{\OptionName}{\OptionsName}}
 
-
-
 % Defining new usage index commands
 \newcommand*{\SpecialIndex@Type}[3]{%
   \@bsphack
@@ -2685,9 +2676,8 @@ language.
 
 % Define new describe commands
 \newcommand*{\newDescribe}[1]{%
-  \csgdef{Describe#1}{%
-    \leavevmode\@bsphack\begingroup\MakePrivateLetters%
-    \csuse{Describe@#1}}%
+  \csgdef{Describe#1}{\leavevmode\@bsphack
+    \begingroup\expandafter\MakePrivateLetters\csuse{Describe@#1}}%
   \csgdef{Describe@#1}##1{%
     \endgroup%
     \ifthenelse{\boolean{TR@indescribe}}{}{\TR@describe@table@begin}%
@@ -2724,40 +2714,24 @@ language.
 }
 \makeatother
 
-
 %    \end{macrocode}
-% Packages we want for hyper-reference support, a tight table of contents,
-% fonts (EB~Garamond and the Adobe Source family), and finally a package for
-% parallel typesetting, among others.
+% Packages we want for hyper-reference support and a tight table of contents,
+% among others.
 %    \begin{macrocode}
-\usepackage[tocflat,toctextentriesindented]{tocstyle}%
-\usetocstyle{nopagecolumn}
-\usepackage[toc]{multitoc}
 \usepackage{relsize}
-\usepackage{fontspec}
-\usepackage{microtype}
-\newfontfeature{Microtype}{protrusion=default;expansion=default;}
-%^^A\usepackage[scale=MatchLowercase]{ebgaramond}
-\setmainfont{EB Garamond}[%
-Scale=MatchLowercase,%
-Numbers=OldStyle,%
-Ligatures=TeX%
-]
-\newcommand*\cfrac[2]{{\addfontfeature{Fractions=On} #1/#2}}
-\usepackage{unicode-math}
-\setmathfont{EB Garamond}
-\usepackage[scale=MatchLowercase,semibold,osf]{sourcesanspro}
-\usepackage[scale=MatchLowercase,semibold]{sourcecodepro}
-\usepackage[main=english,ngerman]{babel}
-\babeltags{german=ngerman,english=english}
-\usepackage{graphicx}
-\usepackage{booktabs}
-\usepackage{ragged2e}
 \usepackage{hologo}
 \usepackage{array}
 \usepackage[binary-units]{siunitx}
 \DeclareSIUnit[number-unit-product = {}] \pt{pt}
 \DeclareSIUnit[number-unit-product = {}] \pc{pc}
+\let\amsCfrac\cfrac
+\renewcommand*\cfrac[2]{%
+  \ifmmode\amsCfrac{#1}{#2}%
+  \else{\addfontfeature{Fractions=On} #1/#2}%
+  \fi}
+%    \end{macrocode}
+% Load |listings| and configure appearance of our code.
+%    \begin{macrocode}
 \usepackage{listings}
 %^^A\definecolor{Blue1}{rgb}{0,0,1}
 \lstdefinelanguage[hpitr]{TeX}[AlLaTeX]{TeX}{%
@@ -2780,48 +2754,6 @@ Ligatures=TeX%
   escapechar=`,%
 }
 \usepackage{threeparttable}
-\usepackage{paracol}
-\marginparthreshold{0}
-%    \end{macrocode}
-% We predominantly want to use the set serif font for all sectioning. We also
-% want a good text area.
-%    \begin{macrocode}
-\setkomafont{subtitle}{\usekomafont{title}\LARGE\em}
-\addtokomafont{disposition}{\rmfamily}
-
-\providecommand*\generalshape{\upshape}
-\setkomafont{title}{\rmfamily\mdseries}
-\addtokomafont{subject}{\mdseries}
-\setkomafont{disposition}{\rmfamily\mdseries\generalshape}
-\addtokomafont{footnote}{\generalshape}
-\addtokomafont{paragraph}{\em}
-\addtokomafont{descriptionlabel}{\mdseries}
-\addtokomafont{captionlabel}{\mdseries}
-\renewcommand*\labelitemii{\normalfont\textendash}
-
-
-\renewenvironment{abstract}%
-{\list{}{\listparindent 1em%
-    \advance\leftmargin 4em\relax
-    \itemindent    \listparindent
-    \rightmargin   \leftmargin
-    \parsep        0pt plus 1pt\relax
-  }%
-  \item\relax}
-{\endlist}
-
-\setfootnoterule{4cc}
-\hypersetup{%
-    colorlinks=true,   %% true for printout
-    linkcolor=MidnightBlue,%
-    citecolor=MidnightBlue,%
-    urlcolor=MidnightBlue,%
-}
-
-
-
-\raggedbottom
-\recalctypearea
 %    \end{macrocode}
 % For debugging only
 %    \begin{macrocode}
@@ -2836,39 +2768,13 @@ Ligatures=TeX%
 % A macro for GitHub issue links.
 %    \begin{macrocode}
 \newcommand*{\ghissue}[1]{%
-\href{https://github.com/HPI-SWA-Lab/hpitr/issues/#1}{GitHub issue \##1}\xspace}
+\href{https://github.com/hpi-swa-lab/hpitr/issues/#1}{GitHub issue \##1}\xspace}
 %    \end{macrocode}
 % Logos.
 %    \begin{macrocode}
 \providecommand*\LuaTeX{\hologo{LuaTeX}}
 \providecommand*\pdfTeX{\hologo{pdfTeX}}
 \providecommand*\XeTeX{\hologo{XeTeX}}
-\AtBeginDocument{\addcontentsonly{toc}{0}}
-\footnotelayout{m}
-
-\newenvironment{eng}[1][]%
-  {\begin{leftcolumn*}[#1]\begin{english}%
-        \let\generalshape\upshape%
-      }%
-  {\end{english}\end{leftcolumn*}}
-\newenvironment*{ger}%
-{\begin{rightcolumn}
- \begin{german}%
-   \let\generalshape\em%
-   \let\origtheHsection\theHsection%
-   \def\theHsection{ignore.\origtheHsection}%
-   % \let\section\origSect%
-   % \let\subsection\origSubSect%
-   % \let\subsubsection\origSubSubSect%
-   % \let\paragraph\origPar%
-   \em}%
-{\end{german}%
- \end{rightcolumn}}
-
-\renewcommand*\listoftocname{%
-  \textenglish{Contents} / \emph{\textgerman{Inhalt}}}
-\let\contentsname\mycontentsname
-
 \newcommand\remark[1]{%
   \unskip\par\vspace{\baselineskip}
   \noindent\framebox[\linewidth]{%
@@ -2877,82 +2783,132 @@ Ligatures=TeX%
   }}%
   \vspace{\baselineskip}\par%
 }
-\usepackage{enumitem}
-\setlist{%
-  noitemsep,%
-  partopsep=0pt,%
-  topsep=\baselineskip,%
-  leftmargin=\parindent}
-\setdescription{noitemsep,topsep=\baselineskip,font=\normalfont\scshape,leftmargin=\parindent}
-\DeclareRobustCommand\cf[1]{%
-cf.\,{#1}
+
+\makeatletter
+\let\TRD@contentEmail\email
+\renewcommand*\email[1]{\gdef\@email{#1}}\gdef\@email{}
+\newcommand*\titlerunning[1]{\gdef\@titlerunning{#1}}\gdef\@titlerunning{}
+\newcommand*\organization[1]{\gdef\@organization{#1}}\gdef\@organization{}
+\newcommand*\institute[1]{\gdef\@institute{#1}}\gdef\@institute{}
+
+\renewcommand*\maketitle{\newpage
+  \setcounter{page}{1}
+  \phantomsection
+  \setcounter{section}{0}%
+  \setcounter{subsection}{0}%
+  \setcounter{figure}{0}
+  \setcounter{table}{0}
+  \setcounter{equation}{0}
+  \setcounter{footnote}{0}%
+  \begingroup
+    \parindent=\z@
+    \renewcommand\thefootnote{\@fnsymbol\c@footnote}%
+   \global\@topnum\z@
+   % ^^A Stuff
+   \def\and{\unskip\space and\space}%
+   \begin{center}%
+     \let\newline\\
+     {\Large \bfseries\boldmath
+       \pretolerance=10000
+       \@title \par}\vskip .8cm
+     \if!\@subtitle!\else {\large \bfseries\boldmath
+       \vskip -.65cm
+       \pretolerance=10000
+       \@subtitle \par}\vskip .8cm\fi
+     {\lineskip .5em
+       \noindent\ignorespaces
+       \@author\vskip.35cm}
+     {\small\par
+      \parskip=\z@
+      \parindent=\z@
+      \def\and{\enspace\ignorespaces}%
+      \ignorespaces
+      \ifcsvoid{@organization}%
+        {\csuse{@institute}}
+        {\ifcsvoid{@group}{}{\csuse{@group} \\}
+          \csuse{@organization}\\\href{mailto:\@email}{\nolinkurl{\@email}}}%
+       \par}
+  \end{center}
+  % ^^A Stuff
+  \thispagestyle{plain}%
+  \endgroup
+  \relax%
+  \ignorespaces}
+\renewenvironment{abstract}%
+  {\list{}{%\advance\topsep by0.35cm\relax
+      \setlength{\topsep}{0pt}%
+      \setlength{\leftmargin}{2em}%
+      \setlength{\rightmargin}{\leftmargin}%
+      \setlength{\listparindent}{\parindent}%
+      \setlength{\itemindent}{\parindent}%
+      \setlength{\parsep}{\parskip}%
+      \small%\usekomafont{abstract}%
+    }\item[]\noindent\ignorespaces}%
+  {\endlist}
+
+\makeatother
+
+\hypersetup{
+  linkcolor=MidnightBlue,%
+  citecolor=MidnightBlue,%
+  urlcolor=MidnightBlue,%
 }
-\GlossaryPrologue{%
-  \section*{\textenglish{Change History} / \emph{\textgerman{Änderungsverlauf}} }}
-\IndexPrologue{
-\begin{paracol}{2}[\section*{Index}%
-  \markboth{Index}{Index}]
-\begin{eng}
-  Numbers written in italic refer to the page where the corresponding entry is
-  described; numbers underlined refer to the code line of the definition;
-  numbers in roman refer to the code lines where the entry is used.
-\end{eng}\begin{ger}
+
+\DeclareRobustCommand\cf[1]{cf.\,{#1}}
+%<*de>
+\GlossaryPrologue{\section*{Änderungsverlauf}}
+\IndexPrologue{\section*{Index}%
+  \markboth{Index}{Index}
   Kursive Zahlen bezeichnen die Seite, auf welcher ein Eintrag beschrieben ist;
   unterstrichene Zahlen bezeichnen die Quelltextzeile seine Definition;
   nicht-ausgezeichnete Zahlen beziehen sich auf Quelltextzeilen, wo der Eintrag
   benutzt wird.
-\end{ger}
-\end{paracol}
 }
-
-
+%</de>
 %<!manual>\CodelineIndex
 \RecordChanges
 \EnableCrossrefs
 %<manual>\OnlyDescription
 \GetFileInfo{\jobname.ltx}
 \begin{document}
-\title{The Class \File{hpitr} for Writing Technical Reports at the
-  Hasso~Plattner~Institute\footnote{This is file version \fileversion{} of
-    file \File{\filename}.}}
-\subtitle{Die Klasse \File{hpitr} zur Erstellung technischer Berichte am
-  Hasso-Plattner-Institut}
-\author{Tobias Pape %
-  \textless\protect\url{tobias.pape@hpi.de}\textgreater}
+\title{%
+%<en>  The Class \File{hpitr} for Writing Technical Reports at the Hasso~Plattner~Institute
+%<de>    Die Klasse \File{hpitr} zur Erstellung technischer Berichte am Hasso-Plattner-Institut
+}
+\author{Tobias Pape}
+%<en>\organization{Hasso Plattner Institute}
+%<de>\organization{Hasso-Plattner-Institut}
+\email{tobias.pape@hpi.uni-potsdam.de}
 \date{\fileversion{} \filedate}
 \maketitle
 \begin{abstract}
-%</!README>
-%<*!manual>
+%</doc>
+%<*doc|README>
+%<*en|README>
 
-%<!README>\begin{paracol}{2}[]\begin{eng}
-%<!README>This consititutes the \LaTeX\ class to creat technical reports at the 
-%<README>This consititutes the LaTeX class to creat technical reports at the 
-Plattner Institute, Potsdam in conjunction with the Universitätsverlag
+This constitutes the  class to create technical reports at the 
+Hasso Plattner Institute, Potsdam in conjunction with the Universitätsverlag
 Potsdam. To maintain a unified appearance, this class provides macrotypographic
 (like paper size and general layout) and microtypographic (like fonts and their
 adjustment) settings.
-%<!README>\end{eng}
 
+%</en|README> 
 %<README> ---
+%<*de|README> 
 
-%<!README>\begin{ger}
-%<!README>Diese \LaTeX-Klasse dient zur Erstellung von technischen Berichten
-%<README>Diese LaTeX-Klasse dient zur Erstellung von technischen Berichten
+Diese Klasse dient zur Erstellung von technischen Berichten
 am Hasso-Plattner-Institut, Potsdam, in Zusammenarbeit mit dem
 Universitätsverlag Potsdam. Zur Erhaltung eines einheitlichen
-Erscheinungsbildes bietet diese Klasses Einstellungen zu Makrotypographie (wie
+Erscheinungsbildes bietet diese Klasse Einstellungen zu Makrotypographie (wie
 Papiergröße, allgemeines Layout) und auch zur Detailtypographie (wie
 Schriftwahl).
-%<!README>\end{ger}\end{paracol}
 
-
-%</!manual>
-% \end{macrocode}
-%
+%</de|README>
+%</doc|README>
+%    \end{macrocode}
 % The installation instructions that end up in the README are from the
 % \texttt{titlepage.dtx} again.
-% \begin{macrocode}
+%    \begin{macrocode}
 %<*README>
 
 -------------------------------------------------------------------------------
@@ -2976,64 +2932,54 @@ package, so you do not need to create files and copy them yourself.
 -------------------------------------------------------------------------------
 
 Prepared files (class, documentation) are available for releases at  
-<https://github.com/HPI-SWA-Lab/hpitr/releases>
+<https://github.com/hpi-swa-lab/hpitr/releases>
 %</README>
+%<*doc>
 %<*manual>
+%<*en>
 This manual gives a concise usage guide for the \texttt{hpitr} class, used to
 prepare technical reports at the Hasso Plattner Institute, Potsdam
 in conjunction with the Universitätsverlag Potsdam. We describe newly
 introduced commands and environments and document deviations from what may seem
 typical, like non-standard paper size.
+%</en>
+%<*de>
+TODO
+%</de>
 %</manual>
-%<*!README>
+%<en>\par This is file version \fileversion{} of  file \File{\filename}.
+%<de>\par Dies ist Version \fileversion{} der Datei \File{\filename}.
 \end{abstract}
-%<*manual>
 %^^A ==========================================================================
 %^^A ==========================================================================
 %^^A ==========================================================================
 \tableofcontents
-\iffalse
-TODO:
-%%%%%
-For conversions from llncs:
-Du benutzt die Defintion-umgebung. Die gibts in lncs, aber nicht
-sonst. Ich habe sie dir mit amsthm nachgebaut.
 
-\fi
-
-\begin{paracol}{2}
-\begin{eng}
-\section{Introduction}
+%<en> \section{Introduction}
+%<de> \section{Einführung}
 \label{sec:intro}
-All technical reports the Hasso-Plattner-Institut für Sofwaresystemtechnik (\textsc{hpi})
+%<*en>
+All technical reports the Hasso-Plattner-Institut for Digital Engineering (\textsc{hpi})
 issues should have a uniform appearance. The \LaTeX{} class \File{hpitr} exists
 for this very purpose. Its aim is to ease the work with and on technical
 reports of the \textsc{hpi} and ensure their uniformity.
 
 This manual illustrates the means this \LaTeX{} class provides and explains the
 necessary constraints.
-\end{eng}
-\begin{ger}
-\section{Einführung}
-Alle technischen Berichte, die das Hasso"-Plattner"-Institut für
-Sofwaresystemtechnik (\textsc{hpi}) herausgibt sollen ein einheitliches
-Erscheinungsbild haben. Zu diesem Zweck existiert diese \LaTeX"=Klasse names
+%</en>
+%<*de>
+Alle technischen Berichte, die das Hasso"=Plattner"=Institut für
+Digital Engineering (\textsc{hpi}) herausgibt sollen ein einheitliches
+Erscheinungsbild haben. Zu diesem Zweck existiert diese \LaTeX"=Klasse namens
 \File{hpitr}. Sie soll die Arbeit an und mit technischen Berichten des
 \textsc{hpi} vereinfachen und die Einheitlichkeit sicherstellen.
 
 Im diesem Handbuch werden die Möglichkeiten dieser \LaTeX"=Klasse erläutert
 und die notwendigen Einschränkungen erklärt.
-\end{ger}
-\end{paracol}
+%</de>
 
-\begin{paracol}{2}
-\begin{eng}
-\subsection{A note on \LaTeX{} elements}
-\end{eng}
-\begin{ger}
-\subsection{Eine Anmerkung zu \LaTeX"=Befehlen}
-\end{ger}
-\end{paracol}
+%<en>\subsection{A note on \LaTeX{} elements}
+%<de> \subsection{Eine Anmerkung zu \LaTeX"=Befehlen}
 \begin{Describe}
   \DescribeMacro{command}\\
   \DescribeEnv{environment}\\
@@ -3041,27 +2987,24 @@ und die notwendigen Einschränkungen erklärt.
   \DescribeValue{option}{value}
 \end{Describe}
 \begingroup \let\dmsize\large
-\begin{paracol}{2}
-\begin{eng}
+%<*en>
 To easily find documentation to specific \LaTeX{} elements this class
 provides, that location is highlighted by a box like above. Every \LaTeX{}
 element is prefixed by its type: command sequences \dm{c}, environments
 \dm{e}, class options \dm{o}, and values to class option keys \dm{v}. This
 should help navigating in the  manual.
-\end{eng}
-\begin{ger}
+%</en>
+%<*de>
   Zur schnellen Hilfe zu bestimmen \LaTeX"=Befehlen dieser Klasse wird die
   zugehörige Erklärung mit einem Kasten wie oben zusehen markiert. Befehlsarten
   haben dabei eigene Präfixe: Befehle~\dm{c}, Umgebungen~\dm{e},
   \mbox{Klassenoptionen~\dm{o}} und Werte für Klassenoptionen~\dm{v}.
   Das soll die Orientierung im Handbuch erleichtern.
-\end{ger}
-\end{paracol}
+%</de>
 \endgroup
 
 
-\begin{paracol}{2}
-\begin{eng}
+%<*en>
 \subsection{An Example}
 \label{sec:example}
 As jump-start, a very minimal but complete \File{hpitr} technical report follows:
@@ -3095,16 +3038,17 @@ This example sets a \File{hpitr} report that
  \item and gives all meta-information for title, author, and keywords.
 \end{itemize}
 
-Note that by intention, the typical selection of the input encoding
-\hbox{(\kern0pt\lstinline|\usepackage[...]{inputenc}|)} is not present in this example. All
+The typical selection of the input encoding
+\hbox{(\kern0pt\lstinline|\usepackage[...]{inputenc}|)} is not present in this
+example on purpose. All
 files of \File{hpitr} reports are to be written using \textsc{utf-8} encoding. The class
 file takes care to select the right input encoding.
 
 \remark{All files of a \File{hpitr} report must be \textsc{utf-8}
 encoded.}
 
-\end{eng}
-\begin{ger}
+%</en>
+%<*de>
 \subsection{Ein Beispiel}
 Als Starthilfe folg ein minimaler, doch vollständiger Technischer Bericht mit
 \File{hpitr}:
@@ -3139,31 +3083,29 @@ Dieses Beispiel erzeugt einen \File{hpitr}"=Bericht, der
   bereitstellt.
 \end{itemize}
 
-Zu beachten ist, dass die eigentlich typische Auswahl der Eingabecodiereung
+Zu beachten ist, dass die eigentlich typische Auswahl der Eingabecodierung
 (\lstinline|\usepackage[...]{inputenc}|) im Beispiel nicht vorhanden ist. Dies
-geschieht absichtilich, das alle Dateien eines \File{hpitr}"=Berichts in
+geschieht absichtlich, da alle Dateien eines \File{hpitr}"=Berichts in
 \textsc{utf-8}"=Codierung geschrieben werden sollen. Die Klasse sorgt dann für
-die korrerte Handhabung.
+die korrekte Handhabung.
 
 \remark{Alle Dateien eines \File{hpitr}"=Berichts müssen
   \textsc{utf-8}"=codiert sein.}
-\end{ger}
-\end{paracol}
+%</de>
 %^^A ----------------------------------------
-\begin{paracol}{2}
-\begin{eng}
+%<*en>
 \subsection{Running \LaTeX}
 \label{sec:running}
 \File{hpitr} reports are handed to the publisher \emph{Universitätsverlag
   Potsdam} as \textsc{pdf} files. The \File{hpitr} class support the three
 major \TeX{} engines that directly produce \textsc{pdf} files:
 \begin{itemize}
-\item \pdfTeX{} (exectuable \lstinline[language=bash]|pdflatex|),
-\item \LuaTeX{} (exectuable \lstinline[language=bash]|lualatex|), and
-\item \XeTeX{} (exectuable \lstinline[language=bash]|xelatex|).
+\item \pdfTeX{} (executable \lstinline[language=bash]|pdflatex|),
+\item \LuaTeX{} (executable \lstinline[language=bash]|lualatex|), and
+\item \XeTeX{} (executable \lstinline[language=bash]|xelatex|).
 \end{itemize}
 For best results, and for best Unicode and \textsc{utf-8} support, the \LuaTeX
-engine is recommended. For the same reason, it is recomended to use Biblatex
+engine is recommended. For the same reason, it is recommended to use Biblatex
 with the \hologo{biber} engine instead of plain \BibTeX.
 
 A typical \LaTeX{} run for a \File{hpitr} report should look like this:
@@ -3174,8 +3116,8 @@ lualatex report
 lualatex report
 \end{lstlisting}
 This should build the \textsc{pdf} file with all bibliographic information.
-\end{eng}
-\begin{ger}
+%</en>
+%<*de>
 \subsection{\LaTeX"=Läufe}
 Alle \File{hpitr}"=Berichte werden als \textsc{pdf}"=Dateien an den
 Universitätsverlag Potsdam übermittelt. Die Klasse unterstützt daher die drei
@@ -3185,7 +3127,7 @@ verbreiteten \TeX"=Systeme mit direkter \textsc{pdf}"=Ausgabe:
 \item \LuaTeX{} (Programmdatei \lstinline[language=bash]|lualatex|) und
 \item \XeTeX{} (Programmdatei \lstinline[language=bash]|xelatex|).
 \end{itemize}
-Für beste Ergebnisse und beste Unicode/\textsc{utf-8}"=Untersützung wird das
+Für beste Ergebnisse und beste Unicode/\textsc{utf-8}"=Unterstützung wird das
 \LuaTeX"=System empfohlen. Aus gleichen Gründen empfiehlt es sich, Biblatex mit
 dem \hologo{biber}"=System statt einfachem \BibTeX\ zu verwenden.
 
@@ -3198,39 +3140,24 @@ lualatex report
 \end{lstlisting}
 Dies sollte die \textsc{pdf}"=Datei mit Bibliographieinformationen
 erzeugen.
-\end{ger}
-\end{paracol}
+%</de>
 %^^A----------------------------------------
-\clearpage
-\begin{paracol}{2}
-\begin{eng}
-\section{Report Structure}
-\end{eng}
-\begin{ger}
-\section{Berichtstruktur}
-\end{ger}
-\end{paracol}
+%<en>\section{Report Structure}
+%<de>\section{Berichtstruktur}
 
-\begin{paracol}{2}
-\begin{eng}
-\subsection{Types of Reports}
-\label{sec:types}
-\end{eng}
-\begin{ger}
-\subsection{Berichtarten}
-\end{ger}
-\end{paracol}
-\DescribeOption{trtype=\meta{type}}
-\begin{paracol}{2}
-\begin{eng}
+%<en>\subsection{Types of Reports}
+%<de> \subsection{Berichtarten}
+\begin{Describe}
+  \DescribeOption{trtype}\hspace*{-1em}{\MacroFont =}\meta{type}
+\end{Describe}
+%<*en> 
 This class support the types of technical reports that are common at the HPI.
 In essence, there are three variants.
-\end{eng}
-\begin{ger}
+%</en>
+%<*de>
 Die Klasse unterstütz die am HPI üblichen Arten von technischen Berichten.
 Grob sind das drei Varianten.
-\end{ger}
-\end{paracol}
+%</de>
 
 
 \begin{Describe}
@@ -3238,22 +3165,20 @@ Grob sind das drei Varianten.
   \DescribeValue{trtype}{article}\\
   {\color{gray} \DescribeOption{singlearticle}}
 \end{Describe}
-\begin{paracol}{2}
-\begin{eng}
+%<*en>
 \paragraph{Article-like reports}
 \label{sec:art-like}
 Reports that are basically similar to conference or journal articles or
 extend such articles have an \emph{article-like} character. Their top-level
 sectioning element is the \emph{sections}.
-\end{eng}
-\begin{ger}
+%</en>
+%<*de>
 \paragraph{Artikelartige Berichte}
 Berichte, die im Kern ähnlich zu Tagungs-, Konferenz- oder
 Zeitschriftenartikeln sind, oder erweiterte Varianten davon sind, haben
 \emph{artikelartigen} Charakter. Ihre höchste Gliederungsebene sind
 \emph{Abschnitte}.
-\end{ger}
-\end{paracol}
+%</de>
 
 
 \begin{Describe}
@@ -3262,8 +3187,7 @@ Zeitschriftenartikeln sind, oder erweiterte Varianten davon sind, haben
 {\color{gray} \DescribeOption{single}}\\
 {\color{gray} \DescribeOption{singlereport}}
 \end{Describe}
-\begin{paracol}{2}
-\begin{eng}
+%<*en>
 \paragraph{Original reports}
 \label{sec:original-rprt}
 Reports that are like monographs (such as theses) or inherently independent
@@ -3272,8 +3196,8 @@ types are inadequate as technical reports, to the contrary!} Their top-level
 sectioning element is the \emph{chapter}.
 
 This is the default type if none is given explicitly.
-\end{eng}
-\begin{ger}
+%</en>
+%<*de>
 \paragraph{Eigentliche Berichte}
 Berichte, die ähnlich zu Monographien (wie Abschlussarbeiten) oder
 grundsätzlich eigenständig sind, sind im eigentlichen Sinne
@@ -3282,8 +3206,7 @@ nicht als technische Berichte eignen würden.} Ihre höchste Gliederungsebene si
 \emph{Kapitel}.
 
 Wird keine Berichtart explizit ausgewählt, ist diese hier Standard.
-\end{ger}
-\end{paracol}
+%</de>
 
 
 \begin{Describe}
@@ -3292,8 +3215,7 @@ Wird keine Berichtart explizit ausgewählt, ist diese hier Standard.
   \DescribeValue{trtype}{proceedings}\\
   {\color{gray} \DescribeOption{proceedings}}
 \end{Describe}
-\begin{paracol}{2}
-\begin{eng}
+%<*en>
 \paragraph{Collection-like reports}
 \label{sec:coll-like}
 Reports comprising several individual contributions are
@@ -3306,8 +3228,8 @@ Note that proceeding use a different formatting for the individual
 contributions. They start with their own title, author information, and
 abstract, while in normal collections, this information is absent. In normal
 collections, all sections are numbered by chapter.
-\end{eng}
-\begin{ger}
+%</en>
+%<*de>
 \paragraph{Sammlungsartige Berichte}
 Berichte, die sich aus mehreren Einzelbeiträgen zusammensetzen sind
 \emph{sammlungsartig}. Dies kann unter anderem Tagungsbände,
@@ -3315,44 +3237,35 @@ Seminarzusammenfassungen oder Sonderbände beinhalten. Ihre höchste
 Gliederungsebene sind \emph{Kapitel}. Es gibt einige Befehle die die
 Verwaltung von diesen Sammlungen vereinfachen sollen.
 
-Tagungsbände zeichen sich durch eine besondere Formatierung der
+Tagungsbände zeichnen sich durch eine besondere Formatierung der
 Einzelbeiträge aus; jeder Beitrag beginnt im Gegensatz zu normalen Sammlungen
 mit eigenem Titel, Autorennennung und Zusammenfassung. In normalen Sammlungen
-ordnet sich die Abschnitsnummerierung der Kapitelnummerierung unter.%
-\end{ger}
-\end{paracol}
+ordnet sich die Abschnittsnummerierung der Kapitelnummerierung unter.%
+%</de>
 
 \begin{Describe}
 \DescribeValue{trtype}{inproceedings}\\
 {\color{gray} \DescribeOption{inproceedings}}
 \end{Describe}
-\begin{paracol}{2}
-\begin{eng}
+%<*en>
 \paragraph{Contributions}
 \label{sec:contrib}
 The \File{hpitr} class supports an additional report type, \emph{inproceedings}
 that is not intended to be published as is. Rather, this type can be used to
 produce a \textsc{pdf} version of an individual contribution to a
 proceedings-like report for further processing.
-\end{eng}
-\begin{ger}
+%</en>
+%<*de>
 \paragraph{Beiträge zu tagungsbandartigen Berichten}
 Die \File{hpitr}"=Klasse unterstützt eine uneigentliche Beritchart
-\emph{inproceedings}, die nicht eingenständig veröffentlicht werden soll. Sie
+\emph{inproceedings}, die nicht eigenständig veröffentlicht werden soll. Sie
 ist dafür gedacht, um einen einzelnen Beitrag zu einem tagungsbandartigen
-Bericht als \textsc{pdf} zur möglichen Weiterverabeitung vorzubereiten.
-\end{ger}
-\end{paracol}
+Bericht als \textsc{pdf} zur möglichen Weiterverarbeitung vorzubereiten.
+%</de>
 
-\begin{paracol}{2}
-\begin{eng}
-\subsection{Report Information and Metadata}
+%<en>\subsection{Report Information and Metadata}
+%<de> \subsection{Informationen zum Bericht und Metadaten}
 \label{sec:metadata}
-\end{eng}
-\begin{ger}
-\subsection{Informationen zum Bericht und Metadaten}
-\end{ger}
-\end{paracol}
 \begin{Describe}
 \DescribeMacro{title}\\
 \DescribeMacro{subtitle}\\
@@ -3361,8 +3274,7 @@ Bericht als \textsc{pdf} zur möglichen Weiterverabeitung vorzubereiten.
 \DescribeMacro{maketitle}\\
 \DescribeEnv{abstract}
 \end{Describe}
-\begin{paracol}{2}
-\begin{eng}
+%<*en>
 A set of specific information and metadata has to be provided for all reports.
 This comprises
 \begin{itemize}
@@ -3371,15 +3283,15 @@ This comprises
 \item keywords in English and German, and
 \item abstracts in English and German
 \end{itemize}
-which have to be provided \emph{in addtition} to the \textsc{pdf} file.
+which have to be provided \emph{in addition} to the \textsc{pdf} file.
 
 
 All but the abstracts have to be also present in the \textsc{pdf} metadata. The
 \File{hpitr} class takes care of that as long as the common \LaTeX{} commands
-are used, i.\,e.\\
+are used, \ie\\
 \cs{title}\marg{work title}\\
 \cs{subtitle}\marg{optional subtitle}\\
-\cs{author}\marg{list of authors seperated by \cs{and}}\\
+\cs{author}\marg{list of authors separated by \cs{and}}\\
 \cs{keywords}\marg{list of comma separated keywords}, and \cs{maketitle} is
 used to make them persistent.
 
@@ -3393,8 +3305,8 @@ typically the first page for article-like and original reports. Collection-like
 reports do not have an abstract but should rather have a dedicated preface or foreword.
 
 Contributions in collection-like reports are treated specially.
-\end{eng}
-\begin{ger}
+%</en>
+%<*de>
 Für alle technischen Berichte müssen bestimmte Informationen und Metadaten
 bereitgestellt werden; und zwar
 \begin{itemize}
@@ -3415,18 +3327,17 @@ dafür, solange die typischen \LaTeX"=Befehle dafür genutzt werden:\\
 \cs{keywords}\marg{kommagetrennte Schlagworte}\\
 und \cs{maketitle} um diese Informationen ins \textsc{pdf} zu übernehmen.
 
-Im Gegensatz zur üblichen Praxis setzt \cs{maketitle} absichtilch \emph{weder}
+Im Gegensatz zur üblichen Praxis setzt \cs{maketitle} absichtlich \emph{weder}
 Titelseite \emph{noch} Titelkopf auf der ersten Seite, da die
 \emph{eigentliche} Titelei durch den Universitätsverlag angefügt wird.
 
 Die Berichtskurzfassung, die in der |abstract|"=Umgebung angegeben wird, wird
 jedoch auf jeden Fall mit ausgegeben. Für artikelartige und eigentliche
-Berichtie ist dies typischerweise die erste Seite. Sammlungsartige Berichte
+Berichte ist dies typischerweise die erste Seite. Sammlungsartige Berichte
 sollten keine Kurzfassung sondern eher ein Vorwort haben.
 
 Beiträge in Sammlungsartigen Berichten werden gesondert behandelt.
-\end{ger}
-\end{paracol}
+%</de>
 
 \begin{Describe}
   {\color{gray}\DescribeMacro{part}}\\
@@ -3437,8 +3348,7 @@ Beiträge in Sammlungsartigen Berichten werden gesondert behandelt.
   \DescribeMacro{paragraph}\\
   \DescribeMacro{minisec}
 \end{Describe}
-\begin{paracol}{2}
-\begin{eng}
+%<*en>
 \subsection{Structuring Elements}
 
 The typical \LaTeX\ commands to structure documents are available to
@@ -3447,7 +3357,7 @@ The typical \LaTeX\ commands to structure documents are available to
 The command \cs{chapter} is only available to original reports and
 colloection-like reports. All kind of reports can use the commands \cs{section}
 to \cs{subsubsection} to structure documents, they created numbered sections.
-All of these commands exists in starred variants (e.\,g. \cs{section*}) to
+All of these commands exists in starred variants (\eg \cs{section*}) to
 create un-numbered structure elements.
 
 The command \cs{paragraph} will always create an unnumbered structure element.
@@ -3470,14 +3380,14 @@ not appear on a page of their own. Chapter should be used for general document
 parts such as a preface or foreword, closing remarks, or a general
 introduction.
 
-\end{eng}
-\begin{ger}
+%</en>
+%<*de>
 \subsection{Strukturelemente}
 
 Die in \LaTeX\ üblichen Strukturierungsbefehle sind auch in
 \File{hpitr}"=Berichten mit nur wenigen Einschränkungen nutzbar.
 
-Der \cs{chapter}"=Befehl ist auf eigentliche und sammlunsartige Berichte
+Der \cs{chapter}"=Befehl ist auf eigentliche und sammlungsartige Berichte
 beschränkt. Alle Berichtarten stehen die Befehle \cs{section} bis
 \cs{subsubsection} zur Verfügung, sie markieren nummerierte Dokumentabschnitte.
 Alle diese Befehle existieren in Stern"=Varianten (wie \cs{section*}) um
@@ -3500,12 +3410,11 @@ In Tagungsbänden und ähnlichen Berichten sollten Kapitel nur außerhalb der
 eigentlichen, eigenständigen Beiträge Verwendung finden, da jeder Beitrag
 einzeln wie ein artikelartiger Bericht wirkt. Daher sollten \emph{in} den
 Beiträgen nur Abschnitte und ggf. markierte Absätze genutzt werden. Anhang und
-Literturverzeichnis verhalten sich wie Abschnitte und stehen nicht allein auf
+Literaturverzeichnis verhalten sich wie Abschnitte und stehen nicht allein auf
 einer neuen Seite. Kapitel hingegen sollten für allgemeine Dokumentteile wie
 Vorworte, Nachworte oder allgemeine Einführungen genutzt werden.
 
-\end{ger}
-\end{paracol}
+%</de>
 \begin{Describe}
   \DescribeMacro{tableofcontents}\\
   \DescribeMacro{listoffigures}\\
@@ -3513,8 +3422,7 @@ Vorworte, Nachworte oder allgemeine Einführungen genutzt werden.
   {\color{gray} \DescribeMacro{listoflistings}\unskip\ldots}
 \end{Describe}
 
-\begin{paracol}{2}
-\begin{eng}
+%<*en>
 \subsubsection*{The Table of Contents}
 
 Reports should contain a table of contents (\cs{tableofcontents}) if they are
@@ -3523,14 +3431,14 @@ foreword, or preface. Hence, those do not show up in the table of contents.
 
 The table of contents may optionally be followed by a list of all figures
 (\cs{listoffigures}) or tables (\cs{listoftables}) in the document. Some
-packages provide individual lists that may also be used here, e.\,g. the
+packages provide individual lists that may also be used here, \eg the
 \File{listings} package provides a \cs{listoflistings}. All those lists should
 \emph{not} be listed in the table of contents.
 
 Individual contributions of proceedings-like reports should not have a table of
 contents on their own.
-\end{eng}
-\begin{ger}
+%</en>
+%<*de>
 
 \subsubsection*{Das Inhaltsverzeichnis}
 
@@ -3548,11 +3456,9 @@ Inhaltsverzeichnis aufgeführt werden.
 
 Die einzelnen Beiträge von tagungsbandartigen Berichten sollten selbst kein
 eigenes Inhaltsverzeichnis haben.
-\end{ger}
-\end{paracol}
+%</de>
 
-\begin{paracol}{2}
-\begin{eng}
+%<*en>
 \section{Layout}
 \label{sec:general}
 The technical reports of the \textsc{hpi} are published both in printed form
@@ -3582,8 +3488,8 @@ Page numbers are set centered on the page foot.
 
 \remark{The page dimensions, margins, and type area must not be changed.}
 
-\end{eng}
-\begin{ger}
+%</en>
+%<*de>
 \section{Satzeigenschaften}
 Technische Berichte des \textsc{hpi} werden sowohl gedruckt als auch
 elektronisch verlegt. Um ein einheitliches Erscheinungsbild über alle Medien
@@ -3607,17 +3513,15 @@ Seitenstege mit {99}\,\si{\pt} oder 8\cfrac{1}{4}\,\si{\pc},
 den Kopfsteg mit {66}\,\si{\pt} oder 5\cfrac{1}{2}\,\si{\pc}
 und den Fußsteg mit {135}\,\si{\pt} oder
 11\cfrac{1}{4}\,\si{\pc}\footnote{circa \SI{34.9}{\mm},
-  \SI{23.3}{\mm}, beziehungswiese \SI{47.6}{\mm}}.
+  \SI{23.3}{\mm}, beziehungsweise \SI{47.6}{\mm}}.
 
 Die Paginierung (Seitenzahlen) erfolgt zentriert im Seitenfuß.
 
 \remark{Seitengröße, Stege (Ränder) und Satzspiegel dürfen nicht verändert
 werden.}
 
-\end{ger}
-\end{paracol}
-\begin{paracol}{2}
-\begin{eng}
+%</de>
+%<*en>
 \subsection{Titles, Document Parts, and Page Numbering}
 \label{sec:title}
 
@@ -3626,38 +3530,39 @@ is provided by the publisher. Hence, the page number for the first page is
 actually 5.
 
 The page numbering defaults to arabic numbers.
+%</en>
+%<*de>
+\subsection{Titelei, Dokumentteile und Seitennummerierung}
+Wie schon beschrieben, haben \File{hpitr}"=Berichte keinen eigentlichen Titel;
+dieser wird durch den Verlag erstellt. Die erste Seite hat daher die
+Seitenzahl~5.
+
+Die Seitennummerierung erfolgt in arabischen Zahlen.
+%</de>
 
 \begin{Describe}
   \DescribeMacro{frontmatter}\\
   \DescribeMacro{mainmatter}\\
   \DescribeMacro{backmatter}
 \end{Describe}
+%<*en>
 Only in collection-like reports, a distinction between frontmatter, mainmatter,
 and backmatter is possible. The page numbering should be roman lowercase in the
 frontmatter and arabic in the main and backmatter. The first page number of the
-frontmatter should be v.
-\end{eng}
-\begin{ger}
-\subsection{Titelei, Dokumentteile und Seitennummerierung}
-
-Wie schon beschrieben haben \File{hpitr}"=Berichte keinen eigentlichen Titel;
-dieser wird durch den Verlag erstellt. Die erste Seite hat daher die
-Seitenzahl~5.
-
-Die Seitennummerierung erfolgt in arabischen Zahlen.
-
-\vspace{4.5\baselineskip}
-Nur in sammlungsartigen Berichten ist eine unterscheidung Zwischen Vorder"~,
+frontmatter should be “v”.
+%</en>
+%<*de>
+Nur in sammlungsartigen Berichten ist eine Unterscheidung Zwischen Vorder"~,
 Haupt"~ und Hinterteil möglich. Im Vorderteil sollte die Seitennummerierung in
 römischen Zahlen (Kleinbuchstaben) erfolgen, sonst mit arabischen. Die erste
-Seite hat die Seitenzahl v.
-\end{ger}
-\end{paracol}
+Seite hat die Seitenzahl „v“.
+%</de>
 
 \begin{figure*}[tbp]
   \centering
-  %\setlength{unitlength}
-  \vbox{\hbox to \linewidth{
+  \setlength{\unitlength}{.9pt}
+  \hbox to \linewidth{\hss%
+  \vbox{\hbox to 1.1\linewidth{
       \begin{picture}(120,140)
         \makebox(120,140){
         \shortstack{
@@ -3696,20 +3601,20 @@ Seite hat die Seitenzahl v.
               {\thicklines \put(0,96){\line(1,0){110}}}
               {\thicklines \put(0,0){\line(1,0){110}}}
               \let\mysize\footnotesize
-              \put(0,86){\mysize aaaaaa}
-              \put(36,86){\mysize zzzzzzzzzzzzzz}
+              \put(0,86){\mysize aaaa}
+              \put(36,86){\mysize zzzzzzzzzzzzz}
               \put(0,84){\line(1,0){110}}
               \put(0,74){\mysize bbbb}
-              \put(36,74){\mysize yyyyyyyyyyyyyyy}
+              \put(36,74){\mysize yyyyyyyyyy}
               \put(0,62){\mysize cccc}
-              \put(36,62){\mysize xxxxxxxxxxxxxxx}
-              \put(36,50){\mysize wwwwwww}
-              \put(0,38){\mysize dddddd}
+              \put(36,62){\mysize xxxxxxxxxx}
+              \put(36,50){\mysize wwwww}
+              \put(0,38){\mysize ddd}
               \put(36,38){\mysize vvvvv}
               \put(36,26){\mysize uuu}
               \put(36,14){\mysize ttttttttttttt}
               \put(0,2){\mysize fff}
-              \put(36,2){\mysize sssssssssssssssssssss}
+              \put(36,2){\mysize sssssssssssssss}
             }}}
       \end{picture}
       \hss
@@ -3747,13 +3652,14 @@ Seite hat die Seitenzahl v.
                 \put(5,2){\lt \line(1,0){18}}}
             }}}
       \end{picture}
-    }}
-  \caption{\textenglish{Recommended positions for float captions} /
-    \textgerman{\em Empfohlene Positionen für Fließumgebungsbeschriftungen}}
+    }}\hss}
+  \caption{%
+%<en>Recommended positions for float captions.%
+%<de>Empfohlene Positionen für Fließumgebungsbeschriftungen.%
+}
   \label{fig:floats}
 \end{figure*}
-\begin{paracol}{2}
-\begin{eng}
+%<*en>
 \subsection{Floats}
 \label{sec:floats}
 
@@ -3779,16 +3685,16 @@ bottom and might span several pages. Hence, their captions are placed
 Floats are named by their type numbered within a chapter (original or
 collection-like reports) or with a section (article-like reports or
 contributions to a proceedings-like report).
-\end{eng}
-\begin{ger}
+%</en>
+%<*de>
 \subsection{Fließumgebungen}
 
 Aller nicht-textueller Inhalt, der Platz benötigt und auf den im Dokument
-verwiesen wird, wird als "`fließender Inhalt"' behandelt. Dazu zählen z.\,B.
+verwiesen wird, wird als "`fließender Inhalt"' behandelt. Dazu zählen \zB
 Abbildungen, Tabellen (auch Tafeln) oder Quelltextwiedergaben.
 
 Fließumgebungen können an der Stelle platziert werden, an der sie im Quelltext
-auftreten, könen von \LaTeX\ aber auch an den Seitenanfang oder
+auftreten, können von \LaTeX\ aber auch an den Seitenanfang oder
 "~ende oder eine eigene Seite verschoben werden. Dies ist beabsichtigt.\\
 \emph{Bemerkung:} Fließumgebungen, die zwingend \emph{exakt} an der Stelle
 erscheinen müssen an der sie im Quelltext gegeben sind, sind im eigentlichen
@@ -3803,15 +3709,13 @@ Bild\emph{unter}schriften erhalten. Tabellen, Quelltextwiedergaben, Algorithmen
 oder Ähnliches werden von oben nach unten gelesen und können über mehrere
 Seiten gehen. Sie sollten daher \emph{Über}schriften erhalten (siehe \autoref{fig:floats}).
 
-Fließumgebungen werden mit ihrem Typ benamt und innerhalb einens Kapitels (bei
+Fließumgebungen werden mit ihrem Typ benannt und innerhalb eines Kapitels (bei
 eigentlichen und sammlungsartigen Berichten) oder eines Abschnitts (bei
 Artikel-artigen Berichten oder Beiträgen zu einem tagungsbandartigen Bericht)
 nummeriert.
-\end{ger}
-\end{paracol}
+%</de>
 
-\begin{paracol}{2}
-\begin{eng}
+%<*en>
 \section{Microtypography}
 \label{sec:micro}
 
@@ -3853,7 +3757,7 @@ these are the spacings chosen:
 
 \begin{itemize}
 \item Paragraphs are set without vertical space but indented by one \emph{em},
- i.\,e. \SI{12}{\pt}. The first paragraph of a chapter or section is not indented.
+ \ie \SI{12}{\pt}. The first paragraph of a chapter or section is not indented.
 \item The space before a chapter heading is three empty lines, the space after
   it, two empty lines.
 \item The space before a section heading is two empty lines, the space after
@@ -3872,15 +3776,15 @@ these are the spacings chosen:
 \label{sec:float-captions}
 
 
-Captions of floats should be preceded by the un-abbreviated float type, e.\,g.
-Figure or Table, the float number and a semi-colon, all in bold font. The
+Captions of floats should be preceded by the un-abbreviated float type, \eg
+Figure or Table, the float number and a colon, all in bold font. The
 caption that follows should be in normal font.
 
 If the caption is only one line, it should be centered, if it spans multiple
 lines, it should be set flush left and all but the first line should be
-indented by one \emph{em}, i.\,e. \SI{12}{\pt}.
-\end{eng}
-\begin{ger}
+indented by one \emph{em}, \ie \SI{12}{\pt}.
+%</en>
+%<*de>
 \section{Detailtypographie}
 
 Für eine konsistente Darstellung, müssen die Wahl von Schrift und Abständen
@@ -3930,16 +3834,16 @@ wiedergegeben.
   abgetrennt.
 \item Unter"=Unterabschnittsüberschriften werden mit einer Zeile davor
   abgetrennt. Danach folg kein vertikaler Weißraum.
-\item Überschriften benamter Absätze werden mit einer Zeile davor abgetrennt.
+\item Überschriften benannter Absätze werden mit einer Zeile davor abgetrennt.
   Der Text fängt direkt rechts der Überschrift an.
 \item Fließumgebungen werden vom Text mit zwei Zeilen abgetrennt.
-\item Fließumgebungen werden voneinander mit einer Zeiler abgetrennt.
+\item Fließumgebungen werden voneinander mit einer Zeile abgetrennt.
 \end{itemize}
 
 \subsection{Beschriftungen}
 
-Der Beschriftung von Fließumgebungen wir der unverkürzte Name (z.\,B. Abbildung
-oder Tabelle), die laufende Fließumgebungsnummer und ein Semikolon
+Der Beschriftung von Fließumgebungen wir der unverkürzte Name (\zB Abbildung
+oder Tabelle), die laufende Fließumgebungsnummer und ein Doppelpunkt
 vorangestellt, alles in fetter Schrift. Die eigentliche Beschriftung folgt, in
 normaler, nicht"=fetter Schrift.
 
@@ -3947,16 +3851,9 @@ Ist die gesamte Beschriftung nicht länger als eine Zeile, wird diese zentriert
 gesetzt. Mehrzeilige Beschriftungen werden linksbündig gesetzt und bis auf die
 erste Zeile mit einem Geviert (hier \SI{12}{\pt}) eingezogen.
 
-\end{ger}
-\end{paracol}
-\begin{paracol}{2}
-\begin{eng}
-\subsection*{Additional considerations}
-\end{eng}
-\begin{ger}
-\subsection*{Anderes}
-\end{ger}
-\end{paracol}
+%</de>
+%<en> \subsection*{Additional considerations}
+%<de> \subsection*{Anderes}
 
 \begin{Describe}
   \DescribeMacro{hairspace}\\
@@ -3971,8 +3868,7 @@ erste Zeile mit einem Geviert (hier \SI{12}{\pt}) eingezogen.
   \DescribeOption{egiecomma}
 \end{Describe}
 
-\begin{paracol}{2}
-\begin{eng}
+%<*en>
 
 \begingroup
 \def\hairspace{\ifmmode\mskip1mu\else\kern0.08em\fi}
@@ -4004,8 +3900,8 @@ enclose a problematic paragraph by a |sloppypar| environment.
 
 \endgroup
 
-\end{eng}
-\begin{ger}
+%</en>
+%<*de>
 \begingroup
 \def\hairspace{\ifmmode\mskip1mu\else\kern0.08em\fi}
 
@@ -4036,26 +3932,22 @@ Stellen können mit der |sloppypar|"=Umgebung besser behandelt werden.
 
 \endgroup
 
-\end{ger}
-\end{paracol}
+%</de>
 
-\begin{paracol}{2}
-\begin{eng}
+%<*en>
 \section{Cross-References}
 \label{sec:refs}
 
 The \File{hpitr} class supports a certain style of inter- and intra-document references.
-\end{eng}
-\begin{ger}
+%</en>
+%<*de>
 \section{Verweise}
 Die \File{hpitr}"=Klasse unterstützt einen bestimmten Stil auf andere Quellen
 oder innerhalb eines Dokuments zu verweisen.
-\end{ger}
-\end{paracol}
+%</de>
 
 \DescribeMacro{autoref}
-\begin{paracol}{2}
-\begin{eng}
+%<*en>
 \subsection{Intra-document References}
 
 To ease references in-between parts of a document, the \cs{autoref} command can
@@ -4070,11 +3962,11 @@ following reference schema is produced:
 \item For chapters: “chapter \(n\)”
 \item For section: “section \(n.m\)” where \(n\) is the number of the chapter
 \item For sub-section: “section \(n.m.k\)” where \(m\) is the number of the
-  section and \(n\) is the number of the chapter. The word subection is not
+  section and \(n\) is the number of the chapter. The word subsection is not
   used.
 \item For sub-sub-section: “section \(n.m.k.l\)” where \(k\) is the number of
   the subsection, \(m\) is the number of the section, and \(n\) is the number
-  of the chapter. The word subsubection is not used.
+  of the chapter. The word subsubsection is not used.
 \item For paragraphs: references to paragraphs should be avoided.
 \end{itemize}
 
@@ -4086,7 +3978,7 @@ following reference schema is produced:
 \begin{itemize}
 \item For section: “section \(n\)”
 \item For sub-section: “section \(n.m\)” where \(n\) is the number of the
-  section. The word subection is not used.
+  section. The word subsection is not used.
 \item For sub-sub-section: “section \(n.m.k\)” where \(m\) is the number of
   the subsection and \(n\) is the number of the section.
 \item For paragraphs: references to paragraphs should be avoided.
@@ -4097,8 +3989,8 @@ If possible, the contributions of a proceedings-like report should not
 inter-reference each other.
 
 The \cs{autoref} command can also be used to reference to floats.
-\end{eng}
-\begin{ger}
+%</en>
+%<*de>
 \subsection{Interne Verweise}
 
 Um Verweise zwischen Dokumentteilen zu erleichtern kann der
@@ -4119,7 +4011,7 @@ folgendes Namensschema verwendet:
 \item Für Unterunterabschnitte: „Abschnitt \(n.m.k.l\)“, wobei \(k\) die
   Unterabschnittsnummer, \(m\) die Abschnittsnummer und \(n\) die Kapitelnummer
   ist. Das Wort Unterunterabschnitt wird nicht verwendet.
-\item Benamte Absätze: Verweise auf benamte Absätze sollten vermieden werden.
+\item Benannte Absätze: Verweise auf benannte Absätze sollten vermieden werden.
 \end{itemize}
 \subsubsection{Berichte ohne Kapitel}
 
@@ -4133,7 +4025,7 @@ folgendes Namensschema verwendet:
 \item Für Unterunterabschnitte: „Abschnitt \(n.m.k\)“, wobei \(m\) die
   Unterabschnittsnummer und \(n\) die Abschnittsnummer ist. Das Wort
   Unterunterabschnitt wird nicht verwendet.
-\item Benamte Absätze: Verweise auf benamte Absätze sollten vermieden werden.
+\item Benannte Absätze: Verweise auf benannte Absätze sollten vermieden werden.
 \end{itemize}
 \bigskip
 
@@ -4144,22 +4036,14 @@ Der \cs{autoref}"=Befehl kann auch verwendet werden um auf Fließumgebungen wie
 Abbildungen zu verweisen.
 
 
-\end{ger}
-\end{paracol}
+%</de>
 
-\begin{paracol}{2}
-\begin{eng}
-\subsection{Bibliographic References}
+%<en> \subsection{Bibliographic References}
+%<de> \subsection{Zitier"~ und Literaturstil}
 \label{sec:biblio}
-\end{eng}
-\begin{ger}
-\subsection{Zitier"~ und Literaturstil}
-\end{ger}
-\end{paracol}
 
 \DescribeMacro{cite}
-\begin{paracol}{2}
-\begin{eng}
+%<*en>
 For citations and bibliographies, a \emph{numeric} citation style is used.
 The numbers derive from the \emph{alphabetic} sorting of the list of
 bibliographic entries at the end of the report (or the end of the individual
@@ -4183,14 +4067,14 @@ used.
 \remark{The citation and bibliographic style is not to
 be changed.}
 
-While \BibTeX should work fine and is supported, the use of Biblatex,
+While \BibTeX\ should work fine and is supported, the use of Biblatex,
 especially with its \emph{biber} backend is encouraged to support proper use of
 Unicode characters and fonts. %^^A TODO: ref biblatex
 Collection works \emph{must} use Biblatex. For a list of kinds of works to cite
 as supported by \BibTeX and Biblatex refer to \autoref{tbl:bibtytpes}. Kinds of
 work not listed should use the \emph{misc} type.
-\end{eng}
-\begin{ger}
+%</en>
+%<*de>
 In Zitaten und Literaturlisten wird ein einfacher, \emph{numerischer} Stil
 genutzt. Die Nummerierung folgt der \emph{alphabetischen} Sortierung der
 Literatureinträge in der Literaturliste am Ende des Berichts (oder am Ende
@@ -4220,104 +4104,168 @@ Sammlungsartige Berichte \emph{müssen} Biblatex benutzen. Eine Liste aller
 von \BibTeX\ und Biblatex unterstützten zu zitierenden Werkarten findet sich
 in \autoref{tbl:bibtytpes}. Nicht aufgeführte Werkarten erhalten den Typ
 \emph{misc}.
-\end{ger}
-\end{paracol}
+%</de>
 
 \begin{table}[htbp]
-  \makeatletter
-  \let\sellang\select@language
-  \makeatother
   \smaller
   \centering
   \begin{threeparttable}
     \caption{%
-    \textenglish{Supported bibliography entry types} / %
-    \textgerman{\em Unterstützte Bibliographieeintragsarten}
-    \hspace{\textwidth}\relax D %^^A I am a sacrifice Oo
-    \textenglish{Default type is indicated; alias entry types in italic} /
-    \textgerman{\em Standardeintragsart ist markiert; Parallelbezeichnungen kursiv}
+%<en> Supported bibliography entry types; %
+%<en> Default type is indicated; alias entry types in italic. %
+%<de> Unterstützte Bibliographieeintragsarten; %
+%<de> Standardeintragsart ist markiert; Parallelbezeichnungen kursiv.%
     }
     \label{tbl:bibtytpes}
-    \begin{tabular}{>{\relax}l>{\relax}l>{\sellang{english}\RaggedRight}p{.34\linewidth}>{\sellang{ngerman}\em\RaggedRight}p{.34\linewidth}}
+    \begin{tabular}{>{\relax}l>{\relax}l>{\relax}l}
     \toprule
-    \BibTeX           & Biblatex                   &                      & \\
+    \BibTeX           & Biblatex                   &                      \\
     \midrule
-    article           & article                    & articles in journal, magazine \&c & Zeitschriften"~, Magazin"~ und andere Artikel \\
-                      & \textit{suppperiodical}      & supplemental material in periodicals & Zusatzmaterialien in Periodika \\
-                      & \textit{review}              & reviews of other works & Rezensionen anderer Arbeiten \\
-    book              & book                       & books & Bücher\\
-                      & \textit{mvbook}              & multi-volume --- & Mehrbändige --- \\
-    booklet           & booklet                    & book-like work without publisher & Buchartiges nicht-verlegtes Werk \\
-                      & collection                 & collection of multiple independent contributions &  Sammlung eigenständiger Werke \\
-                      & \textit{mvcollection}        & multi-volume --- & Mehrbändige --- \\
-                      & \textit{reference}           & references such as dictionaries & Nachschlagewerke wie Wörterbücher\\
-                      & \textit{mvreference}         & multi-volume --- & Mehrbändige --- \\
-    inbook            & inbook\tnote{a}            & independent part of a book & Eigenständiger Buchteil \\
-                      & \textit{bookinbook}          & part of a book that originally was a book & Buchteil, der schon als eigenständiges Buch verlegt wurde \\
-                      & \textit{suppbook}            & supplemental material in books & Zusatzmaterialien in Büchern \\
-    incollection      & incollection               & independent contribution to a collection & Eigenständiges Werk, das einer Sammlung ist \\
-                      & \textit{suppcollection}      & supplemental material in a collection & Zusatzmaterialien in Sammlungen \\
-                      & \textit{inreference}         & articles in works of references & Artikel in Nachschlagewerken\\
-    inproceedings     & inproceedings              & articles in conference proceedings & Tagungsbandartikel\\
-    \textit{conference} & \textit{conference}          & --- ditto & --- dito \\
-    manual            & manual                     & documentation works & Handbücher \\
-    mastersthesis     & mastersthesis\tnote{b}     & Master’s theses & Master"~ oder Magisterarbeiten \\
-\llap{☞} misc        & misc                        & anything (default) & sonstiges (Vorgabewert)\\
-                      & online                     & online resource like web sites & Internetquellen wie Webseiten \\
-                      & \textit{www}                 & --- ditto & --- dito \\
-                      & \textit{electronic}          & --- ditto & --- dito \\
-    phdthesis         & phdthesis\tnote{b}         & doctoral dissertation & Dissertation \\
-                      & patent                     & patent entries & Patente \\
-                      & periodical                 & complete preriodical issue & Ganze Zeitschriftenausgabe \\
-    proceedings       & proceedings                & conference proceeding & Konferenz"~ und Tagungsbändge \\
-                      & \textit{mvproceedings}       & multi-volume --- & Mehrbändige --- \\
-                      & report                     & institutionally published report & Von Institutionen veröffentlichte Berichte\\
-    techreport        & \textit{techreport}\tnote{c} & technical reports & Technische Berichte\\
-                      & thesis                     & theses submitted to educational institutins & Abschlussarbeiten \\
-                      & \textit{mastersthesis}       & (see above) & (siehe oben) \\
-                      & \textit{phdthesis}           & (see above) & (siehe oben) \\
-    unpublished       & unpublished                & works not formally published & Nicht offiziell veröffentlichte Werke \\
+    article           & article                    &
+%<en>                                                    articles in journal, magazine \&c \\
+%<de>                                                    Zeitschriften"~, Magazin"~ und andere Artikel \\
+                      & \textit{suppperiodical}      &
+%<en>                                                    supplemental material in periodicals \\
+%<de>                                                    Zusatzmaterialien in Periodika \\
+                      & \textit{review}              &
+%<en>                                                    reviews of other works \\
+%<de>                                                    Rezensionen anderer Arbeiten \\
+    book              & book                       &
+%<en>                                                    books \\
+%<de>                                                    Bücher\\
+                      & \textit{mvbook}              &
+%<en>                                                    multi-volume --- \\
+%<de>                                                    Mehrbändige --- \\
+    booklet           & booklet                    &
+%<en>                                                    book-like work without publisher \\
+%<de>                                                    Buchartiges nicht-verlegtes Werk \\
+                      & collection                 &
+%<en>                                                    collection of multiple independent contributions \\
+%<de>                                                     Sammlung eigenständiger Werke \\
+                      & \textit{mvcollection}        &
+%<en>                                                    multi-volume --- \\
+%<de>                                                    Mehrbändige --- \\
+                      & \textit{reference}           &
+%<en>                                                    references such as dictionaries \\
+%<de>                                                    Nachschlagewerke wie Wörterbücher\\
+                      & \textit{mvreference}         &
+%<en>                                                    multi-volume --- \\
+%<de>                                                    Mehrbändige --- \\
+    inbook            & inbook\tnote{a}            &
+%<en>                                                    independent part of a book \\
+%<de>                                                    Eigenständiger Buchteil \\
+                      & \textit{bookinbook}          &
+%<en>                                                    part of a book that originally was a book \\
+%<de>                                                    Buchteil, der schon als eigenständiges Buch verlegt wurde \\
+                      & \textit{suppbook}            &
+%<en>                                                    supplemental material in books \\
+%<de>                                                    Zusatzmaterialien in Büchern \\
+    incollection      & incollection               &
+%<en>                                                    independent contribution to a collection \\
+%<de>                                                    Eigenständiges Werk, das einer Sammlung ist \\
+                      & \textit{suppcollection}      &
+%<en>                                                    supplemental material in a collection \\
+%<de>                                                    Zusatzmaterialien in Sammlungen \\
+                      & \textit{inreference}         &
+%<en>                                                    articles in works of references \\
+%<de>                                                    Artikel in Nachschlagewerken\\
+    inproceedings     & inproceedings              &
+%<en>                                                    articles in conference proceedings \\
+%<de>                                                    Tagungsbandartikel\\
+    \textit{conference} & \textit{conference}          &
+%<en>                                                    --- ditto \\
+%<de>                                                    --- dito \\
+    manual            & manual                     &
+%<en>                                                    documentation works \\
+%<de>                                                    Handbücher \\
+    mastersthesis     & mastersthesis\tnote{b}     &
+%<en>                                                    Master’s theses \\
+%<de>                                                    Master"~ oder Magisterarbeiten \\
+\llap{☞} misc        & misc                        &
+%<en>                                                    anything (default) \\
+%<de>                                                    sonstiges (Vorgabewert)\\
+                      & online                     &
+%<en>                                                    online resource like web sites \\
+%<de>                                                    Internetquellen wie Webseiten \\
+                      & \textit{www}                 &
+%<en>                                                    --- ditto \\
+%<de>                                                    --- dito \\
+                      & \textit{electronic}          &
+%<en>                                                    --- ditto \\
+%<de>                                                    --- dito \\
+    phdthesis         & phdthesis\tnote{b}         &
+%<en>                                                    doctoral dissertation \\
+%<de>                                                    Dissertation \\
+                      & patent                     &
+%<en>                                                    patent entries \\
+%<de>                                                    Patente \\
+                      & periodical                 &
+%<en>                                                    complete periodical issue \\
+%<de>                                                    Ganze Zeitschriftenausgabe \\
+    proceedings       & proceedings                &
+%<en>                                                    conference proceeding \\
+%<de>                                                    Konferenz"~ und Tagungsbände \\
+                      & \textit{mvproceedings}       &
+%<en>                                                    multi-volume --- \\
+%<de>                                                    Mehrbändige --- \\
+                      & report                     &
+%<en>                                                    institutionally published report \\
+%<de>                                                    Von Institutionen veröffentlichte Berichte\\
+    techreport        & \textit{techreport}\tnote{c} &
+%<en>                                                    technical reports \\
+%<de>                                                    Technische Berichte\\
+                      & thesis                     &
+%<en>                                                    theses submitted to educational institutions \\
+%<de>                                                    Abschlussarbeiten \\
+                      & \textit{mastersthesis}       &
+%<en>                                                    (see above) \\
+%<de>                                                    (siehe oben) \\
+                      & \textit{phdthesis}           &
+%<en>                                                    (see above) \\
+%<de>                                                    (siehe oben) \\
+    unpublished       & unpublished                &
+%<en>                                                    works not formally published \\
+%<de>                                                    Nicht offiziell veröffentlichte Werke \\
     \bottomrule
     \end{tabular}
     \begin{tablenotes}
-    \item [a] Behaves differently than \BibTeX / \emph{Verhält sich anders
-    als in \BibTeX}
-    \item [b] Actually a subtype of thesis / \emph{Eigentlich eine thesis-Unterart}
-    \item [c] Actually a subtype of report / \emph{Eigentlich eine report-Unterart}
+    \item [a]
+%<en>      Behaves differently than \BibTeX
+%<de>      Verhält sich anders als in \BibTeX
+    \item [b]
+%<en>      Actually a subtype of thesis
+%<de>      Eigentlich eine thesis-Unterart
+    \item [c]
+%<en>      Actually a subtype of report
+%<de>      Eigentlich eine report-Unterart
     \end{tablenotes}
   \end{threeparttable}
 \end{table}
-\begin{paracol}{2}
-\begin{eng}
+
+%<en>
 \section{Miscellanea}
-\end{eng}
-\begin{ger}
-\section{Verschiedenes}
-\end{ger}
-\end{paracol}
+%<de> \section{Verschiedenes}
 \begin{Describe}
   \DescribeOption{copyrightmark}\\
   \DescribeValue{copyrightmark}{true}\\
   \DescribeValue{copyrightmark}{false}\\
 \end{Describe}
-\begin{paracol}{2}
-\begin{eng}
+%<*en>
 \subsection{Copyright metadata}
 
 By default, a copyright mark of the form ``Copyright (c) \the\year, HPI'' is
 added to the metadata of the resulting PDF file. This corresponds to the option
 |copyrightmark| or |copyrightmark=true|. To not add the information, use
 |copyrightmark=false|.
-\end{eng}
-\begin{ger}
+%</en>
+%<*de>
 \subsection{Coyprightvermerk in den Metadaten}
 
 Standardmäßig wird eine Vermerk der form "`Copyright (c) \the\year, HPI"' dem
 erzeugten PDF hinzugefügt, was der Option |copyrightmark| oder
-|copyrightmark=true| entspricht. Um den Vermerk zu verindern, sollte die Option
+|copyrightmark=true| entspricht. Um den Vermerk zu verhindern, sollte die Option
 |copyrightmark=false| verwendet werden.
-\end{ger}
-\end{paracol}
+%</de>
 
 
 \begin{Describe}
@@ -4326,8 +4274,7 @@ erzeugten PDF hinzugefügt, was der Option |copyrightmark| oder
   \DescribeValue{draft}{full}\\
   \DescribeOption{todotools}
 \end{Describe}
-\begin{paracol}{2}
-\begin{eng}
+%<*en>
 \subsection{Draft tools}
 
 To support editing early versions of reports, the |draft| or |draft=true|
@@ -4339,11 +4286,11 @@ version. To avoid that, use |draft=full|.
 
 The |todotools=true| option loads the \File{todonotes} packages (in draft mode)
 and provides a few additional commands.
-\end{eng}
-\begin{ger}
+%</en>
+%<*de>
 \subsection{Editierhilfen}
 
-Zur Unterstüzung von Bericht"=vorversionen schaletet die Klassenoption
+Zur Unterstützung von Vorversionen eines Berichts schaltet die Klassenoption
 |draft| (oder |draft=true|) einen grauen Balken mit der Aufschrift „Draft“ am
 Seitenanfang und "~ende ein. Viele \LaTeX"=Pakete reagieren ebenfalls auf die
 |draft|"=Option. Normalerweise schaltet dies auch alle Bilder ab. Die
@@ -4353,23 +4300,20 @@ ins Dokument übernommen werden. Sollen Bilder außen vor bleiben, kann die
 
 Die Option |todotools=true| lädt das \File{todonotes}"=Paket und stellt einige
 zusätzliche Editierbefehle bereit.
-\end{ger}
-\end{paracol}
+%</de>
 
-\begin{paracol}{2}
-\begin{eng}
+%<*en>
 \subsection{\LaTeX\ Packages}
 
 The following packages are automatically loaded by the \File{hpitr} class.
-\end{eng}
-\begin{ger}
+%</en>
+%<*de>
 \subsection{\LaTeX"=Pakete}
 Die folgenden Pakte werden von der \File{hpitr}"=Klasse automatisch geladen.
-\end{ger}
-\end{paracol}
+%</de>
 
-\begin{multicols}{3}
-{\color{DarkGreen}
+\begin{multicols}{2}
+{\color{DarkGreen}\smaller
 \begin{itemize}
 \item \File{accsupp}
 \item \File{amsmath}
@@ -4382,7 +4326,6 @@ Die folgenden Pakte werden von der \File{hpitr}"=Klasse automatisch geladen.
 \item \File{csquotes}
 \item \File{eso-pic} \emph{draft only}
 \item \File{etoolbox}
-\item \File{eulervm}
 \item \File{expl3}
 \item \File{extdash}
 \item \File{fixltx2e} pre-\TeX Live 2015 \emph{only}
@@ -4401,6 +4344,7 @@ Die folgenden Pakte werden von der \File{hpitr}"=Klasse automatisch geladen.
 \item \File{inputenc}
 \item \File{longtable}
 \item \File{ltxcmds}
+\item \File{luatex85} since \TeX Live 2016, \LuaTeX\ \emph{only}
 \item \File{mathcomp}
 \item \File{mathpazo} \pdfTeX\ \emph{only}
 \item \File{microtype}
@@ -4423,17 +4367,11 @@ Die folgenden Pakte werden von der \File{hpitr}"=Klasse automatisch geladen.
 \end{itemize}}
 \end{multicols}
 
-\begin{paracol}{2}
-\begin{eng}
-\par\noindent The following packages \emph{must not} be loaded.
-\end{eng}
-\begin{ger}
-\par\noindent Die folgenden Pakte \emph{dürfen nicht} geladen werden.
-\end{ger}
-\end{paracol}
+%<en>\par\noindent The following packages \emph{must not} be loaded.
+%<de>\par\noindent Die folgenden Pakte \emph{dürfen nicht} geladen werden.
 
-\begin{multicols}{3}
-{\color{DarkRed}
+\begin{multicols}{2}
+{\color{DarkRed}\smaller
 \begin{itemize}
 \item \File{SIstyle}
 \item \File{SIunits}
@@ -4448,6 +4386,7 @@ Die folgenden Pakte werden von der \File{hpitr}"=Klasse automatisch geladen.
 \item \File{epsfig}
 \item \File{epsf}
 \item \File{euler}
+\item \File{eulervm}
 \item \File{fancyhdr}
 \item \File{fancyheadings}
 \item \File{fourier}
@@ -4474,33 +4413,12 @@ Die folgenden Pakte werden von der \File{hpitr}"=Klasse automatisch geladen.
 \end{itemize}}
 \end{multicols}
 
-\begin{paracol}{2}
-\begin{eng}
-\section{Troubleshooting}
-\end{eng}
-\begin{ger}
-\section{Fehlerbehebung}
-\end{ger}
-\end{paracol}
+%<en> \section{Troubleshooting}
+%<de> \section{Fehlerbehebung}
 
-\begin{paracol}{2}
-\begin{eng}
 \subsection{Biber}
-\end{eng}
-\begin{ger}
-\subsection{Biber}
-\end{ger}
-\end{paracol}
-
-\begin{paracol}{2}
-\begin{eng}
-Biber may complain about ``missing files'', such as
-\end{eng}
-\begin{ger}
-Biber beklagt sich zeitweise über "`fehlende
-Dateien"', z.\,B.
-\end{ger}
- \end{paracol}
+%<en> Biber may complain about ``missing files'', such as
+%<de> Biber beklagt sich zeitweise über "`fehlende Dateien"', \zB
 \par\smallskip
 {\centering\ttfamily\bfseries
 read\_file '\meta{\textit{a path}}/recode\_data.xml' -
@@ -4508,45 +4426,32 @@ sysopen: No such file or directory at \meta{\textit{another path}}/bda77484.pm
 line 112.
 \par}
 \medskip
-\begin{paracol}{2}
-\begin{eng}
+%<*en>
   \noindent The reason for this error is the Biber's cach directory is
   corrupted. This is unfortunate but not problematic. The location of Biber's
   cache directory can be obtained with \lstinline|biber -cache|. Just deleting
   this directory should resolve this error. Biber's next run will just be a
   little bit slower.
-\end{eng}
-\begin{ger}
+%</en>
+%<*de>
   \noindent Der Grund liegt in einem kaputten oder unvollständigem
-  Cache"=Verzeichins. Das ist zwar unerfreulich aber nicht problematisch. Wird
+  Cache"=Verzeichnis. Das ist zwar unerfreulich aber nicht problematisch. Wird
   das Cache"=Verzeichnis (mit \lstinline|biber -cache| herauszufinden)
   gelöscht, wird Biber es beim nächsten Lauf wieder korrekt angelegen und der
   Fehler ist behoben.
-\end{ger}
-\end{paracol}
+%</de>
 
-%</manual>
-\DocInput{hpitr.dtx}
+%<!manual>\DocInput{hpitr.dtx}
 \end{document}
-%</!README>
 %    \end{macrocode}
 % \iffalse meta-comment
-%</doc|manual|README>
+%</doc>
 % \fi^^A meta-comment
 %
 % \Finale
 %
 \endinput
-
 %% Local Variables:
 %% TeX-master: t
+%% fill-column: 68
 %% End:
-
-\begin{paracol}{2}
-\begin{eng}
-..
-\end{eng}
-\begin{ger}
-..
-\end{ger}
-\end{paracol}
