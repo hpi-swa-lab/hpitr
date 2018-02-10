@@ -1,20 +1,22 @@
 hpitr
+=====
   Copyright (c) Tobias Pape <tobias.pape at hpi.uni-potsdam.de>
-  2017/03/03 v1.5
+  2018/02/10 v1.7
+
   A unified class for Technical Reports at the HPI
 
-This consititutes the LaTeX class to creat technical reports at the
-Plattner Institute, Potsdam in conjunction with the Universitätsverlag
+This constitutes the  class to create technical reports at the
+Hasso Plattner Institute, Potsdam in conjunction with the Universitätsverlag
 Potsdam. To maintain a unified appearance, this class provides macrotypographic
 (like paper size and general layout) and microtypographic (like fonts and their
 adjustment) settings.
 
  ---
 
-Diese LaTeX-Klasse dient zur Erstellung von technischen Berichten
+Diese Klasse dient zur Erstellung von technischen Berichten
 am Hasso-Plattner-Institut, Potsdam, in Zusammenarbeit mit dem
 Universitätsverlag Potsdam. Zur Erhaltung eines einheitlichen
-Erscheinungsbildes bietet diese Klasses Einstellungen zu Makrotypographie (wie
+Erscheinungsbildes bietet diese Klasse Einstellungen zu Makrotypographie (wie
 Papiergröße, allgemeines Layout) und auch zur Detailtypographie (wie
 Schriftwahl).
 
@@ -40,4 +42,4 @@ package, so you do not need to create files and copy them yourself.
 -------------------------------------------------------------------------------
 
 Prepared files (class, documentation) are available for releases at
-<https://github.com/HPI-SWA-Lab/hpitr/releases>
+<https://github.com/hpi-swa-lab/hpitr/releases>
