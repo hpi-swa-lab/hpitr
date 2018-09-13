@@ -1371,7 +1371,7 @@ without this file.
 %^^A     % \par\addvspace\baselineskip%
 %^^A     % \noindent\keywordname\enspace\ignorespaces#1}%
   \newcommand*\TR@contrib@keywords[1]{}
-  \ifthenelse{\boolean{TR@chapters}}%
+  \ifthenelse{\boolean{TR@chapters}\AND\boolean{TR@proceedings}}%
     {\renewcommand*\thesection{\@arabic\c@section}
       \renewcommand*\thefigure{\@arabic\c@figure}
       \renewcommand*\thetable{\@arabic\c@table}
