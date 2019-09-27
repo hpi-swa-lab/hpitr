@@ -1067,15 +1067,15 @@ without this file.
           \cleardoubleemptypage}{\clearpage}%
         \begingroup%
         \TR@saved@input{#1/content}%
-        \printbibliography[%
-          heading=subbibliography, %
-          title=\refname, %
-        ]%
         \IfFileExists{#1/appendix}{%
           \begin{subappendices}
           \TR@saved@input{#1/appendix}%
           \end{subappendices}
         }{}%
+        \printbibliography[%
+          heading=subbibliography, %
+          title=\refname, %
+        ]%
         \endgroup%
       \end{refsection}}
   }{%
