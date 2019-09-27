@@ -1,7 +1,7 @@
 % \iffalse meta-comment
 % hpitr.dtx
 % Copyright (c) Daniel Richter, Uwe Hentschel 2013-2014
-% Copyright (c) Tobias Pape, 2014-2018
+% Copyright (c) Tobias Pape, 2014-2019
 %
 % This work may be distributed and/or modified under the conditions of
 % the LaTeX Project Public License, version 1.3c of the license.
@@ -59,7 +59,7 @@
 %<*!README>
 [%
 %</!README>
-  2018/02/10 v1.7
+  2019/09/27 v1.9
 %<README>
 %<!README>^^J
   A unified class for Technical Reports at the HPI
@@ -93,6 +93,8 @@
 % \changes{v1.5}{2017/03/03}{Expand \File{README} a little bit}
 % \changes{v1.6}{2017/08/09}{Only predef quotes when \Package{xunicode} is there.}
 % \changes{v1.7}{2018/02/10}{Split the documentation (\ghissue{1}).}
+% \changes{v1.8}{2019/02/28}{Add appendix support for collections.}
+% \changes{v1.9}{2019/09/27}{Make sure colors from ps are preferred.}
 % \GetFileInfo{hpitr.dtx}
 %^^A ==========================================================================
 %^^A ==========================================================================
@@ -187,7 +189,7 @@
 
 \preamble
 Copyright (c) Daniel Richter, Uwe Hentschel 2013-2014
-Copyright (c) Tobias Pape, 2014-2018
+Copyright (c) Tobias Pape, 2014-2019
 
 This file was generated from file(s) of hpitr distribution.
 ----------------------------------------------------------------------
@@ -936,7 +938,7 @@ without this file.
 % \begin{macro}{\event}
 %  Title of the event
 % \changes{v0.4}{2014/08/12}{Delay to latest point for \Package{hyperref}}
-% \changes{v1.8}{2018/02/13}{Clear out principal investigator when
+% \changes{v1.8}{2019/02/13}{Clear out principal investigator when
 % setting the event, so that it wont carry over}
 %    \begin{macrocode}
   \newcommand*\event[1]{%
@@ -985,7 +987,9 @@ without this file.
 % Collections
 % \changes{v0.4}{2014/08/12}{Add facilities to make collections.}
 %    \begin{macrocode}
-  \RequirePackage{ragged2e,trimspaces}
+  \RequirePackage{ragged2e,trimspaces,appendix}
+  \renewcommand{\setthesection}{\Alph{section}}
+  \renewcommand{\restoreapp}{}
   \ifthenelse{\boolean{TR@inproceedings}}%
     {}%
     {\ifthenelse{\boolean{TR@proceedings}\OR\boolean{TR@collection}}%
@@ -1035,6 +1039,7 @@ without this file.
 % \changes{v1.0a}{2015/02/09}{Fix \cs{input} and \cs{include} to respect \TeX\ paths}
 % \changes{v1.1d}{2015/09/30}{Fix \cs{TR@includedir} to look for
 % \cs{lstinline}, if present}
+% \changes{v1.8}{2018/02/28}{Add appendix support for collections.}
 %    \begin{macrocode}
   \newcommand*{\TR@includedir}[1]{%
     \global\let\TR@saved@include\include
@@ -1062,23 +1067,35 @@ without this file.
           \cleardoubleemptypage}{\clearpage}%
         \begingroup%
         \TR@saved@input{#1/content}%
-        \endgroup%
         \printbibliography[%
           heading=subbibliography, %
           title=\refname, %
         ]%
+        \IfFileExists{#1/appendix}{%
+          \begin{subappendices}
+          \TR@saved@input{#1/appendix}%
+          \end{subappendices}
+        }{}%
+        \endgroup%
       \end{refsection}}
   }{%
     \newcommand*{\TR@includedir@}[1]{%
       \ifthenelse{\boolean{TR@proceedings}}{\cleardoubleemptypage}{\clearpage}%
+      \begingroup
       \TR@saved@input{#1/content}%
+      \IfFileExists{#1/appendix}{%
+        \begin{subappendices}%
+        \TR@saved@input{#1/appendix}%
+        \endgroup%
+        }{}%
+      \endgroup%
     }
   }
 
 %    \end{macrocode}
 %
 % Support for multiple separate work titles, portions from llncs.cls
-% \changes{v2.0}{2018/99/99}{Rework affiliations}
+% \changes{v1.7a}{2018/07/23}{Rework affiliations}
 %    \begin{macrocode}
   \def\clearheadinfo{%
     \gdef\@author{No Author Given}%
@@ -1110,7 +1127,7 @@ without this file.
 
 %    \end{macrocode}
 % \changes{v1.1c}{2015/07/13}{Allow for empty groups in proceedings}
-% \changes{v2.0}{2018/99/99}{Rework affiliations}
+% \changes{v1.7a}{2018/07/23}{Rework affiliations}
 %    \begin{macrocode}
   \def\affiliationtext{\par\begingroup
     \parskip=\z@
@@ -1133,7 +1150,7 @@ without this file.
 % \changes{v1.1}{2015/02/13}{Record inproceedings information to prc file}
 % \changes{v1.4}{2016/09/01}{Robustify writing the prc file}
 % \begin{macro}{\TR@recordmetadata}
-% \changes{v2.0}{2018/99/99}{Rework affiliations: recording with
+% \changes{v1.7a}{2018/07/23}{Rework affiliations: recording with
 % \cs{maketitle}, not at end of document}
 % For a |inproceedings| report, we write crucial information to
 % \File{\jobname.prc} to (potentially) pick it up in a |proceedings| run.
@@ -1553,6 +1570,7 @@ without this file.
 % Other emphasis: Sans: Source Sans Pro (Adobe)\\
 %    \begin{macrocode}
 \ifthenelse{\boolean{luatex}}{%
+  \RequirePackage{luatexbase}
   \RequirePackage[final]{microtype}[2013/05/23]
 }{
   \RequirePackage[final,babel=true]{microtype}[2013/05/23]
@@ -1974,11 +1992,19 @@ without this file.
 
 %    \end{macrocode}
 % \subsubsection{Color}
+% \changes{v1.9}{2019/09/27}{Make sure colors from ps are preferred. 
+% Formerly, svg ones would override the ps ones.}
 %    \begin{macrocode}
 \RequirePackage{color}
-\PassOptionsToPackage{table,svgnames,dvipsnames,x11names}{xcolor}
+\PassOptionsToPackage{table,svgnames,dvipsnames*,x11names}{xcolor}
+\AfterPackage{xcolor}{%
+  \definecolors{Aquamarine,Black,Blue,BlueViolet,Brown,CadetBlue,%
+    CornflowerBlue,Cyan,DarkOrchid,ForestGreen,Fuchsia,Goldenrod,Gray,%
+    Green,GreenYellow,Lavender,LimeGreen,Magenta,Maroon,MidnightBlue,%
+    NavyBlue,Orange,OrangeRed,Orchid,Plum,Purple,Red,RoyalBlue,Salmon,%
+    SeaGreen,SkyBlue,SpringGreen,Tan,Thistle,Turquoise,Violet,%
+    VioletRed,White,Yellow,YellowGreen}}
 \RequirePackage{xcolor}
-
 %    \end{macrocode}
 % \subsubsection{PDF File Inclusion}
 %    \begin{macrocode}
