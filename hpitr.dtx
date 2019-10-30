@@ -302,7 +302,7 @@ without this file.
 %  Some basic tools we need everywhere: Common macros, the KOMA-Script base
 %  package. Also, all the conditionals we might need.
 %    \begin{macrocode}
-\RequirePackage{etexcmds,etoolbox,ltxcmds}
+\RequirePackage{etexcmds,etoolbox,xpatch,ltxcmds}
 \RequirePackage{scrbase}[2013/12/19]
 \RequirePackage{ifthen,ifdraft,ifxetex,ifluatex}
 %    \end{macrocode}
@@ -703,7 +703,7 @@ without this file.
   \KOMAoption{titlepage}{yes}
 }
 
-\apptocmd{\title}{%
+\xapptocmd{\title}{%
   \AfterPreamble{
     \begingroup
     \appto\pdfstringdefPreHook{\def\\{\space\ignorespaces}}
@@ -712,7 +712,7 @@ without this file.
 {}{%
   \TR@warning@noline{Cannot patch \string\title to set pdftitle}}
 
-\apptocmd{\author}{%
+\xapptocmd{\author}{%
   \AfterPreamble{
     \begingroup
     \appto\pdfstringdefPreHook{\def\and{,\space\ignorespaces}}
@@ -797,7 +797,7 @@ without this file.
     \let\huge\normalsize%
   }{}{%
     \TR@warning@noline{Cannot patch \string\maketitle}}
-  \apptocmd{\endtitlepage}{%
+  \xapptocmd{\endtitlepage}{%
     \cleardoubleemptypage%
     \ifthenelse{\boolean{@mainmatter}}{%
       \pagenumbering{arabic}}{%
@@ -1200,7 +1200,7 @@ without this file.
         \clearheadinfo%
         \booltrue{TR@firsttitleseen}}}
     % we switch to title seen also when people do not use \maketitle
-    \apptocmd{\tableofcontents}{\booltrue{TR@firsttitleseen}}{}{%
+    \xapptocmd{\tableofcontents}{\booltrue{TR@firsttitleseen}}{}{%
       \TR@warning@noline{Cannot patch \string\tableofcontents}}
 
   \let\TR@firsttitle@author\author
@@ -2149,15 +2149,15 @@ without this file.
 
 %% Warn about global use of sloppy
 \let\TR@sloppy\sloppy
-\patchcmd{\sloppypar}{\sloppy}{\TR@sloppy}{}{}
-\patchcmd{\@arrayparboxrestore}{\sloppy}{\TR@sloppy}{}{}
-\patchcmd{\thebibliography}{\sloppy}{\TR@sloppy}{}{}
+\xpatchcmd{\sloppypar}{\sloppy}{\TR@sloppy}{}{}
+\xpatchcmd{\@arrayparboxrestore}{\sloppy}{\TR@sloppy}{}{}
+\xpatchcmd{\thebibliography}{\sloppy}{\TR@sloppy}{}{}
 %    \end{macrocode}
 % \changes{v0.9b}{2014/11/28}{Whitelist \cs{sloppy} in \Package{caption}}
 %    \begin{macrocode}
 \AfterPackage{caption}{
-  \patchcmd{\caption@boxrestore@mini}{\sloppy}{\TR@sloppy}{}{}
-  \patchcmd{\caption@boxrestore}{\sloppy}{\TR@sloppy}{}{}
+  \xpatchcmd{\caption@boxrestore@mini}{\sloppy}{\TR@sloppy}{}{}
+  \xpatchcmd{\caption@boxrestore}{\sloppy}{\TR@sloppy}{}{}
 }
 \def\sloppy{\TR@warning{You should not use \string\sloppy. 
     Instead, use a sloppypar, when necessary:\MessageBreak
@@ -4648,6 +4648,7 @@ Die folgenden Pakte werden von der \File{hpitr}"=Klasse automatisch geladen.
 \item \File{tocbasic}
 \item \File{todonotes} \emph{draft only}
 \item \File{xcolor}
+\item \File{xpatch}
 \item \File{xparse}
 \item \File{xspace}
 \end{itemize}}
