@@ -1,7 +1,7 @@
 hpitr
 =====
   Copyright (c) Tobias Pape <tobias.pape at hpi.uni-potsdam.de>
-  2018/02/10 v1.7
+  2021/10/05 v2.1
 
   A unified class for Technical Reports at the HPI
 
