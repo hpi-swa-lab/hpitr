@@ -98,7 +98,7 @@
 % \changes{v2.0}{2019/11/20}{Robustify patching, move appendices before bibs.}
 % \changes{v2.1}{2021/10/05}{Add \cs{weblink} (\ghissue{18}),
 % \Package{fncpt} (\ghissue{20}), ban \Paclage{flafter}
-% (\ghissue{24}), misc others.}
+% (\ghissue{24}), load \Package{auxhook} early (\ghissue{27}), misc others.}
 % \GetFileInfo{hpitr.dtx}
 %^^A ==========================================================================
 %^^A ==========================================================================
@@ -303,11 +303,12 @@ without this file.
 %    \end{macrocode}
 %
 % \subsubsection{Preparation}
-%  Some basic tools we need everywhere: Common macros, the KOMA-Script base
-%  package. Also, all the conditionals we might need.
+% Some basic tools we need everywhere: Common macros, the KOMA-Script base
+% package. Also, all the conditionals we might need.
 % \changes{v2.0}{2019/11/20}{Robustify patching}
+% \changes{v2.1}{2021/10/05}{Load \Package{auxhook} early (\ghissue{27})}
 %    \begin{macrocode}
-\RequirePackage{etexcmds,etoolbox,xpatch,ltxcmds}
+\RequirePackage{etexcmds,etoolbox,xpatch,ltxcmds,auxhook}
 \RequirePackage{scrbase}[2013/12/19]
 \RequirePackage{ifthen,ifdraft,ifxetex,ifluatex}
 %    \end{macrocode}
