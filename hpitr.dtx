@@ -1150,7 +1150,6 @@ without this file.
     \csuse{@affiliation}\par
     \endgroup}
   \def\affil#1{\unskip\textsuperscript{#1}}
-  \ifthenelse{\boolean{TR@inproceedings}}{%
 %    \end{macrocode}
 % \changes{v1.1}{2015/02/13}{Record inproceedings information to prc file}
 % \changes{v1.4}{2016/09/01}{Robustify writing the prc file}
@@ -1160,6 +1159,7 @@ without this file.
 % For a |inproceedings| report, we write crucial information to
 % \File{\jobname.prc} to (potentially) pick it up in a |proceedings| run.
 %    \begin{macrocode}
+  \ifthenelse{\boolean{TR@inproceedings}}{%
     \def\TR@recordmetadata{%
       \begingroup
         \def\and{\noexpand\protect\noexpand\and}%
@@ -1189,11 +1189,9 @@ without this file.
         \immediate\openout \csname tf@prc\endcsname \jobname.prc\relax
       \fi
     }
-%    \end{macrocode}
-% \end{macro}
-%    \begin{macrocode}
   }{}
 %    \end{macrocode}
+% \end{macro}
 % Patch \cs{maketitle} to allow one global and multiple local titles.
 %    \begin{macrocode}
   \let\TR@firsttitle@maketitle\maketitle
