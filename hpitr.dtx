@@ -1,7 +1,7 @@
 % \iffalse meta-comment
 % hpitr.dtx
 % Copyright (c) Daniel Richter, Uwe Hentschel 2013-2014
-% Copyright (c) Tobias Pape, 2014-2019
+% Copyright (c) Tobias Pape, 2014-2021
 %
 % This work may be distributed and/or modified under the conditions of
 % the LaTeX Project Public License, version 1.3c of the license.
@@ -40,7 +40,7 @@
 %<*!README>
 [%
 %</!README>
-  2019/11/20 v2.0
+  2021/10/05 v2.1
 %<README>
 %<!README>^^J
   A unified class for Technical Reports at the HPI
@@ -77,9 +77,8 @@
 % \changes{v1.8}{2019/02/28}{Add appendix support for collections.}
 % \changes{v1.9}{2019/09/27}{Make sure colors from ps are preferred.}
 % \changes{v2.0}{2019/11/20}{Robustify patching, move appendices before bibs.}
-% \changes{v2.1}{2021/10/05}{Add \cs{weblink} (\ghissue{18}),
-% \Package{fncpt} (\ghissue{20}), ban \Paclage{flafter}
-% (\ghissue{24}), load \Package{auxhook} early (\ghissue{27}), misc others.}
+% \changes{v2.1}{2021/10/05}{Add \cs{weblink}, \Package{fncpt}, ban
+% \Package{flafter}, early \Package{auxhook} etc.}
 % \GetFileInfo{hpitr.dtx}
 %^^A ==========================================================================
 %^^A ==========================================================================
@@ -180,7 +179,7 @@
 
 \preamble
 Copyright (c) Daniel Richter, Uwe Hentschel 2013-2014
-Copyright (c) Tobias Pape, 2014-2019
+Copyright (c) Tobias Pape, 2014-2021
 
 This file was generated from file(s) of hpitr distribution.
 ----------------------------------------------------------------------
@@ -2202,9 +2201,14 @@ without this file.
   {}
 %    \end{macrocode}
 % Misc packages.
-% \changes{v1.4}{2016/09/01}{Decide for end-of-preamble for \Package{siunitx} (see \ghissue{5})}
-% \changes{v1.4}{2016/09/01}{Use \Package{extdash} (see \ghissue{8})}
-% \changes{v1.6}{2017/08/09}{Only predef quotes when \Package{xunicode} is there.}
+% \changes{v1.4}{2016/09/01}{Decide for end-of-preamble for
+% \Package{siunitx} (see \ghissue{5})}
+% \changes{v1.4}{2016/09/01}{Use \Package{extdash} (see
+% \ghissue{8})}
+% \changes{v1.6}{2017/08/09}{Only predef quotes when
+% \Package{xunicode} is there.}
+% \changes{v2.1}{2021/10/05}{use v2 interface of \Package{siunitx},
+% don't use the pgf interface (deprecated)}
 %    \begin{macrocode}
 \RequirePackage{xspace,csquotes}
 \ifthenelse{\boolean{luatex}\OR\boolean{xetex}}{
