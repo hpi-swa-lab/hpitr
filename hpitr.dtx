@@ -96,7 +96,8 @@
 % \changes{v1.8}{2019/02/28}{Add appendix support for collections.}
 % \changes{v1.9}{2019/09/27}{Make sure colors from ps are preferred.}
 % \changes{v2.0}{2019/11/20}{Robustify patching, move appendices before bibs.}
-% \changes{v2.1}{2021/10/05}{Add \cs{weblink} (\ghissue{18}).}
+% \changes{v2.1}{2021/10/05}{Add \cs{weblink} (\ghissue{18}),
+% \Package{fncpt} (\ghissue{20}), misc others.}
 % \GetFileInfo{hpitr.dtx}
 %^^A ==========================================================================
 %^^A ==========================================================================
@@ -2018,6 +2019,13 @@ without this file.
     VioletRed,White,Yellow,YellowGreen}}
 \RequirePackage{xcolor}
 %    \end{macrocode}
+% \subsubsection{Footnotes}
+% \changes{v2.1}{2021/10/05}{Use \Package{fnpct} (see \ghissue{20})}
+%    \begin{macrocode}
+\RequirePackage{fnpct}
+\setfnpct{after-punct-space={-.2em}}
+%    \end{macrocode}
+%
 % \subsubsection{PDF File Inclusion}
 %    \begin{macrocode}
 \ifthenelse{\boolean{TR@proceedings}}{
