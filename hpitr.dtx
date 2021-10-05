@@ -159,6 +159,12 @@
 % starts very common with loading \File{docstrip}, preamble declaration and
 % start of generation.
 %    \begin{macrocode}
+\ifx\documentclass\@undefined\relax
+\input pdftexcmds.sty
+\else
+\RequirePackage{pdftexcmds}
+\makeatletter
+\fi
 \def\batchfile{hpitr.dtx}
 \input docstrip.tex
 \ifToplevel{%
@@ -214,14 +220,15 @@ without this file.
   \file{README.md}{\from{hpitr.dtx}{README}}%
 }%
 %    \end{macrocode}
-% After file generation, wie use shell escapes (aka \verb|\write18| feature) to
-% create \File{hpitr.pdf}, the manual, and \File{hpitr-source.pdf}, the full
-% documentation including source code.
+% After file generation, we use shell escapes (aka \verb|\write18|
+% feature) --- if available -- to create \File{hpitr.pdf}, the
+% manual, and \File{hpitr-source.pdf}, the full documentation
+% including source code.
 %    \begin{macrocode}
 \ifToplevel{%
   \Msg{* \space\space done.}
 }
-
+\ifnum1=\pdf@shellescape\relax
 \immediate\write18{lualatex -interaction=nonstopmode hpitr.ltx}
 \immediate\write18{mkindex hpitr}
 \immediate\write18{lualatex -interaction=nonstopmode hpitr.ltx}
@@ -245,6 +252,7 @@ without this file.
 \immediate\write18{biber example-inproceedings}
 \immediate\write18{lualatex -interaction=nonstopmode example-inproceedings}
 \immediate\write18{lualatex -interaction=nonstopmode example-inproceedings}
+\fi
 
 \ifToplevel{%
   \Msg{* \space\space done.}
@@ -256,6 +264,7 @@ without this file.
 %    \end{macrocode}
 % At docstrip, this concludes the run.
 %    \begin{macrocode}
+\endbatchfile
 \csname endinput\endcsname
 %    \end{macrocode}
 % \iffalse meta-comment
