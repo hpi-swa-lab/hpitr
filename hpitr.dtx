@@ -4578,7 +4578,31 @@ erzeugten PDF hinzugefügt, was der Option |copyrightmark| oder
 |copyrightmark=false| verwendet werden.
 %</de>
 
+%<en>\subsection{Dated links}
+%<de>\subsection{Datierte Links}
+\DescribeMacro{weblink}
+%<*en>
+It is good practice to put the date of last access next to any
+\textsc{url} that is used in a text. Since these \textsc{url}s are
+often unwieldy, they are best put in a footnote. 
+The command \cs{weblink} in the form \cs{weblink}\marg{\textsc{url}}
+does exactly that, and uses the current date as last-access--date.
+With an optional argument, the last-access--date can be explicitly
+specified: \cs{weblink}\oarg{date}\marg{\textsc{url}}.
+%</en>
+%<*de>
+Es ist sinnvoll, im Text genutzte \textsc{url}s mit einem
+Zugriffsdatum zu versehen. Da solche \textsc{url}s oft unhandlich
+sind, passen sie meist besser in eine Fußnote. Der Befehl
+\cs{weblink} stellt genau das her. In der Form
+\cs{weblink}\marg{\textsc{url}} wird genau das getan, mit dem
+heutigen Datum als Zugriffsdatum. Mit einem optionalen Argument kann
+das Zugriffsdatum explizit festgelegt werden: \cs{weblink}\oarg{date}\marg{\textsc{url}}.
+%</de>
 
+
+%<en>\subsection{Draft tools}
+%<de>\subsection{Editierhilfen}
 \begin{Describe}
   \DescribeOption{draft}\\
   \DescribeValue{draft}{true}\\
@@ -4586,8 +4610,6 @@ erzeugten PDF hinzugefügt, was der Option |copyrightmark| oder
   \DescribeOption{todotools}
 \end{Describe}
 %<*en>
-\subsection{Draft tools}
-
 To support editing early versions of reports, the |draft| or |draft=true|
 option can be used to activate a gray bar at the to and the bottom that says
 ``Draft''. Many \LaTeX\ packages also react to the |draft| option. Unlike the
@@ -4599,8 +4621,6 @@ The |todotools=true| option loads the \File{todonotes} packages (in draft mode)
 and provides a few additional commands.
 %</en>
 %<*de>
-\subsection{Editierhilfen}
-
 Zur Unterstützung von Vorversionen eines Berichts schaltet die Klassenoption
 |draft| (oder |draft=true|) einen grauen Balken mit der Aufschrift „Draft“ am
 Seitenanfang und "~ende ein. Viele \LaTeX"=Pakete reagieren ebenfalls auf die
@@ -4615,7 +4635,6 @@ zusätzliche Editierbefehle bereit.
 
 %<*en>
 \subsection{\LaTeX\ Packages}
-
 The following packages are automatically loaded by the \File{hpitr} class.
 %</en>
 %<*de>
