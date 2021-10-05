@@ -2216,7 +2216,7 @@ without this file.
 }{}
 \PassOptionsToPackage{shortcuts}{extdash}
 \AtEndPreamble{\RequirePackage{extdash}}
-\AtEndPreamble{\RequirePackage{siunitx}}
+\AtEndPreamble{\RequirePackage{siunitx}[=v2]}
 \AfterPackage{siunitx}{%
   \sisetup{%
     binary-units,
@@ -2227,9 +2227,6 @@ without this file.
     unit-optional-argument,
     parse-units = false}
   \AtEndPreamble{%
-    \ltx@ifpackageloaded{pgf}%
-      {\SendSettingsToPgf}%
-      {}
     \addto\extrasgerman{\sisetup{locale = DE}}
     \addto\extrasngerman{\sisetup{locale = DE}}
     \addto\extrasenglish{\sisetup{locale = US}}}}
