@@ -96,6 +96,7 @@
 % \changes{v1.8}{2019/02/28}{Add appendix support for collections.}
 % \changes{v1.9}{2019/09/27}{Make sure colors from ps are preferred.}
 % \changes{v2.0}{2019/11/20}{Robustify patching, move appendices before bibs.}
+% \changes{v2.1}{2021/10/05}{Add \cs{weblink} (\ghissue{18}).}
 % \GetFileInfo{hpitr.dtx}
 %^^A ==========================================================================
 %^^A ==========================================================================
@@ -774,6 +775,14 @@ without this file.
 % \end{macro}
 % \end{macro}
 % \end{macro}
+% \end{macro}
+% \begin{macro}{\weblink}
+% \changes{v2.1}{2021/10/05}{Add \cs{weblink} (\ghissue{18}).}
+% \cs{weblink} is a tiny helper to consistently put \textsc{url}s in
+% footnotes and to not forget the last-accessed--date.
+%    \begin{macrocode}
+\providecommand*\weblink[2][\today]{\footnote{\url{#2} (last accessed {#1}).}}
+%    \end{macrocode}
 % \end{macro}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 % Titlepage
