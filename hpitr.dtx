@@ -2007,8 +2007,9 @@ without this file.
 % \subsubsection{Color}
 % \changes{v1.9}{2019/09/27}{Make sure colors from ps are preferred. 
 % Formerly, svg ones would override the ps ones.}
+% \changes{v2.1}{2021/10/05}{Lose explicit \Package{color},
+% \Package{xcolor} already takes care}
 %    \begin{macrocode}
-\RequirePackage{color}
 \PassOptionsToPackage{table,svgnames,dvipsnames*,x11names}{xcolor}
 \AfterPackage{xcolor}{%
   \definecolors{Aquamarine,Black,Blue,BlueViolet,Brown,CadetBlue,%
