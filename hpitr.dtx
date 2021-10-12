@@ -84,14 +84,11 @@
 %^^A
 %^^A
 %
-%\makeatletter
+% \makeatletter
 % ^^A Heiko Oberdiek's fix from latexbugs (latex/3540):
-%\begingroup
-%  \def\x\begingroup#1\@nil{\endgroup
-%    \def\DoNotIndex{\begingroup
-%      \@tfor\@tempa:=\#\$\&\^\_\|\~\ \<\do{\expandafter\@makeother\@tempa}#1}}
-%\expandafter\x\DoNotIndex\@nil
-%\def\PercentIndex{}\def\LeftBraceIndex{}\def\RightBraceIndex{}
+% \expandafter\DoNotIndex
+% \expandafter{\detokenize{\#,\$,\^,\_,\|,\~,\ ,\&,\<,\>}}
+% \def\PercentIndex{}\def\LeftBraceIndex{}\def\RightBraceIndex{}
 %
 % ^^A Non-Index list derived from microtype.dtx and titlepage.dtx
 %
