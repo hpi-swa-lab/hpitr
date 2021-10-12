@@ -49,7 +49,7 @@
 %</!README>
 %</dtx|ins|doc|class|README>
 % \fi^^A meta-comment
-% ^^A -------------------------------------------------------------------------
+% ^^A
 %
 % \changes{v0.1}{2014/06/01}{Initial class derived from \Class{polze.cls}}
 % \changes{v0.2}{2014/07/10}{Minimal changes to play nice with babel and
@@ -80,9 +80,9 @@
 % \changes{v2.1}{2021/10/05}{Add \cs{weblink}, \Package{fncpt}, ban
 % \Package{flafter}, early \Package{auxhook} etc.}
 % \GetFileInfo{hpitr.dtx}
-%^^A ==========================================================================
-%^^A ==========================================================================
-%^^A ==========================================================================
+%^^A
+%^^A
+%^^A
 %
 %\makeatletter
 % ^^A Heiko Oberdiek's fix from latexbugs (latex/3540):
@@ -128,17 +128,16 @@
 %  \pagestyle,\par,\paragraph,\parbox,\PassOptionsToPackage,\penalty
 %  \PrintChanges,\PrintIndex,\protect,\providecommand,\ProvidesClass
 %  \raggedbottom,\raggedright,\refstepcounter,\relax,\renewcommand
-%  \rightmargin,\rightskip,\rmfamily,\setbox
+%  \RequirePackage,\rightmargin,\rightskip,\rmfamily,\setbox
 %  \setcounter,\setlength,\sffamily,\skip,\sloppy,\space,\string
-%  \the,\thispagestyle,\ttfamily,\typeout,\vfil,\vspace,\ifthenelse
-%  \OR,\AND,\boolean,\File,\Package,\Class,\Option,\emph
+%  \the,\thispagestyle,\ttfamily,\typeout,\vfil,\vspace,\File,\Package,\Class,\Option,\emph
 %  \baselineskip,\csuse
 % }
 % \makeatother
 %
-%^^A ==========================================================================
-%^^A ==========================================================================
-%^^A ==========================================================================
+%^^A
+%^^A
+%^^A
 % \StopEventually{
 %  \newpage
 %  \appendix
@@ -269,9 +268,9 @@ without this file.
 % \iffalse meta-comment
 %</dtx|ins>
 % \fi^^A meta-comment
-%^^A ==========================================================================
-%^^A ==========================================================================
-%^^A ==========================================================================
+%^^A
+%^^A
+%^^A
 % \iffalse meta-comment
 %<*class>
 % \fi^^A meta-comment
@@ -776,13 +775,12 @@ without this file.
 \providecommand*\weblink[2][\today]{\footnote{\url{#2} (last accessed {#1}).}}
 %    \end{macrocode}
 % \end{macro}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%^^A 
 % Titlepage
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%^^A 
 % \changes{v0.4}{2014/08/12}{If draft-titlepage, set its numbering in Roman
 % (for \pdfTeX)}
 %    \begin{macrocode}
-
 \ifthenelse{\boolean{@draft}}{
   \AtBeginDocument{
     \setkomafont{author}{\normalfont\normalsize}
@@ -817,7 +815,6 @@ without this file.
       \setcounter{page}{5}%
     }\relax}
 }
-
 %    \end{macrocode}
 % ToC-formatters for proceedings contributions.\\
 % Note: these have to be done at toplevel, currently, or else there
@@ -2048,7 +2045,7 @@ without this file.
 % \subsubsection{Drafting support}
 %    \begin{macrocode}
 \ifthenelse{\boolean{@draft}}{%
-  \RequirePackage{blindtext}
+  \AtEndPreamble{\RequirePackage{blindtext}}
   \errorcontextlines=999
   \RequirePackage{eso-pic}
   \newkomafont{draftline}{\small\sffamily}
@@ -3169,9 +3166,9 @@ Dokumenteigenschaften.
 %<en>\par This is file version \fileversion{} of  file \File{\filename}.
 %<de>\par Dies ist Version \fileversion{} der Datei \File{\filename}.
 \end{abstract}
-%^^A ==========================================================================
-%^^A ==========================================================================
-%^^A ==========================================================================
+%^^A
+%^^A
+%^^A
 {\smaller \tableofcontents}
 
 %<en> \section{Introduction}
@@ -3311,7 +3308,7 @@ die korrekte Handhabung.
 \remark{Alle Dateien eines \File{hpitr}"=Berichts müssen
   \textsc{utf-8}"=codiert sein.}
 %</de>
-%^^A ----------------------------------------
+%^^A
 %<*en>
 \subsection{Running \LaTeX}
 \label{sec:running}
@@ -3360,7 +3357,7 @@ lualatex report
 Dies sollte die \textsc{pdf}"=Datei mit Bibliographieinformationen
 erzeugen.
 %</de>
-%^^A----------------------------------------
+%^^A
 %<en>\section{Report Structure}
 %<de>\section{Berichtstruktur}
 
