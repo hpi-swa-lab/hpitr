@@ -1495,7 +1495,6 @@ without this file.
   \HyphSubstLet{ngerman}{ngerman-x-latest}
 }
 \RequirePackage{babel}
-\newcommand*\TR@lang{}\let\TR@lang\@empty
 %    \end{macrocode}
 % \changes{v0.4}{2014/08/12}{Silence \Package{babel}+\Package{hyperref}+shorthands}%
 % The combination of \cs{babel} and \cs{hyperref} might produce bogus
@@ -1508,53 +1507,8 @@ without this file.
     {\let\bbl@info\@gobble\csname HyPsd@babel@}
     {}{}}
 %    \end{macrocode}
-% Extract ISO 639-2 code from babel language name
-% \DoNotIndex{\@l,\@L}
-%    \begin{macrocode}
-{
-  \def\@l#1{\equal{\languagename}{#1}}
-  \def\@L#1{\gdef\TR@lang{#1}}
-\ifthenelse{\@l{afrikaans}}{\@L{af}}{}
-\ifthenelse{\@l{bahasa}\OR\@l{indonesian}\OR\@l{indon}\OR%
-  \@l{bahasai}\OR\@l{bahasam}\OR\@l{malay}\OR\@l{meyalu}}{\@L{id}}{}
-\ifthenelse{\@l{basque}}{\@L{eu}}{}
-\ifthenelse{\@l{breton}}{\@L{br}}{}
-\ifthenelse{\@l{bulgarian}}{\@L{bg}}{}
-\ifthenelse{\@l{catalan}}{\@L{ca}}{}
-\ifthenelse{\@l{croatian}}{\@L{hr}}{}
-\ifthenelse{\@l{czech}}{\@L{cs}}{}
-\ifthenelse{\@l{danish}}{\@L{da}}{}
-\ifthenelse{\@l{dutch}}{\@L{nl}}{}
-\ifthenelse{\@l{english}\OR\@l{USenglish}\OR\@l{american}\OR%
-  \@l{UKenglish}\OR\@l{british}\OR\@l{canadian}\OR%
-  \@l{australian}\OR\@l{newzealand}}{\@L{en}}{}
-\ifthenelse{\@l{esperanto}}{\@L{eo}}{}
-\ifthenelse{\@l{estonian}}{\@L{et}}{}
-\ifthenelse{\@l{finnish}}{\@L{fi}}{}
-\ifthenelse{%
-  \@l{french}\OR\@l{francais}\OR\@l{canadien}\OR\@l{acadian}}{\@L{fr}}{}
-\ifthenelse{\@l{galician}}{\@L{gl}}{}
-\ifthenelse{\@l{german}\OR\@l{germanb}\OR\@l{ngerman}\OR%
-  \@l{ngermanb}\OR\@l{austrian}\OR\@l{naustrian}}{\@L{de}}{}
-\ifthenelse{\@l{greek}\OR\@l{polutonikogreek}}{\@L{el}}{}
-\ifthenelse{\@l{hebrew}}{\@L{he}}{}
-\ifthenelse{\@l{magyar}\OR\@l{hungarian}}{\@L{hu}}{}
-\ifthenelse{\@l{icelandic}}{\@L{is}}{}
-\ifthenelse{\@l{interlingua}}{\@L{ia}}{}
-\ifthenelse{\@l{irish}}{\@L{ga}}{}
-\ifthenelse{\@l{italian}}{\@L{it}}{}
-\ifthenelse{\@l{latin}}{\@L{la}}{}
-\ifthenelse{\@l{samin}}{\@L{se}}{}
-\ifthenelse{\@l{norsk}}{\@L{no}}{}
-\ifthenelse{\@l{nynorsk}}{\@L{nn}}{}
-\ifthenelse{\@l{polish}}{\@L{pl}}{}
-\ifthenelse{%
-  \@l{portuges}\OR\@l{portuguese}\OR\@l{brazilian}\OR\@l{brazil}}{\@L{pt}}{}
-\ifthenelse{\@l{romanian}}{\@L{ro}}{}
-\ifthenelse{\@l{russian}}{\@L{ru}}{}
-\ifthenelse{\@l{scottish}}{\@L{gd}}{}
-}
-%    \end{macrocode}
+% \changes{v2.1}{2021/10/13}{Drop language code extraction,
+% \Package{hyperxmp} does that better anyway}
 % \subsubsection{Fonts}
 % Default font: Serif:  Palatino via \TeX Gyre Pagella\\
 % Code Font: Monospace: Source Code Pro (Adobe)\\
@@ -1789,7 +1743,6 @@ without this file.
     pdfcreator = {HPI},
     pdfmetalang = {en},
     pdfproducer = {\TR@ClassName - Technical Reports at the HPI},
-    pdflang = {\TR@lang},
     pdfdisplaydoctitle = false,
     pdfpagemode = UseOutlines,
   }
