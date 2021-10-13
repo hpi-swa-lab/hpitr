@@ -697,17 +697,14 @@ without this file.
 
 
 %    \end{macrocode}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-%% Title.
-%%
-%% No actual title, only a titlepage page when in draft mode.
-%%
-%% However, we collect the information for the pdf and also for
-%% convenience.
+%\subsubsection{Title}
+%
+% No actual title, only a titlepage page when in draft mode.
+%
+% However, we collect the information for the pdf and also for
+% convenience.
 % \changes{v0.4}{2014/08/12}{Delay \cs{title}/\cs{author} pdf setting
 % to latest point}
-%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %    \begin{macrocode}
 \@ifpackagelater{scrbase}{2013/12/19}{%
   \KOMAoption{titlepage}{firstiscover}
@@ -1507,7 +1504,7 @@ without this file.
 %    \end{macrocode}
 % \end{macro}
 %
-% Language
+% \subsubsection{Language}
 %
 % \changes{v1.3}{2016/06/23}{Disable \cs{hyphsubst} for \LuaTeX (see \ghissue{12})}
 %    \begin{macrocode}
@@ -1610,30 +1607,26 @@ without this file.
 \renewcommand*\labelitemii{\normalfont\textendash}
 \setfootnoterule{4cc}
 \setlength{\skip\footins}{2\baselineskip}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Text companion fonts
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+%    \end{macrocode}
+% \paragraph{Text companion fonts}
+%    \begin{macrocode}
 \RequirePackage{textcomp}
 \RequirePackage{mathcomp}
 \RequirePackage{relsize}
-
-%%%
-%%% Details
-%%%
+%    \end{macrocode}
+% \subsubsection{Layout variables}
+%    \begin{macrocode}
 \KOMAoptions{
   headings=big
 }
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Page breaks
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%% no footnote breaks
+%    \end{macrocode}
+%\paragraph{Page breaks}
+% No footnote breaks
+%    \begin{macrocode}
 \interfootnotelinepenalty = 1000
-
-%% avoid widows (Hurenkinder) and orphans (Schusterjungen)
+%    \end{macrocode}
+%  avoid widows (Hurenkinder) and orphans (Schusterjungen)
+%    \begin{macrocode}
 \clubpenalty = \@M
 \widowpenalty = \@M
 
@@ -1645,12 +1638,9 @@ without this file.
   \frenchspacing
   \raggedbottom
 }
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Headers and footers
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+%    \end{macrocode}
+%\subsection{Headers and footers}
+%    \begin{macrocode}
 \KOMAoptions{
   headsepline=false,
   footsepline=false,
@@ -2112,7 +2102,9 @@ without this file.
 % \end{itemize}
 %    \begin{macrocode}
 }
-
+%    \end{macrocode}
+% Error hard on font commands form the last millennium.
+%    \begin{macrocode}
 \csgappto{bf}{\TR@fonterror}
 \csgappto{it}{\TR@fonterror}
 \csgappto{sc}{\TR@fonterror}
@@ -2121,8 +2113,9 @@ without this file.
 \csgappto{sf}{\TR@fonterror}
 \csgappto{sl}{\TR@fonterror}
 \csgappto{tt}{\TR@fonterror}
-
-%% Warn about global use of sloppy
+%    \end{macrocode}
+% Warn about global use of sloppy
+%    \begin{macrocode}
 \let\TR@sloppy\sloppy
 %    \end{macrocode}
 % \changes{v2.0}{2019/11/20}{Robustify patching}
@@ -2954,7 +2947,7 @@ words should match the language.
 \usepackage{relsize}
 \usepackage{hologo}
 \usepackage{array}
-\usepackage[binary-units]{siunitx}
+\usepackage[binary-units]{siunitx}[=v2]
 \DeclareSIUnit[number-unit-product = {}] \pt{pt}
 \DeclareSIUnit[number-unit-product = {}] \pc{pc}
 \let\amsCfrac\cfrac
