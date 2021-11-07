@@ -29,7 +29,7 @@ jobs:
       - name: install fonts
         run: |
           apt update
-          apt install -y fonts-texgyre
+          apt install -y fonts-texgyre texlive-fonts-extra
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
         run: pdftex -shell-escape hpitr.dtx
