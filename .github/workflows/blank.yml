@@ -30,6 +30,9 @@ jobs:
         run: |
           apt update
           apt install -y zip
+      
+      - name: install hub
+        run: snap install --classic hub
 
       - name: generate files from dtx
         run: pdftex hpitr.dtx
@@ -50,6 +53,9 @@ jobs:
             "README.*"
             "*.cls"
             "*.dtx"
+            "*.zip"
       
       - name: create release
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         run: hub release create -a "hpitr.zip#hpitr-$(sed '4q;d' README.txt | xargs |  cut -d " " -f 2)-$(date +%Y-%m-%d)" "$(sed '4q;d' README.txt | xargs |  cut -d " " -f 2)"
