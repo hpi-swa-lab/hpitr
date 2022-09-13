@@ -1,0 +1,50 @@
+# swathesis needs the follwing packages.
+# These are available via TeXLive tlmgr or MiKTeX mpm
+accsupp
+appendix
+auxhook
+babel
+biblatex
+blindtext
+booktabs
+csquotes
+eso-pic
+etexcmds
+etoolbox
+extdash
+fnpct
+fontenc
+fontspec
+graphicx
+greek-fontenc # alphabeta
+grffile
+hardwrap
+hypcap
+hyperref
+hyperxmp
+ifluatex
+ifthen
+ifxetex
+inputenx
+koma-script
+l3kernel # expl3
+soft listings # examples
+longtable
+ltxcmds
+mathcomp
+mathpazo
+mathtools
+microtype
+oberdiek # hypcap, ifdraft
+pdfpages
+soft pdftexcmds # only for dtx
+relsize
+sourcecodepro
+sourcesanspro
+tabularx
+soft threeparttable # examples
+todonotes
+trimspaces
+xcolor
+xspace
+# EOF

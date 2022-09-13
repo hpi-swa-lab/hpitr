@@ -49,7 +49,7 @@
 %</!README>
 %</dtx|ins|doc|class|README>
 % \fi^^A meta-comment
-% ^^A -------------------------------------------------------------------------
+% ^^A
 %
 % \changes{v0.1}{2014/06/01}{Initial class derived from \Class{polze.cls}}
 % \changes{v0.2}{2014/07/10}{Minimal changes to play nice with babel and
@@ -80,65 +80,56 @@
 % \changes{v2.1}{2021/10/05}{Add \cs{weblink}, \Package{fncpt}, ban
 % \Package{flafter}, early \Package{auxhook} etc.}
 % \GetFileInfo{hpitr.dtx}
-%^^A ==========================================================================
-%^^A ==========================================================================
-%^^A ==========================================================================
+%^^A
+%^^A
+%^^A
 %
-%\makeatletter
+% \makeatletter
 % ^^A Heiko Oberdiek's fix from latexbugs (latex/3540):
-%\begingroup
-%  \def\x\begingroup#1\@nil{\endgroup
-%    \def\DoNotIndex{\begingroup
-%      \@tfor\@tempa:=\#\$\&\^\_\|\~\ \<\do{\expandafter\@makeother\@tempa}#1}}
-%\expandafter\x\DoNotIndex\@nil
-%\def\PercentIndex{}\def\LeftBraceIndex{}\def\RightBraceIndex{}
+% \expandafter\DoNotIndex
+% \expandafter{\detokenize{\#,\$,\^,\_,\|,\~,\ ,\&,\<,\>}}
+% \def\PercentIndex{}\def\LeftBraceIndex{}\def\RightBraceIndex{}
 %
 % ^^A Non-Index list derived from microtype.dtx and titlepage.dtx
 %
-% \DoNotIndex{\!,\",\',\(,\),\*,\+,\,,\-,\.,\/,\:,\;,\<,\=,\>,\?,\[,\\,\],\`,
-%  \#,\$,\&,\^,\_,\|,\~,\ ,\@Alph,\@M,
-%  \@Alph,\@M,\advance,\begingroup,\bgroup,\catcode,\char,\csname
-%  \def,\edef,\else,\endcsname,\endgroup,\endinput,\expandafter,\fi
-%  \futurelet,\gdef,\global,\hbox,\hsize,\hskip,\if,\ifcase,\ifdim
-%  \iffalse,\ifmmode,\ifnum,\ifx,\immediate,\input,\jobname,\let
-%  \noexpand,\or,\parfillskip,\pretolerance,\relax,\setbox,\string
-%  \the,\unskip,\vbox,\wd,\xdef,\dimexpr,\@classoptionslist
-%  \@currext,\@currname,\@empty,\@firstofone,\@gobble
-%  \@ifpackagelater,\@ifundefined,\@makeother,\@minus,\@ne,\@nil
-%  \@plus,\@tempa,\@tempdima,\m@ne,\documentclass,\leavevmode
-%  \makeatletter,\mbox,\newcommand,\newtoks,\nobreak,\normalsize
-%  \renewcommand,\space,\AtBeginDocument,\CurrentOption
-%  \DeclareRobustCommand,\IfFileExists,\InputIfFileExists
-%  \MessageBreak,\RequirePackage,\languagename,\wd,\xdef,\year
-%  \@addtoreset,\@arabic,\@dotsep,\@empty,\@float,\@highpenalty
-%  \@ifundefined,\@minus,\@ne,\@nil,\@plus,\@tempa,\@tempdima
-%  \@tempdimb,\@tempdimc,\@tocrmarg,\@topnum,\addcontentsline
-%  \addpenalty,\addtocontents,\addvspace,\advance,\begin,\begingroup
-%  \bfseries,\c@figure,\c@table,\cdot,\centering,\changes
-%  \cleardoublepage,\clearpage,\CurrentOption,\CodelineIndex,\cs
-%  \DeclareOption,\def,\DoNotIndex,\ifdim,\else,\fi,\empty,\em
-%  \EnableCrossrefs,\end,\endgroup,\endlist,\endtitlepage
-%  \expandafter,\gdef,\global,\hbox,\hsize,\hskip,\hspace,\hss
-%  \ifcase,\or,\fi,\fi,\ifnum,\ifx,\fi,\fi,\fi,\include,\input
-%  \InputIfFileExists,\item,\itshape,\leavevmode,\leftskip,\let
-%  \lineskip,\list,\long,\m@ne,\m@th,\markboth,\mathbf,\mathit
-%  \mathrm,\MessageBreak,\newblock,\newcommand,\newcounter
-%  \newenvironment,\newpage,\nobreak,\noindent,\normalfont
-%  \normalsize,\null,\normalcolor,\OnlyDescription,\pagenumbering
-%  \pagestyle,\par,\paragraph,\parbox,\PassOptionsToPackage,\penalty
-%  \PrintChanges,\PrintIndex,\protect,\providecommand,\ProvidesClass
-%  \raggedbottom,\raggedright,\refstepcounter,\relax,\renewcommand
-%  \RequirePackage,\rightmargin,\rightskip,\rmfamily,\setbox
-%  \setcounter,\setlength,\sffamily,\skip,\sloppy,\space,\string
-%  \the,\thispagestyle,\ttfamily,\typeout,\vfil,\vspace,\ifthenelse
-%  \OR,\AND,\boolean,\File,\Package,\Class,\Option,\emph
-%  \baselineskip,\csuse
-% }
+% \DoNotIndex{\!,\",\',\(,\),\*,\+,\,,\-,\.,\/,\:,\;,\=,\?,\@Alph,\@M}
+% \DoNotIndex{\@addtoreset,\@arabic,\@classoptionslist,\@currext}
+% \DoNotIndex{\@currname,\@dotsep,\@empty,\@firstofone,\@float,\@gobble}
+% \DoNotIndex{\@highpenalty,\@ifpackagelater,\@ifundefined,\@makeother}
+% \DoNotIndex{\@minus,\@ne,\@nil,\@plus,\@tempa,\@tempdima,\@tempdimb}
+% \DoNotIndex{\@tempdimc,\@tocrmarg,\@topnum,\AtBeginDocument,\Class}
+% \DoNotIndex{\CodelineIndex,\CurrentOption,\DeclareOption}
+% \DoNotIndex{\DeclareRobustCommand,\DoNotIndex,\EnableCrossrefs,\File}
+% \DoNotIndex{\IfFileExists,\InputIfFileExists,\MessageBreak}
+% \DoNotIndex{\OnlyDescription,\Option,\Package,\PassOptionsToPackage}
+% \DoNotIndex{\PrintChanges,\PrintIndex,\ProvidesClass,\RequirePackage}
+% \DoNotIndex{\[,\\,\],\`,\addcontentsline,\addpenalty,\addtocontents}
+% \DoNotIndex{\addvspace,\advance,\baselineskip,\begin,\begingroup}
+% \DoNotIndex{\bfseries,\bgroup,\c@figure,\c@table,\catcode,\cdot}
+% \DoNotIndex{\centering,\changes,\char,\cleardoublepage,\clearpage,\cs}
+% \DoNotIndex{\csname,\csuse,\def,\dimexpr,\documentclass,\edef,\else}
+% \DoNotIndex{\em,\emph,\empty,\end,\endcsname,\endgroup,\endinput}
+% \DoNotIndex{\endlist,\endtitlepage,\expandafter,\fi,\futurelet,\gdef}
+% \DoNotIndex{\global,\hbox,\hsize,\hskip,\hspace,\hss,\if,\ifcase}
+% \DoNotIndex{\ifdim,\iffalse,\ifmmode,\ifnum,\ifx,\immediate,\include}
+% \DoNotIndex{\input,\item,\itshape,\jobname,\languagename,\leavevmode}
+% \DoNotIndex{\leftskip,\let,\lineskip,\list,\long,\m@ne,\m@th}
+% \DoNotIndex{\makeatletter,\markboth,\mathbf,\mathit,\mathrm,\mbox}
+% \DoNotIndex{\newblock,\newcommand,\newcounter,\newenvironment,\newpage}
+% \DoNotIndex{\newtoks,\nobreak,\noexpand,\noindent,\normalcolor}
+% \DoNotIndex{\normalfont,\normalsize,\null,\or,\pagenumbering}
+% \DoNotIndex{\pagestyle,\par,\paragraph,\parbox,\parfillskip,\penalty}
+% \DoNotIndex{\pretolerance,\protect,\providecommand,\raggedbottom}
+% \DoNotIndex{\raggedright,\refstepcounter,\relax,\renewcommand}
+% \DoNotIndex{\rightmargin,\rightskip,\rmfamily,\setbox,\setcounter}
+% \DoNotIndex{\setlength,\sffamily,\skip,\sloppy,\space,\string,\the}
+% \DoNotIndex{\thispagestyle,\ttfamily,\typeout,\unskip,\vbox,\vfil}
+% \DoNotIndex{\vspace,\wd,\xdef,\year}
 % \makeatother
 %
-%^^A ==========================================================================
-%^^A ==========================================================================
-%^^A ==========================================================================
+%^^A
+%^^A
+%^^A
 % \StopEventually{
 %  \newpage
 %  \appendix
@@ -269,9 +260,9 @@ without this file.
 % \iffalse meta-comment
 %</dtx|ins>
 % \fi^^A meta-comment
-%^^A ==========================================================================
-%^^A ==========================================================================
-%^^A ==========================================================================
+%^^A
+%^^A
+%^^A
 % \iffalse meta-comment
 %<*class>
 % \fi^^A meta-comment
@@ -295,12 +286,40 @@ without this file.
 % Some basic tools we need everywhere: Common macros, the KOMA-Script base
 % package. Also, all the conditionals we might need.
 % \changes{v2.0}{2019/11/20}{Robustify patching}
-% \changes{v2.1}{2021/10/05}{Load \Package{auxhook} early (\ghissue{27})}
+% \changes{v2.1}{2021/10/13}{Load \Package{auxhook} early
+% (\ghissue{27}), drop ifthen}
 %    \begin{macrocode}
 \RequirePackage{etexcmds,etoolbox,xpatch,ltxcmds,auxhook}
 \RequirePackage{scrbase}[2013/12/19]
-\RequirePackage{ifthen,ifdraft,ifxetex,ifluatex}
+\RequirePackage{ifdraft,iftex,ifxetex,ifluatex}
 %    \end{macrocode}
+% \changes{v2.1}{2021/10/13}{Compatibility shim for old
+% \Package{iftex}}
+%    \begin{macrocode}
+\ifcsundef{iftutex}%
+  {\ifboolexpr{bool {luatex} or bool {xetex}}%
+    {\csletcs{iftutex}{iftrue}}%
+    {\csletcs{iftutex}{iffalse}}}
+  {}
+%    \end{macrocode}
+% \changes{v2.1}{2021/10/13}{one-armed ifs}
+\newcommand*{\whenbool}[1]{%
+  \ifcsundef{if#1}
+    {\etb@err@nobool{#1}\@gobble}
+    {\csname if#1\endcsname
+       \expandafter\@firstofone
+     \else
+       \expandafter\@gobble
+     \fi}}
+\newcommand*{\whennotbool}[1]{%
+  \ifcsundef{if#1}
+    {\etb@err@nobool{#1}\@gobble}
+    {\csname if#1\endcsname
+       \expandafter\@gobble
+     \else
+       \expandafter\@firstofone
+     \fi}}
+%    \begin{macrocode}
 % 
 % \subsubsection{Initialization}
 % First, option handling.
@@ -369,9 +388,9 @@ without this file.
     }{}
   \fi
   \AfterTRoptions{
-    \ifthenelse{\boolean{@draft}}{
+    \whenbool{@draft}{
       \@pushback@classoption{draft}
-      \ifthenelse{\not\boolean{TR@fulldraft}}{
+      \whennotbool{TR@fulldraft}{
         \PassOptionsToPackage{draft=false}{scrlayer-scrpage}
         \PassOptionsToPackage{final}{listings}
 %    \end{macrocode}
@@ -379,11 +398,10 @@ without this file.
 %    For non-fulldraft to work with grffile, we unconditionally use the
 %    graphics internal draft boolean.
 %    \begin{macrocode}
-        \AtBeginDocument{\Gin@draftfalse}
-      }{}
-    }{}
-  }
-}
+        \AtBeginDocument{\Gin@draftfalse}%
+%    \end{macrocode}
+%    \begin{macrocode}
+}}}}
 \TRStdOption{final}{draft=false}
 \TRStdOption{draft}{draft=true}
 
@@ -412,12 +430,11 @@ without this file.
 %    \begin{macrocode}
 \newcommand*\setcontribmaketitle{%
   \AtBeginDocument{%
-    \ifthenelse{\boolean{TR@contribtools}}%
+    \whenbool{TR@contribtools}%
       {\booltrue{TR@firsttitleseen}%
         \let\maketitle\TR@contrib@maketitle%
         \let\author\TR@contrib@author%
-        \lehead{\TR@titlemark}}
-      {}}}
+        \lehead{\TR@titlemark}}}}
 %    \end{macrocode}
 % \end{macro}
 % \subsubsection{Contribtools Author Access}
@@ -610,18 +627,18 @@ without this file.
 % \changes{v1.3}{2016/06/23}{Make greek letters work in \pdfTeX}
 %    \begin{macrocode}
 \RequirePackage[LGR,OT1,LY1,T1]{fontenc}
-\ifthenelse{\boolean{xetex} \or \boolean{luatex}}{}{%
+\notbool{tutex}{%
   \RequirePackage[utf8]{inputenx}
   \input{ix-utf8enc.dfu}
   \RequirePackage{alphabeta}
-}
+}{}
 %    \end{macrocode}
 % With \TeX Live 2016, \LuaTeX\ does not expose most \pdfTeX\ primitives under
 % the \cs{pdf..} names. Currently, some packages still rely on this, however.
 % So we use \cs{luatex85}. Since the package first appeared in 2016, it is a
 % good way to see whether we need it in the first place.
 %    \begin{macrocode}
-\ifthenelse{\boolean{luatex}}{%
+\ifbool{luatex}{%
   \IfFileExists{luatex85.sty}{%
     \RequirePackage{luatex85}}{}}{}%
 %    \end{macrocode}
@@ -651,7 +668,7 @@ without this file.
 %    \end{macrocode}
 %
 %    \begin{macrocode}
-\ifthenelse{\boolean{TR@proceedings}\AND\boolean{TR@chapters}}{
+\ifboolexpr{bool {TR@proceedings} and bool{TR@chapters}}{
   \KOMAoption{open}{right}
 }{}
 %    \end{macrocode}
@@ -680,17 +697,14 @@ without this file.
 
 
 %    \end{macrocode}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-%% Title.
-%%
-%% No actual title, only a titlepage page when in draft mode.
-%%
-%% However, we collect the information for the pdf and also for
-%% convenience.
+%\subsubsection{Title}
+%
+% No actual title, only a titlepage page when in draft mode.
+%
+% However, we collect the information for the pdf and also for
+% convenience.
 % \changes{v0.4}{2014/08/12}{Delay \cs{title}/\cs{author} pdf setting
 % to latest point}
-%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %    \begin{macrocode}
 \@ifpackagelater{scrbase}{2013/12/19}{%
   \KOMAoption{titlepage}{firstiscover}
@@ -744,7 +758,7 @@ without this file.
 % \mbox{}
 %\changes{v0.8}{2014/09/26}{Provide convenient abbreviations}
 %    \begin{macrocode}
-\ifthenelse{\boolean{TR@egiecomma}}{
+\ifbool{TR@egiecomma}{
   \providecommand*\eg{e.\hairspace{}g.,\xspace}
   \providecommand*\Eg{E.\hairspace{}g.,\xspace}
   \providecommand*\Ie{I.\hairspace{}e.,\xspace}
@@ -776,14 +790,13 @@ without this file.
 \providecommand*\weblink[2][\today]{\footnote{\url{#2} (last accessed {#1}).}}
 %    \end{macrocode}
 % \end{macro}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%^^A 
 % Titlepage
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%^^A 
 % \changes{v0.4}{2014/08/12}{If draft-titlepage, set its numbering in Roman
 % (for \pdfTeX)}
 %    \begin{macrocode}
-
-\ifthenelse{\boolean{@draft}}{
+\ifbool{@draft}{
   \AtBeginDocument{
     \setkomafont{author}{\normalfont\normalsize}
     \setkomafont{date}{\normalfont\normalsize}
@@ -794,7 +807,7 @@ without this file.
     \setkomafont{titlehead}{\normalfont\normalsize}
   }
   \pretocmd{\titlepage}{%
-    \ifthenelse{\boolean{@mainmatter}}{\pagenumbering{Roman}}{}
+    \whenbool{@mainmatter}{\pagenumbering{Roman}}
     \let\center\flushright%
     \let\endcenter\endflushright%
     \let\huge\normalsize%
@@ -802,10 +815,10 @@ without this file.
     \TR@warning@noline{Cannot patch \string\maketitle}}
   \xapptocmd{\endtitlepage}{%
     \cleardoubleemptypage%
-    \ifthenelse{\boolean{@mainmatter}}{%
+    \ifbool{@mainmatter}{%
       \pagenumbering{arabic}}{%
       \pagenumbering{roman}}
-      \ifthenelse{\boolean{TR@inproceedingspagenumbers}}{}{%
+      \whennotbool{TR@inproceedingspagenumbers}{%
         \setcounter{page}{5}%
       }
     \relax%
@@ -813,11 +826,10 @@ without this file.
     \TR@warning@noline{Cannot patch \string\maketitle}}
 }{%
   \def\maketitle{%
-    \ifthenelse{\boolean{TR@inproceedingspagenumbers}}{}{%
+    \whennotbool{TR@inproceedingspagenumbers}{%
       \setcounter{page}{5}%
     }\relax}
 }
-
 %    \end{macrocode}
 % ToC-formatters for proceedings contributions.\\
 % Note: these have to be done at toplevel, currently, or else there
@@ -861,7 +873,7 @@ without this file.
 %              emulate when the |chapter| style is not defined in
 %              the first place,
 %    \begin{macrocode}
-\ifthenelse{\boolean{TR@chapters}}{}{
+\whennotbool{TR@chapters}{
     \CloneTOCEntryStyle{section}{chapter}}
 %    \end{macrocode}
 %        \item the style for events (no page numbers, no
@@ -934,7 +946,7 @@ without this file.
 %      \end{itemize}
 % 
 %    \begin{macrocode}
-\ifthenelse{\boolean{TR@proceedings}\OR\boolean{TR@contribtools}}{
+\ifboolexpr{bool {TR@proceedings} or bool {TR@contribtools}}{
 %    \end{macrocode}
 %
 %  Proceedings stuff.
@@ -993,11 +1005,11 @@ without this file.
   \RequirePackage{ragged2e,trimspaces,appendix}
   \renewcommand{\setthesection}{\Alph{section}}
   \renewcommand{\restoreapp}{}
-  \ifthenelse{\boolean{TR@inproceedings}}%
-    {}%
-    {\ifthenelse{\boolean{TR@proceedings}\OR\boolean{TR@collection}}%
+  \ifboolexpr{
+    not bool {TR@inproceedings}
+    and ( bool {TR@proceedings} or bool {TR@collection})}%
       {\AtEndPreamble{\RequirePackage{biblatex}}}%
-      {}}
+      {}
 %    \end{macrocode}
 % Automatically pick up \texttt{preamble.tex} and \texttt{content.tex} for each
 % contribution.
@@ -1009,7 +1021,7 @@ without this file.
   }
   \newcommand*{\TR@preamble}[1]{%
       \InputIfFileExists {#1/preamble}{}{}%
-      \ifthenelse{\boolean{TR@chapterbib}}{}{%
+      \whennotbool{TR@chapterbib}{%
         \addbibresource{#1/references.bib}
       }}
 
@@ -1064,10 +1076,10 @@ without this file.
     \global\let\include\TR@saved@include%
     \global\let\input\TR@saved@input%
   }
-  \ifthenelse{\boolean{TR@chapterbib}}{%
+  \ifbool{TR@chapterbib}{%
     \newcommand*{\TR@includedir@}[1]{%
       \begin{refsection}[#1/references.bib]
-        \ifthenelse{\boolean{TR@proceedings}}{%
+        \ifbool{TR@proceedings}{%
           \cleardoubleemptypage}{\clearpage}%
         \begingroup%
         \TR@saved@input{#1/content}%
@@ -1084,7 +1096,7 @@ without this file.
       \end{refsection}}
   }{%
     \newcommand*{\TR@includedir@}[1]{%
-      \ifthenelse{\boolean{TR@proceedings}}{\cleardoubleemptypage}{\clearpage}%
+      \ifbool{TR@proceedings}{\cleardoubleemptypage}{\clearpage}%
       \begingroup
       \TR@saved@input{#1/content}%
       \IfFileExists{#1/appendix}{%
@@ -1158,7 +1170,7 @@ without this file.
 % For a |inproceedings| report, we write crucial information to
 % \File{\jobname.prc} to (potentially) pick it up in a |proceedings| run.
 %    \begin{macrocode}
-  \ifthenelse{\boolean{TR@inproceedings}}{%
+  \ifbool{TR@inproceedings}{%
     \def\TR@recordmetadata{%
       \begingroup
         \def\and{\noexpand\protect\noexpand\and}%
@@ -1195,7 +1207,7 @@ without this file.
 %    \begin{macrocode}
   \let\TR@firsttitle@maketitle\maketitle
   \renewcommand*\maketitle{
-    \ifthenelse{\boolean{TR@firsttitleseen}}{%
+    \ifbool{TR@firsttitleseen}{%
       \TR@contrib@maketitle%
       }{
         \TR@firsttitle@maketitle%
@@ -1207,14 +1219,14 @@ without this file.
 
   \let\TR@firsttitle@author\author
   \renewcommand*\author{
-    \ifthenelse{\boolean{TR@firsttitleseen}}%
+    \ifbool{TR@firsttitleseen}%
     {\TR@contrib@author}%
     {\TR@firsttitle@author}}
 
   \AtEndOfClass{
     \let\TR@firsttitle@keywords\keywords
     \renewcommand*\keywords{%
-      \ifthenelse{\boolean{TR@firsttitleseen}}%
+      \ifbool{TR@firsttitleseen}%
       {\TR@contrib@keywords}%
       {\TR@firsttitle@keywords}}
   }
@@ -1245,9 +1257,8 @@ without this file.
 
   \newcommand*\TR@contrib@maketitle{\newpage
       \phantomsection
-      \ifthenelse{\boolean{TR@chapters}}%
+      \whenbool{TR@chapters}%
         {\refstepcounter{chapter}}%
-        {}
       \stepcounter{section}%
       \setcounter{section}{0}%
       \setcounter{subsection}{0}%
@@ -1264,11 +1275,11 @@ without this file.
 %    \begin{macrocode}
       \global\@topnum\z@
       \TR@contrib@@maketitle
-      \ifthenelse{\boolean{TR@chapters}}%
+      \ifbool{TR@chapters}%
         {\thispagestyle{\chapterpagestyle}}%
         {\thispagestyle{empty}}%
       \@thanks
-      \ifthenelse{\boolean{TR@inproceedings}}{\TR@recordmetadata}{}
+      \ifbool{TR@inproceedings}{\TR@recordmetadata}{}
       \def\\{\unskip\ \ignorespaces}%
       \def\thanks##1{\unskip{}}%
       \if!\the\toctitle!\relax
@@ -1314,7 +1325,7 @@ without this file.
       \fi
       \xdef\@runninghead{\copy\headrun}
       \xdef\@author{\copy\authrun}
-      \ifthenelse{\boolean{TR@chapters}}%
+      \ifbool{TR@chapters}%
         {\addchapmark{\@runninghead}}%
         {\xdef\TR@titlemark{\@runninghead}%
           \xdef\TR@authormark{\@author}}%
@@ -1390,7 +1401,7 @@ without this file.
 %^^A     % \par\addvspace\baselineskip%
 %^^A     % \noindent\keywordname\enspace\ignorespaces#1}%
   \newcommand*\TR@contrib@keywords[1]{}
-  \ifthenelse{\boolean{TR@chapters}\AND\boolean{TR@proceedings}}%
+  \ifboolexpr{bool {TR@chapters} and bool {TR@proceedings}}%
     {\renewcommand*\thesection{\@arabic\c@section}
       \renewcommand*\thefigure{\@arabic\c@figure}
       \renewcommand*\thetable{\@arabic\c@table}
@@ -1411,21 +1422,20 @@ without this file.
     {}
   \AtBeginDocument{\setcounter{tocdepth}{0}}%
   \AfterPackage{listings}{\lstset{numberbychapter=true}}
-  \ifthenelse{\boolean{TR@proceedings}}%
+  \whenbool{TR@proceedings}%
     {\AfterPackage{listings}{
         \AtBeginDocument{
           \def\thelstlisting{\@arabic\c@lstlisting}%
           \def\theHlstnumber{\ifx\lst@@caption\@empty \lst@neglisting
                                                  \else \theHlstlisting \fi%
                                                  .\thelstnumber}}}}%
-    {}
 %    \end{macrocode}
 % as for title, as for abstract.
 %    \begin{macrocode}
     \@ifundefined{abstract}{%
       \newenvironment{abstract}{}{}}{}%
     \renewenvironment{abstract}{%
-      \ifthenelse{\boolean{TR@firsttitleseen}}{
+      \ifbool{TR@firsttitleseen}{
         \list{}{%\advance\topsep by0.35cm\relax
           \setlength{\topsep}{0pt}%
           \setlength{\leftmargin}{2em}%
@@ -1440,24 +1450,22 @@ without this file.
           abstracts. Please remove it.}{}%
       }%
     }%
-    {\ifthenelse{\boolean{TR@firsttitleseen}}{\endlist}{}}
+    {\whenbool{TR@firsttitleseen}{\endlist}}
   %for compat with swathesis
   \let\supervisors\@gobble
   \let\statements\relax
 }{}
-\ifthenelse{\boolean{TR@collection}}%
-  {%
+\whenbool{TR@collection}%
 %    \end{macrocode}
 % Now |collection| specific stuff.
 %    \begin{macrocode}
-   \let\TR@contrib@author\@gobble
+   {\let\TR@contrib@author\@gobble
    \let\TR@contrib@keywords\@gobble
    \let\institute\@gobble
    \let\authorrunning\@gobble
    \let\toctitle\@gobble
    \let\tocauthor\@gobble
    \setkomafont{abstract}{\footnotesize\itshape}
-
 %    \end{macrocode}
 % \cs{titlerunning} and \cs{maketitle} for collections, but since
 % they may already been defined, provide and renew.
@@ -1477,7 +1485,6 @@ without this file.
 %    \begin{macrocode}
       \typeout{^^J^^JSet label "\@templ" for contribution "\@title"^^J^^J}
       \clearheadinfo}}%
-    {}
 %    \end{macrocode}
 % Let the subsubsections be numbered.
 %    \begin{macrocode}
@@ -1497,16 +1504,15 @@ without this file.
 %    \end{macrocode}
 % \end{macro}
 %
-% Language
+% \subsubsection{Language}
 %
 % \changes{v1.3}{2016/06/23}{Disable \cs{hyphsubst} for \LuaTeX (see \ghissue{12})}
 %    \begin{macrocode}
-\ifthenelse{\boolean{luatex}}{}{
+\whennotbool{luatex}{
   \RequirePackage{hyphsubst}
   \HyphSubstLet{ngerman}{ngerman-x-latest}
 }
 \RequirePackage{babel}
-\newcommand*\TR@lang{}\let\TR@lang\@empty
 %    \end{macrocode}
 % \changes{v0.4}{2014/08/12}{Silence \Package{babel}+\Package{hyperref}+shorthands}%
 % The combination of \cs{babel} and \cs{hyperref} might produce bogus
@@ -1519,59 +1525,14 @@ without this file.
     {\let\bbl@info\@gobble\csname HyPsd@babel@}
     {}{}}
 %    \end{macrocode}
-% Extract ISO 639-2 code from babel language name
-% \DoNotIndex{\@l,\@L}
-%    \begin{macrocode}
-{
-  \def\@l#1{\equal{\languagename}{#1}}
-  \def\@L#1{\gdef\TR@lang{#1}}
-\ifthenelse{\@l{afrikaans}}{\@L{af}}{}
-\ifthenelse{\@l{bahasa}\OR\@l{indonesian}\OR\@l{indon}\OR%
-  \@l{bahasai}\OR\@l{bahasam}\OR\@l{malay}\OR\@l{meyalu}}{\@L{id}}{}
-\ifthenelse{\@l{basque}}{\@L{eu}}{}
-\ifthenelse{\@l{breton}}{\@L{br}}{}
-\ifthenelse{\@l{bulgarian}}{\@L{bg}}{}
-\ifthenelse{\@l{catalan}}{\@L{ca}}{}
-\ifthenelse{\@l{croatian}}{\@L{hr}}{}
-\ifthenelse{\@l{czech}}{\@L{cs}}{}
-\ifthenelse{\@l{danish}}{\@L{da}}{}
-\ifthenelse{\@l{dutch}}{\@L{nl}}{}
-\ifthenelse{\@l{english}\OR\@l{USenglish}\OR\@l{american}\OR%
-  \@l{UKenglish}\OR\@l{british}\OR\@l{canadian}\OR%
-  \@l{australian}\OR\@l{newzealand}}{\@L{en}}{}
-\ifthenelse{\@l{esperanto}}{\@L{eo}}{}
-\ifthenelse{\@l{estonian}}{\@L{et}}{}
-\ifthenelse{\@l{finnish}}{\@L{fi}}{}
-\ifthenelse{%
-  \@l{french}\OR\@l{francais}\OR\@l{canadien}\OR\@l{acadian}}{\@L{fr}}{}
-\ifthenelse{\@l{galician}}{\@L{gl}}{}
-\ifthenelse{\@l{german}\OR\@l{germanb}\OR\@l{ngerman}\OR%
-  \@l{ngermanb}\OR\@l{austrian}\OR\@l{naustrian}}{\@L{de}}{}
-\ifthenelse{\@l{greek}\OR\@l{polutonikogreek}}{\@L{el}}{}
-\ifthenelse{\@l{hebrew}}{\@L{he}}{}
-\ifthenelse{\@l{magyar}\OR\@l{hungarian}}{\@L{hu}}{}
-\ifthenelse{\@l{icelandic}}{\@L{is}}{}
-\ifthenelse{\@l{interlingua}}{\@L{ia}}{}
-\ifthenelse{\@l{irish}}{\@L{ga}}{}
-\ifthenelse{\@l{italian}}{\@L{it}}{}
-\ifthenelse{\@l{latin}}{\@L{la}}{}
-\ifthenelse{\@l{samin}}{\@L{se}}{}
-\ifthenelse{\@l{norsk}}{\@L{no}}{}
-\ifthenelse{\@l{nynorsk}}{\@L{nn}}{}
-\ifthenelse{\@l{polish}}{\@L{pl}}{}
-\ifthenelse{%
-  \@l{portuges}\OR\@l{portuguese}\OR\@l{brazilian}\OR\@l{brazil}}{\@L{pt}}{}
-\ifthenelse{\@l{romanian}}{\@L{ro}}{}
-\ifthenelse{\@l{russian}}{\@L{ru}}{}
-\ifthenelse{\@l{scottish}}{\@L{gd}}{}
-}
-%    \end{macrocode}
+% \changes{v2.1}{2021/10/13}{Drop language code extraction,
+% \Package{hyperxmp} does that better anyway}
 % \subsubsection{Fonts}
 % Default font: Serif:  Palatino via \TeX Gyre Pagella\\
 % Code Font: Monospace: Source Code Pro (Adobe)\\
 % Other emphasis: Sans: Source Sans Pro (Adobe)\\
 %    \begin{macrocode}
-\ifthenelse{\boolean{luatex}}{%
+\ifbool{luatex}{%
   \RequirePackage{luatexbase}
   \RequirePackage[final]{microtype}[2013/05/23]
 }{
@@ -1581,7 +1542,7 @@ without this file.
 %    \end{macrocode}
 %  engine-dependent, eg, encoding, loading.
 %    \begin{macrocode}
-\ifthenelse{\boolean{luatex} \or \boolean{xetex}}{%
+\ifbool{tutex}{%
   \RequirePackage{fontspec}[2013/05/20]
 }{}
 %    \end{macrocode}
@@ -1593,7 +1554,7 @@ without this file.
 % engine/encoding/font-mechanism used.
 %    \begin{macrocode}
 \RequirePackage[osf,sc]{mathpazo}
-\ifthenelse{\boolean{luatex} \or \boolean{xetex}}{%
+\ifbool{tutex}{%
 %    \end{macrocode}
 % \changes{v0.4}{2014/08/12}{Load TeX Gyre Pagella before Adobe Source for
 % MatchLowercase reference.}
@@ -1636,11 +1597,9 @@ without this file.
 %    \end{macrocode}
 % \changes{v0.4}{2014/08/12}{Disable \OptionValue{tracking}{smallcaps} in \LuaTeX, also. Is broken.}
 %    \begin{macrocode}
-\ifthenelse{\boolean{xetex}\OR\boolean{luatex}}{
-  \microtypesetup{stretch=9,shrink=15,step=3}
-}{
-  \microtypesetup{stretch=9,shrink=15,step=3,tracking=smallcaps,letterspace=75}
-}
+\ifbool{tutex}%
+  {\microtypesetup{stretch=9,shrink=15,step=3}}%
+  {\microtypesetup{stretch=9,shrink=15,step=3,tracking=smallcaps,letterspace=75}}
 
 \addtokomafont{disposition}{\rmfamily}
 \setkomafont{title}{\rmfamily\mdseries}
@@ -1648,30 +1607,26 @@ without this file.
 \renewcommand*\labelitemii{\normalfont\textendash}
 \setfootnoterule{4cc}
 \setlength{\skip\footins}{2\baselineskip}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Text companion fonts
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+%    \end{macrocode}
+% \paragraph{Text companion fonts}
+%    \begin{macrocode}
 \RequirePackage{textcomp}
 \RequirePackage{mathcomp}
 \RequirePackage{relsize}
-
-%%%
-%%% Details
-%%%
+%    \end{macrocode}
+% \subsubsection{Layout variables}
+%    \begin{macrocode}
 \KOMAoptions{
   headings=big
 }
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Page breaks
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%% no footnote breaks
+%    \end{macrocode}
+%\paragraph{Page breaks}
+% No footnote breaks
+%    \begin{macrocode}
 \interfootnotelinepenalty = 1000
-
-%% avoid widows (Hurenkinder) and orphans (Schusterjungen)
+%    \end{macrocode}
+%  avoid widows (Hurenkinder) and orphans (Schusterjungen)
+%    \begin{macrocode}
 \clubpenalty = \@M
 \widowpenalty = \@M
 
@@ -1683,12 +1638,9 @@ without this file.
   \frenchspacing
   \raggedbottom
 }
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Headers and footers
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+%    \end{macrocode}
+%\subsection{Headers and footers}
+%    \begin{macrocode}
 \KOMAoptions{
   headsepline=false,
   footsepline=false,
@@ -1696,12 +1648,12 @@ without this file.
 \RequirePackage{scrlayer-scrpage}
 \pagestyle{scrheadings}
 
-\ifthenelse{\boolean{TR@chapters}}{
+\ifbool{TR@chapters}{
   \renewcommand*\chapterpagestyle{plain.scrheadings}
   \automark[chapter]{chapter}
   \automark*[section]{}
 }{
-  \ifthenelse{\boolean{TR@inproceedings}}{
+  \ifbool{TR@inproceedings}{
     \lehead{\TR@titlemark}
   }{
     \lehead{\@title}
@@ -1714,8 +1666,8 @@ without this file.
 %    \begin{macrocode}
 \lefoot[]{}\lofoot[]{}
 \refoot[]{}\rofoot[]{}
-\ifthenelse{\boolean{TR@inproceedings}}{
-  \ifthenelse{\boolean{TR@inproceedingspagenumbers}}{
+\ifbool{TR@inproceedings}{
+  \ifbool{TR@inproceedingspagenumbers}{
     \cefoot[\pagemark]{\pagemark}
     \cofoot[\pagemark]{\pagemark}
   }{
@@ -1727,7 +1679,7 @@ without this file.
   \cofoot[\pagemark]{\pagemark}
 }
 
-%%  \ifthenelse{\boolean{TR@proceedings}\OR\boolean{TR@contribtools}}{
+%%  \ifboolexpr{bool {TR@proceedings} or bool {TR@contribtools}}{
 %%   \lefoot[\@eventtitle]{\@eventtitle}
 %%   \lofoot[\@eventtitle]{\@eventtitle}
 %% }{}
@@ -1736,12 +1688,10 @@ without this file.
 \setkomafont{pagehead}{\itshape}
 \setkomafont{pageheadfoot}{\normalcolor}
 \setkomafont{pagenumber}{\normalfont}
-%
-%
-% Sectioning
-%
-
-\ifthenelse{\boolean{TR@chapters}}{
+%    \end{macrocode}
+% \subsubsection{Sectioning}
+%    \begin{macrocode}
+\ifbool{TR@chapters}{
   \renewcommand*{\chapterheadstartvskip}{\vspace*{3\baselineskip}}
   \renewcommand*{\chapterheadendvskip}{\vspace*{2\baselineskip}}
 }{}
@@ -1800,7 +1750,6 @@ without this file.
     pdfcreator = {HPI},
     pdfmetalang = {en},
     pdfproducer = {\TR@ClassName - Technical Reports at the HPI},
-    pdflang = {\TR@lang},
     pdfdisplaydoctitle = false,
     pdfpagemode = UseOutlines,
   }
@@ -1823,7 +1772,7 @@ without this file.
 %   Provide an option to not include a copyright information in the pdf
 %   metadata.
 %    \begin{macrocode}
-  \ifthenelse{\boolean{TR@copyrightmark}}{%
+  \ifbool{TR@copyrightmark}{%
     \hypersetup{pdfcopyright = {Copyright (c) \the\year, HPI}}}{}
 %    \end{macrocode}
 %
@@ -1846,7 +1795,7 @@ without this file.
   \setuptoc{lol}{noprotrusion}
 }
 
-\ifthenelse{\boolean{TR@chapters}}{
+\ifbool{TR@chapters}{
   \renewcommand*\raggedchapterentry{\raggedright}
 }{}
 %    \end{macrocode}
@@ -1854,7 +1803,7 @@ without this file.
 % The main abstract for the non-proceedings case, \ie, there is exactly one
 % abstract in the whole document.
 %    \begin{macrocode}
-\ifthenelse{\boolean{TR@proceedings}\OR\boolean{TR@contribtools}}{}{
+\ifboolexpr{bool {TR@proceedings} or bool {TR@contribtools}}{}{
   \renewenvironment{abstract}{%
     \thispagestyle{plain.scrheadings}
     \null\vfil\leavevmode%
@@ -1906,7 +1855,7 @@ without this file.
 % Use references name instead of bibliography throughout
 % \changes{v0.4}{2014/08/12}{More robust variand of refname forcing}
 %    \begin{macrocode}
-\ifthenelse{\boolean{TR@chapters}}{%
+\ifbool{TR@chapters}{%
   \global\let\@auto@bibname\refname
   \global\let\bibname\refname
   \defcaptionname{ngerman}{\bibname}{\refname}
@@ -1963,10 +1912,10 @@ without this file.
 \PassOptionsToPackage{ruled}{algorithm2e}
 
 \providecommand*\TR@listingfont{}
-\ifthenelse{\boolean{xetex}}{%
+\ifbool{xetex}{%
   \newcommand*\TRlistingfont[1]{\gdef\TR@listingfont{#1\addfontfeature{Mapping=}}}%
 }{%
-  \ifthenelse{\boolean{luatex}}{%
+  \ifbool{luatex}{%
     \newcommand*\TRlistingfont[1]{\gdef\TR@listingfont{#1\addfontfeature{RawFeature={-tlig;-trep}}}}%
   }{
     \newcommand*\TRlistingfont[1]{\gdef\TR@listingfont{#1}}}
@@ -2018,15 +1967,15 @@ without this file.
 %
 % \subsubsection{PDF File Inclusion}
 %    \begin{macrocode}
-\ifthenelse{\boolean{TR@proceedings}}{
+\ifbool{TR@proceedings}{
   \RequirePackage{pdfpages}
-  \ifthenelse{\boolean{xetex}}{}{\pdfinclusioncopyfonts = 1}
+  \whennotbool{xetex}{\pdfinclusioncopyfonts = 1}
   \includepdfset{pagecommand={\thispagestyle{plain.scrheadings}}}
 }{}
 %    \end{macrocode}
 % \subsubsection{Comments and ToDo Help}
 %    \begin{macrocode}
-\ifthenelse{\boolean{TR@todotools}}{%
+\ifbool{TR@todotools}{%
   \RequirePackage[obeyDraft,colorinlistoftodos]{todonotes}
   \newcommand*\todosec{\par\noindent\todo[inline]}
   \newcommand*\secmissing{\par\noindent\todo[color=red,inline,size=\Large]}
@@ -2047,8 +1996,8 @@ without this file.
 %    \end{macrocode}
 % \subsubsection{Drafting support}
 %    \begin{macrocode}
-\ifthenelse{\boolean{@draft}}{%
-  \RequirePackage{blindtext}
+\ifbool{@draft}{%
+  \AtEndPreamble{\RequirePackage{blindtext}}
   \errorcontextlines=999
   \RequirePackage{eso-pic}
   \newkomafont{draftline}{\small\sffamily}
@@ -2093,7 +2042,7 @@ without this file.
 %    \end{macrocode}
 % \changes{v0.3a}{2014/08/08}{Fix \cs{listoftodos}, only to appear with \Option{todotools}}
 %    \begin{macrocode}
-  \ifthenelse{\boolean{TR@todotools}}{
+  \ifbool{TR@todotools}{
     \AtEndDocument{\listoftodos}}{}
 }{
   \let\blindtext\relax
@@ -2153,7 +2102,9 @@ without this file.
 % \end{itemize}
 %    \begin{macrocode}
 }
-
+%    \end{macrocode}
+% Error hard on font commands form the last millennium.
+%    \begin{macrocode}
 \csgappto{bf}{\TR@fonterror}
 \csgappto{it}{\TR@fonterror}
 \csgappto{sc}{\TR@fonterror}
@@ -2162,8 +2113,9 @@ without this file.
 \csgappto{sf}{\TR@fonterror}
 \csgappto{sl}{\TR@fonterror}
 \csgappto{tt}{\TR@fonterror}
-
-%% Warn about global use of sloppy
+%    \end{macrocode}
+% Warn about global use of sloppy
+%    \begin{macrocode}
 \let\TR@sloppy\sloppy
 %    \end{macrocode}
 % \changes{v2.0}{2019/11/20}{Robustify patching}
@@ -2188,13 +2140,11 @@ without this file.
 %    \end{macrocode}
 % Page number: Set counter to 5 (or v), respectively (See above)
 %    \begin{macrocode}
-\ifthenelse{\boolean{TR@inproceedingspagenumbers}}%
-  {}%
+\whennotbool{TR@inproceedingspagenumbers}%
   {\setcounter{page}{5}}
 \ifcsdef{frontmatter}%
   {\apptocmd{\frontmatter}%
-    {\ifthenelse{\boolean{TR@inproceedingspagenumbers}}%
-      {}%
+    {\whennotbool{TR@inproceedingspagenumbers}%
       {\setcounter{page}{5}}}%
     {}%
     {\TR@warning@noline{Cannot patch \string\frontmatter}}}%
@@ -2211,13 +2161,20 @@ without this file.
 % don't use the pgf interface (deprecated)}
 %    \begin{macrocode}
 \RequirePackage{xspace,csquotes}
-\ifthenelse{\boolean{luatex}\OR\boolean{xetex}}{
-  \ltx@ifpackageloaded{xunicode}{
-    %% http://tex.stackexchange.com/a/16995
-    \DeclareUTFcharacter[\UTFencname]{x201C}{\grqq}
-    \DeclareUTFcharacter[\UTFencname]{x201E}{\glqq}
-  }{}
-}{}
+%    \end{macrocode}
+% German quotes might not be right in old \Package{babel} on \XeTeX
+% (see \url{http://tex.stackexchange.com/a/16995})
+%    \begin{macrocode}
+\ifboolexpr{
+  bool {xetex}
+  and test {\ltx@ifpackageloaded{xunicode}}
+  and not test {\@ifpackagelater{babel}{2016/02/01}}}%
+    {\DeclareUTFcharacter[\UTFencname]{x201C}{\grqq}
+      \DeclareUTFcharacter[\UTFencname]{x201E}{\glqq}}
+    {}
+%    \end{macrocode}
+% Dashes and units.
+%    \begin{macrocode}
 \PassOptionsToPackage{shortcuts}{extdash}
 \AtEndPreamble{\RequirePackage{extdash}}
 \AtEndPreamble{\RequirePackage{siunitx}[=v2]}
@@ -2931,9 +2888,9 @@ words should match the language.
 }
 
 \newcommand*\Describe@@[1]{%
-  \ifthenelse{\boolean{TR@indescribe}}{}{\TR@describe@table@begin}%
+  \whennotbool{TR@indescribe}{\TR@describe@table@begin}%
   \noindent\mbox{#1}%
-  \ifthenelse{\boolean{TR@indescribe}}{}{\TR@describe@table@end}}%
+  \whennotbool{TR@indescribe}{\TR@describe@table@end}}%
 
 \renewcommand*\Describe@Env[1]{\endgroup%
   \Describe@@{\PrintDescribeEnv{#1}}%
@@ -2957,22 +2914,22 @@ words should match the language.
   \SpecialOptionIndex{\@tempa@de}\@esphack\ignorespaces}
 
 \renewcommand*\Describe@Macro[1]{\endgroup%
-  \ifthenelse{\boolean{TR@indescribe}}{}{\TR@describe@table@begin}%
+  \whennotbool{TR@indescribe}{\TR@describe@table@begin}%
   \noindent\mbox{\PrintDescribeMacro{#1}}%
-  \ifthenelse{\boolean{TR@indescribe}}{}{\TR@describe@table@end}%
+  \whennotbool{TR@indescribe}{\TR@describe@table@end}%
   \SpecialUsageIndex{#1}\@esphack\ignorespaces}
 
 \def\DescribeValue{\leavevmode\@bsphack\begingroup%
   \MakePrivateLetters\Describe@Value}
 \def\Describe@Value#1#2{%
     \endgroup%
-    \ifthenelse{\boolean{TR@indescribe}}{}{\TR@describe@table@begin}%
+    \whennotbool{TR@indescribe}{\TR@describe@table@begin}%
     \noindent\mbox{\PrintDescribeValue{#1}{#2}}%
-    \ifthenelse{\boolean{TR@indescribe}}{}{\TR@describe@table@end}%
+    \whennotbool{TR@indescribe}{\TR@describe@table@end}%
     \@esphack\ignorespaces}%
 
 \newenvironment{Describe}{%
-  \ifthenelse{\boolean{TR@indescribe}}{\TR@error{Do not nest Describe}}{}%
+  \ifbool{TR@indescribe}{\TR@error{Do not nest Describe}}{}%
   \booltrue{TR@indescribe}%
   \TR@describe@table@begin%
 }{%
@@ -2990,7 +2947,7 @@ words should match the language.
 \usepackage{relsize}
 \usepackage{hologo}
 \usepackage{array}
-\usepackage[binary-units]{siunitx}
+\usepackage[binary-units]{siunitx}[=v2]
 \DeclareSIUnit[number-unit-product = {}] \pt{pt}
 \DeclareSIUnit[number-unit-product = {}] \pc{pc}
 \let\amsCfrac\cfrac
@@ -3169,9 +3126,9 @@ Dokumenteigenschaften.
 %<en>\par This is file version \fileversion{} of  file \File{\filename}.
 %<de>\par Dies ist Version \fileversion{} der Datei \File{\filename}.
 \end{abstract}
-%^^A ==========================================================================
-%^^A ==========================================================================
-%^^A ==========================================================================
+%^^A
+%^^A
+%^^A
 {\smaller \tableofcontents}
 
 %<en> \section{Introduction}
@@ -3311,7 +3268,7 @@ die korrekte Handhabung.
 \remark{Alle Dateien eines \File{hpitr}"=Berichts müssen
   \textsc{utf-8}"=codiert sein.}
 %</de>
-%^^A ----------------------------------------
+%^^A
 %<*en>
 \subsection{Running \LaTeX}
 \label{sec:running}
@@ -3360,7 +3317,7 @@ lualatex report
 Dies sollte die \textsc{pdf}"=Datei mit Bibliographieinformationen
 erzeugen.
 %</de>
-%^^A----------------------------------------
+%^^A
 %<en>\section{Report Structure}
 %<de>\section{Berichtstruktur}
 
@@ -4045,7 +4002,7 @@ The body font family for \File{hpitr} reports is the%
 }\end{quotation}%
 family from the GUST
 e-foundry\footnote{\url{http://www.gust.org.pl/projects/e-foundry}}, a
-digitization of ``{\fontspec{Palatino Linotype} Palatino}'' by Hermann Zapf. It is
+digitization of ``Palatino'' by Hermann Zapf. It is
 set at \SI{12}{\pt} with a line spread of \SI{15.12}{\pt}. For typesetting
 source-code--like material, the mono-spaced%
 \begin{quotation}{\fontspec{Source Code Pro}[Scale=MatchLowercase]%
@@ -4111,9 +4068,9 @@ Die Hauptschriftart (Brotschrift) für \File{hpitr}"=Berichte ist die%
 \upshape
   \TeX\ Gyre Pagella%
 }\end{quotation}%
-der GUST e-foundry, eine Digitalisierung Hermann Zapfs ``{\fontspec{Palatino
-    Linotype} Palatino}''. Sie wird mit \SI{12}{\pt} auf einem Zeilenabstand
-von \SI{15.12}{\pt} gesetzt. Quelltext"=artige Textteile können in der
+der GUST e-foundry, eine Digitalisierung Hermann Zapfs ``Palatino''.
+Sie wird mit \SI{12}{\pt} auf einem Zeilenabstand von
+\SI{15.12}{\pt} gesetzt. Quelltext"=artige Textteile können in der
 dicktengleichen ("`mono-spaced"')%
 \begin{quotation}{\fontspec{Source Code Pro}[Scale=MatchLowercase]%
 \upshape
@@ -4670,8 +4627,8 @@ Die folgenden Pakte werden von der \File{hpitr}"=Klasse automatisch geladen.
 \item \File{hyphsubst} \pdfTeX\ \emph{only}
 \item \File{ifdraft}
 \item \File{ifluatex}
-\item \File{ifthen}
 \item \File{ifxetex}
+\item \File{iftex}
 \item \File{inputenc}
 \item \File{longtable}
 \item \File{ltxcmds}
