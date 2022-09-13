@@ -26,10 +26,10 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
       
-      - name: install zip & more fonts
+      - name: install zip
         run: |
           apt update
-          apt install -y fonts-texgyre texlive-fonts-extra zip
+          apt install -y zip
 
       - name: generate files from dtx
         run: pdftex hpitr.dtx
