@@ -25,6 +25,12 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+      
+      - name: install zip & more fonts
+        run: |
+          apt update
+          apt install -y fonts-texgyre texlive-fonts-extra zip
+
       - name: generate files from dtx
         run: pdftex hpitr.dtx
       
@@ -46,4 +52,4 @@ jobs:
             "*.dtx"
       
       - name: create release
-        run: hub release create -a "hpitr.zip#hpitr-$(date +%Y-%m-%d)" "$(date +%Y-%m-%d)"
+        run: hub release create -a "hpitr.zip#hpitr-$(sed '4q;d' README.txt | xargs |  cut -d " " -f 2)-$(date +%Y-%m-%d)" "$(sed '4q;d' README.txt | xargs |  cut -d " " -f 2)"
