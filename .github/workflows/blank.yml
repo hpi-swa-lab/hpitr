@@ -26,10 +26,10 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
       
-      - name: install zip
+      - name: install zip and snapd
         run: |
           apt update
-          apt install -y zip
+          apt install -y zip snapd
       
       - name: install hub
         run: snap install --classic hub
